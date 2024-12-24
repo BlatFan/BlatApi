@@ -1,0 +1,44 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ru.blatfan.blatapi.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "blatapi.refmap.json",
+  "mixins": [
+    "common.MixinAnvilMenu",
+    "common.MixinItem",
+    "common.MixinJEIVanillaPlugin",
+    "common.AccessorJEIRecipeManager",
+    "client.ExplosionMixin",
+    "client.LightningBoltMixin",
+    "common.BlockItemMixin",
+    "common.BlocksMixin",
+    "common.CreeperMixin",
+    "common.ThrownTridentMixin",
+    "common.TntBlockMixin"
+  ],
+  "client": [
+    "client.MixinAnvilScreen",
+    "client.AbstractClientPlayerMixin",
+    "client.CameraMixin",
+    "client.CurioTooltipMixin",
+    "client.EffectProgramMixin",
+    "client.FoxRendererMixin",
+    "client.GameRendererMixin",
+    "client.GuiGraphicsMixin",
+    "client.HumanoidModelMixin",
+    "client.ItemEntityMixin",
+    "client.ItemInHandLayerMixin",
+    "client.ItemInHandRendererMixin",
+    "client.ItemStackMixin",
+    "client.LightningBoltRendererMixin",
+    "client.MinecraftMixin",
+    "client.PlayerRendererMixin",
+    "client.RabbitRendererMixin",
+    "client.SplashManagerMixin",
+    "client.TitleScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
