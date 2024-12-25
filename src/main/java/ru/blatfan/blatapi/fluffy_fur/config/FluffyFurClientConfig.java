@@ -21,7 +21,7 @@ public class FluffyFurClientConfig {
         builder.comment("Particles").push("particles");
         ITEM_PARTICLE = builder.comment("Enable dropping items particles.").define("itemParticle", true);
         ITEM_GUI_PARTICLE = builder.comment("Enable items particles in GUI.").define("itemGuiParticle", true);
-        ITEM_GUI_PARTICLE = builder.comment("Enable items GUI particles in hand.").define("itemParticleInHand", true);
+        ITEM_IN_HAND_PARTICLE = builder.comment("Enable items GUI particles in hand.").define("itemParticleInHand", true);
         BLOOD_PARTICLE = builder.comment("Enable blood particles in case of damage.").define("bloodParticle", true);
         LIGHTNING_BOLT_EFFECT = builder.comment("Enable custom effect of lightning bolt.").define("lightningBoltEffect", true);
         EXPLOSION_EFFECT = builder.comment("Enable custom effect of explosion.").define("explosionEffect", true);
