@@ -23,7 +23,6 @@
     "client.CameraMixin",
     "client.CurioTooltipMixin",
     "client.EffectProgramMixin",
-    "client.FoxRendererMixin",
     "client.GameRendererMixin",
     "client.GuiGraphicsMixin",
     "client.HumanoidModelMixin",
@@ -34,7 +33,6 @@
     "client.LightningBoltRendererMixin",
     "client.MinecraftMixin",
     "client.PlayerRendererMixin",
-    "client.RabbitRendererMixin",
     "client.SplashManagerMixin",
     "client.TitleScreenMixin"
   ],

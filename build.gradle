@@ -17,7 +17,6 @@ plugins {
 }
 
 apply plugin: 'org.spongepowered.mixin'
-apply plugin: 'maven-publish'
 
 group = mod_group_id
 version = mod_version
@@ -94,9 +93,9 @@ dependencies {
 
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
-    implementation fg.deobf("mezz.jei:jei-1.20.1-forge:15.8.2.25")
+    implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+1.20.1")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+${minecraft_version}")
     compileOnly fg.deobf("curse.maven:oculus-581495:5299671")
 
     runtimeOnly fg.deobf("curse.maven:jade-324717:5493390")
@@ -145,12 +144,4 @@ tasks.named('jar', Jar).configure {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
 }
