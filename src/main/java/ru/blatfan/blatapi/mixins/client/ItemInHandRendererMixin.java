@@ -1,6 +1,8 @@
 package ru.blatfan.blatapi.mixins.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemDisplayContext;
 import ru.blatfan.blatapi.fluffy_fur.client.animation.ItemAnimation;
 import ru.blatfan.blatapi.fluffy_fur.client.bow.BowHandler;
 import ru.blatfan.blatapi.fluffy_fur.common.item.ICustomAnimationItem;
@@ -21,7 +23,7 @@ import ru.blatfan.blatapi.utils.ParticleItem;
 
 @Mixin(ItemInHandRenderer.class)
 public abstract class ItemInHandRendererMixin {
-
+    
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"), method = "renderArmWithItem")
     public void fluffy_fur$renderArmWithItem(AbstractClientPlayer player, float partialTicks, float pitch, InteractionHand hand, float swingProgress, ItemStack stack, float equippedProgress, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, CallbackInfo ci) {
         if (stack.getItem() instanceof ICustomAnimationItem item) {
@@ -32,9 +34,13 @@ public abstract class ItemInHandRendererMixin {
                 if (use) item.getAnimation(stack).renderArmWithItem(player, partialTicks, pitch, hand, swingProgress, stack, equippedProgress, poseStack, buffer, combinedLight);
             }
         }
+    }
+    
+    @Inject(method = "renderItem", at = @At("HEAD"))
+    public void fluffy_fur$renderItem(LivingEntity pEntity, ItemStack stack, ItemDisplayContext pDisplayContext, boolean pLeftHand, PoseStack poseStack, MultiBufferSource pBuffer, int seed, CallbackInfo ci) {
         if(FluffyFurClientConfig.ITEM_IN_HAND_PARTICLE.get() &&
-            stack.getItem() instanceof ParticleItem particleItem && particleItem.renderInHand())
-            particleItem.guiParticle(poseStack, stack.getDescriptionId().length());
+            !stack.isEmpty() && stack.getItem() instanceof ParticleItem particleItem && particleItem.renderInHand())
+            particleItem.guiParticle(poseStack, seed);
     }
 
     @Inject(at = @At("HEAD"), method = "evaluateWhichHandsToRender", cancellable = true)
