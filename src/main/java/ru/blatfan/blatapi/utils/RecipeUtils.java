@@ -43,7 +43,7 @@ public class RecipeUtils {
     }
     
     public static NonNullList<Ingredient> getIngFromJson(JsonObject jsonObject){
-        JsonArray jIngs = jsonObject.get("ingredients").getAsJsonArray();
+        JsonArray jIngs = GsonHelper.getAsJsonArray(jsonObject, "ingredients");
         NonNullList<Ingredient> ings = NonNullList.withSize(jIngs.size(), Ingredient.of(Items.AIR));
         for(int i=0; i<ings.size(); i++)
             ings.add(i, Ingredient.fromJson(jIngs.get(i)));
