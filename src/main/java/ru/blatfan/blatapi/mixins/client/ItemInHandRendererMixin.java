@@ -40,7 +40,7 @@ public abstract class ItemInHandRendererMixin {
     public void fluffy_fur$renderItem(LivingEntity pEntity, ItemStack stack, ItemDisplayContext pDisplayContext, boolean pLeftHand, PoseStack poseStack, MultiBufferSource pBuffer, int seed, CallbackInfo ci) {
         if(FluffyFurClientConfig.ITEM_IN_HAND_PARTICLE.get() &&
             !stack.isEmpty() && stack.getItem() instanceof ParticleItem particleItem && particleItem.renderInHand())
-            particleItem.guiParticle(poseStack, seed);
+            particleItem.guiParticle(poseStack, stack.getDescriptionId().length());
     }
 
     @Inject(at = @At("HEAD"), method = "evaluateWhichHandsToRender", cancellable = true)

@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.fluffy_fur.common.recipe;
+package ru.blatfan.blatapi.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

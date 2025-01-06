@@ -31,10 +31,10 @@ public class FluffyFurClientConfig {
         builder.comment("Menu").push("menu");
         PANORAMA = builder.comment("Fluffy Fur Panorama.").define("panorama", "minecraft:vanilla");
         MENU_BUTTON = builder.comment("Enable Fluffy Fur menu button.").define("menuButton", true);
-        MENU_BUTTON_ROW = builder.comment("Fluffy Fur menu button row.").defineInRange("menuButtonRow", 3, 0, 4);
+        MENU_BUTTON_ROW = builder.comment("Fluffy Fur menu button row.").defineInRange("menuButtonRow", 1, 0, 4);
         MENU_BUTTON_ROW_X_OFFSET = builder.comment("Fluffy Fur menu button X offset with row.").define("menuButtonRowXOffset", 4);
-        MENU_BUTTON_X_OFFSET = builder.comment("Fluffy Fur menu button X offset.").define("menuButtonXOffset", 24);
-        MENU_BUTTON_Y_OFFSET = builder.comment("Fluffy Fur menu button Y offset.").define("menuButtonYOffset", 36);
+        MENU_BUTTON_X_OFFSET = builder.comment("Fluffy Fur menu button X offset.").define("menuButtonXOffset", 0);
+        MENU_BUTTON_Y_OFFSET = builder.comment("Fluffy Fur menu button Y offset.").define("menuButtonYOffset", 0);
         builder.pop();
     }
 

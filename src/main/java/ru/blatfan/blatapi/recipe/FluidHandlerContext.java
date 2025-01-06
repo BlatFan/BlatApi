@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.fluffy_fur.common.recipe;
+package ru.blatfan.blatapi.recipe;
 
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;

@@ -39,11 +39,11 @@ public final class DisabledRecipes implements ResourceManagerReloadListener {
 
     public DisabledRecipes() {
         try {
-            Files.createDirectory(Paths.get(PATH.toString(), BlatApi.MODID));
+            Files.createDirectory(Paths.get(PATH.toString(), "blatfan"+BlatApi.MODID));
         } catch (FileAlreadyExistsException e) {
-            BlatApi.LOGGER.debug("{} config directory already exists.", BlatApi.MODID);
+            BlatApi.LOGGER.debug("{} config directory already exists.", "blatfan"+BlatApi.MODID);
         } catch (IOException e) {
-            BlatApi.LOGGER.error("Failed to create {} config directory.", BlatApi.MODID);
+            BlatApi.LOGGER.error("Failed to create {} config directory.", "blatfan"+BlatApi.MODID);
         }
     }
 
@@ -86,7 +86,7 @@ public final class DisabledRecipes implements ResourceManagerReloadListener {
         REPAIR_ITEMS.addAll(REPAIR_ITEMS_INTERNAL);
 
         try {
-            var file = new File(Paths.get(PATH.toString(), BlatApi.MODID).toString(), "disabled_vanilla_recipes.json");
+            var file = new File(Paths.get(PATH.toString(), "blatfan"+BlatApi.MODID).toString(), "disabled_vanilla_recipes.json");
 
             if (!file.exists()) {
                 file.createNewFile();
