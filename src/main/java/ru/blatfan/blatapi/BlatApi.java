@@ -10,6 +10,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.blatfan.blatapi.anvilapi.AnvilAPI;
+import ru.blatfan.blatapi.biome_replacer.BiomeRaplacerModule;
 import ru.blatfan.blatapi.events.BlatBlockEvents;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.init.BARecipeSerializers;
@@ -20,8 +21,6 @@ import ru.blatfan.blatapi.utils.packet.PacketRegistry;
 public class BlatApi {
     public static final String MODID = "blatapi";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatApi");
-    @Getter
-    private static FluffyFur fluffyFur;
     
     public BlatApi() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -31,7 +30,8 @@ public class BlatApi {
         
         AnvilAPI.load(bus);
         
-        fluffyFur = new FluffyFur(bus);
+        new FluffyFur(bus);
+        new BiomeRaplacerModule(bus);
         new BlatBlockEvents();
         bus.addListener(this::setup);
     }
