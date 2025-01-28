@@ -11,7 +11,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
-import ru.blatfan.blatapi.utils.RecipeUtils;
+import ru.blatfan.blatapi.utils.RecipeUtil;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -21,14 +21,14 @@ public interface IRecipePattern {
     int getRecipeWidth();
     int getRecipeHeight();
     default NonNullList<Ingredient> patternsFromJson(JsonObject pJson){
-        return RecipeUtils.patternIngsFromJson(pJson, getRecipeWidth(), getRecipeHeight());
+        return RecipeUtil.patternIngsFromJson(pJson, getRecipeWidth(), getRecipeHeight());
     }
     
     default void patternToNetwork(FriendlyByteBuf buf, SimpleShapedRecipe recipe) {
-        RecipeUtils.patternIngsToNetwork(buf, recipe);
+        RecipeUtil.patternIngsToNetwork(buf, recipe);
     }
     default NonNullList<Ingredient> patternFromNetwork(FriendlyByteBuf buf){
-        return RecipeUtils.patternIngFromNetwork(buf);
+        return RecipeUtil.patternIngFromNetwork(buf);
     }
     
     @VisibleForTesting

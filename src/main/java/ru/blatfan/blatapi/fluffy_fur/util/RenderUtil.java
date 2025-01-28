@@ -33,6 +33,7 @@ import net.minecraftforge.fluids.FluidType;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import ru.blatfan.blatapi.utils.ColorHelper;
 
 import java.awt.*;
 import java.util.Optional;
@@ -237,7 +238,7 @@ public class RenderUtil {
             builder.setFirstUV(sprite.getU0(), sprite.getV0(), sprite.getU0() + ((sprite.getU1() - sprite.getU0()) * texLength), sprite.getV0() + ((sprite.getV1() - sprite.getV0()) * texWidth))
                     .setSecondUV(sprite.getU0(), sprite.getV0(), sprite.getU0() + ((sprite.getU1() - sprite.getU0()) * texWidth), sprite.getV0() + ((sprite.getV1() - sprite.getV0()) * texHeight))
                     .setThirdUV(sprite.getU0(), sprite.getV0(), sprite.getU0() + ((sprite.getU1() - sprite.getU0()) * texLength), sprite.getV0() + ((sprite.getV1() - sprite.getV0()) * texHeight))
-                    .setColor(ColorUtil.getColor(clientType.getTintColor(fluidStack)))
+                    .setColor(ColorHelper.getColor(clientType.getTintColor(fluidStack)))
                     .setLight(Math.max(type.getLightLevel(fluidStack) << 4, light));
         }
         return builder;

@@ -4,6 +4,7 @@ import net.minecraft.util.FastColor;
 import org.joml.Vector3f;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 @SuppressWarnings("unused")
 public class ColorHelper {
@@ -30,6 +31,33 @@ public class ColorHelper {
 
     public static int getColor(float r, float g, float b, float a) {
         return FastColor.ARGB32.color((int) (a * 255f), (int) (r * 255f), (int) (g * 255f), (int) (b * 255f));
+    }
+    
+    public static Color rainbowColor(float ticks) {
+        int r = (int) (Math.sin(ticks) * 127 + 128);
+        int g = (int) (Math.sin(ticks + Math.PI / 2) * 127 + 128);
+        int b = (int) (Math.sin(ticks + Math.PI) * 127 + 128);
+        return new Color(r, g, b);
+    }
+    
+    public static Color getBlendColor(ArrayList<Color> colors) {
+        float f = 0.0F;
+        float f1 = 0.0F;
+        float f2 = 0.0F;
+        int j = 0;
+        
+        for(Color color : colors) {
+            int k = ColorHelper.getColor(color);
+            f += (float) ((k >> 16 & 255)) / 255.0F;
+            f1 += (float) ((k >> 8 & 255)) / 255.0F;
+            f2 += (float) ((k >> 0 & 255)) / 255.0F;
+            j += 1;
+        }
+        
+        f = f / (float)j * 255.0F;
+        f1 = f1 / (float)j * 255.0F;
+        f2 = f2 / (float)j * 255.0F;
+        return ColorHelper.getColor((int) f << 16 | (int) f1 << 8 | (int) f2);
     }
     
     public static Vector3f getColorV3f(Color color){

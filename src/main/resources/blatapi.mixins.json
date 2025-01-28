@@ -4,38 +4,8 @@
   "package": "ru.blatfan.blatapi.mixins",
   "compatibilityLevel": "JAVA_8",
   "refmap": "blatapi.refmap.json",
-  "mixins": [
-    "common.MixinAnvilMenu",
-    "common.MixinItem",
-    "common.MixinJEIVanillaPlugin",
-    "common.AccessorJEIRecipeManager",
-    "client.ExplosionMixin",
-    "client.LightningBoltMixin",
-    "common.BlockItemMixin",
-    "common.BlocksMixin",
-    "common.CreeperMixin",
-    "common.ThrownTridentMixin",
-    "common.TntBlockMixin"
-  ],
-  "client": [
-    "client.MixinAnvilScreen",
-    "client.AbstractClientPlayerMixin",
-    "client.CameraMixin",
-    "client.CurioTooltipMixin",
-    "client.EffectProgramMixin",
-    "client.GameRendererMixin",
-    "client.GuiGraphicsMixin",
-    "client.HumanoidModelMixin",
-    "client.ItemEntityMixin",
-    "client.ItemInHandLayerMixin",
-    "client.ItemInHandRendererMixin",
-    "client.ItemStackMixin",
-    "client.LightningBoltRendererMixin",
-    "client.MinecraftMixin",
-    "client.PlayerRendererMixin",
-    "client.SplashManagerMixin",
-    "client.TitleScreenMixin"
-  ],
+  "mixins": ["client.ExplosionMixin", "client.LightningBoltMixin", "common.AccessorJEIRecipeManager", "common.BiomeSourceMixin", "common.BlockItemMixin", "common.BlocksMixin", "common.CreeperMixin", "common.MixinAnvilMenu", "common.MixinItem", "common.MixinJEIVanillaPlugin", "common.NoiseBasedChunkGeneratorMixin", "common.ThrownTridentMixin", "common.TntBlockMixin"],
+  "client": ["client.AbstractClientPlayerMixin", "client.CameraMixin", "client.CurioTooltipMixin", "client.EffectProgramMixin", "client.GameRendererMixin", "client.GuiGraphicsMixin", "client.HumanoidModelMixin", "client.ItemEntityMixin", "client.ItemInHandLayerMixin", "client.ItemInHandRendererMixin", "client.ItemStackMixin", "client.LightningBoltRendererMixin", "client.MinecraftMixin", "client.MixinAnvilScreen", "client.PlayerRendererMixin", "client.SplashManagerMixin", "client.TitleScreenMixin"],
   "injectors": {
     "defaultRequire": 1
   }

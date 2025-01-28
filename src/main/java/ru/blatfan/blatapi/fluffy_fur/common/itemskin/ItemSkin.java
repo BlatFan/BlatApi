@@ -1,9 +1,9 @@
 package ru.blatfan.blatapi.fluffy_fur.common.itemskin;
 
+import lombok.Getter;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.fluffy_fur.client.model.armor.ArmorModel;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurModels;
-import ru.blatfan.blatapi.fluffy_fur.util.ColorUtil;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.nbt.CompoundTag;
@@ -15,11 +15,13 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import ru.blatfan.blatapi.utils.ColorHelper;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class ItemSkin {
     public String id;
     public Color color;
@@ -34,15 +36,7 @@ public class ItemSkin {
         this.id = id;
         this.color = color;
     }
-
-    public String getId() {
-        return id;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
+    
     public String getTranslatedName() {
         return getTranslatedName(id);
     }
@@ -65,11 +59,11 @@ public class ItemSkin {
     public static Component getSkinName(ItemSkin skin) {
         Color color = skin.getColor();
 
-        return Component.translatable(skin.getTranslatedName()).withStyle(Style.EMPTY.withColor(ColorUtil.packColor(255, color.getRed(), color.getGreen(), color.getBlue())));
+        return Component.translatable(skin.getTranslatedName()).withStyle(Style.EMPTY.withColor(ColorHelper.getColor(color.getRed(), color.getGreen(), color.getBlue())));
     }
 
     public static Component getSkinComponent(ItemSkin skin) {
-        return Component.translatable("lore.fluffy_fur.skin").withStyle(Style.EMPTY.withColor(ColorUtil.packColor(255, 249, 210, 129))).append(" ").append(getSkinName(skin));
+        return Component.translatable("lore.fluffy_fur.skin").withStyle(Style.EMPTY.withColor(ColorHelper.getColor(249, 210, 129))).append(" ").append(getSkinName(skin));
     }
 
     public Component getSkinName() {
@@ -124,11 +118,7 @@ public class ItemSkin {
         }
         return null;
     }
-
-    public List<ItemSkinEntry> getSkinEntries() {
-        return skinEntries;
-    }
-
+    
     public void addSkinEntry(ItemSkinEntry skinEntry) {
         skinEntries.add(skinEntry);
     }

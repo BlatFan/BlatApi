@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
-import ru.blatfan.blatapi.fluffy_fur.util.ColorUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -15,6 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import ru.blatfan.blatapi.utils.ColorHelper;
 
 import java.awt.*;
 
@@ -36,7 +36,7 @@ public abstract class TitleScreenMixin {
                 if (i == 25) {
                     RenderSystem.setShaderColor(1, 1, 1, 1);
                 } else {
-                    Color color = ColorUtil.rainbowColor(ticks * 0.05f);
+                    Color color = ColorHelper.rainbowColor(ticks * 0.05f);
                     RenderSystem.setShaderColor(color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 0.1f);
                 }
                 poseStack.pushPose();

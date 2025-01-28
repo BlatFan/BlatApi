@@ -25,7 +25,7 @@ import ru.blatfan.blatapi.recipe.SimpleShapedRecipe;
 
 import java.util.Map;
 
-public class RecipeUtils {
+public class RecipeUtil {
     public static ItemStack itemStackFromJson(JsonObject pStackObject) {
         return CraftingHelper.getItemStack(pStackObject, true, true);
     }

@@ -5,7 +5,6 @@ import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
 import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.components.FluffyFurLogoRenderer;
-import ru.blatfan.blatapi.fluffy_fur.util.ColorUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -24,7 +23,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import ru.blatfan.blatapi.utils.ColorHelper;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -130,8 +131,8 @@ public class FluffyFurMenuScreen extends Screen {
         FluffyFurMod mod = mods.get(selectedMod);
 
         Font font = Minecraft.getInstance().font;
-        Component component = Component.literal(mod.getName()).withStyle(Style.EMPTY.withColor(ColorUtil.packColor(mod.getNameColor())))
-                .append(" ").append(Component.literal("v" + mod.getVersion()).withStyle(Style.EMPTY.withColor(ColorUtil.packColor(mod.getVersionColor()))));
+        Component component = Component.literal(mod.getName()).withStyle(Style.EMPTY.withColor(ColorHelper.getColor(mod.getNameColor())))
+                .append(" ").append(Component.literal("v" + mod.getVersion()).withStyle(Style.EMPTY.withColor(ColorHelper.getColor(mod.getVersionColor()))));
         drawBlackBackground(gui, x + 80, y - 12, font.width(component) + 8, mouseX, mouseY, partialTicks);
         gui.drawCenteredString(font, component, x + 80, y - 11, 16777215);
 
@@ -230,7 +231,7 @@ public class FluffyFurMenuScreen extends Screen {
             gui.renderItem(mod.getItemStack(), x + 2, y + 2 + (i * 20));
             MutableComponent name = Component.empty().append(mod.getName());
             if (blatfan(mod.getDev())) {
-                name = name.withStyle(Style.EMPTY.withColor(ColorUtil.packColor(ColorUtil.rainbowColor((ticks + partialTicks) * 0.01f))));
+                name = name.withStyle(Style.EMPTY.withColor(ColorHelper.getColor(new Color(65, 36, 138))));
             }
             if (selectedMod == index) {
                 name.withStyle(ChatFormatting.UNDERLINE);

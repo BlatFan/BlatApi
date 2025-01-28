@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import java.awt.*;
 import java.util.List;
 
-public class BlockRendererUtils {
+public class BlockRendererUtil {
     public static void renderItem(BlockEntity block, double x, double y, double z, List<Float> size, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1, ItemStack itemStack){
         renderItem(block.getBlockPos(), x, y, z, size, poseStack, multiBufferSource, i, i1, itemStack);
     }
