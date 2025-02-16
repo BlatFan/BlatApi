@@ -2,6 +2,9 @@ package ru.blatfan.blatapi.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import ru.blatfan.blatapi.fluffy_fur.client.event.ClientTickHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
 import ru.blatfan.blatapi.fluffy_fur.common.block.entity.BlockSimpleInventory;
@@ -19,6 +22,15 @@ import java.awt.*;
 import java.util.List;
 
 public class BlockRendererUtil {
+    public static void dispatchTEToNearbyPlayers(BlockEntity tile) {
+        ServerLevel world = (ServerLevel) tile.getLevel();
+        world.getChunkSource().chunkMap.getPlayers(new ChunkPos(tile.getBlockPos()), false)
+            .forEach(player -> player.connection.send(tile.getUpdatePacket()));
+    }
+    public static void dispatchTEToNearbyPlayers(Level world, BlockPos pos) {
+        BlockEntity tile = world.getBlockEntity(pos);
+        if (tile != null) dispatchTEToNearbyPlayers(tile);
+    }
     public static void renderItem(BlockEntity block, double x, double y, double z, List<Float> size, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1, ItemStack itemStack){
         renderItem(block.getBlockPos(), x, y, z, size, poseStack, multiBufferSource, i, i1, itemStack);
     }
