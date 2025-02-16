@@ -9,5 +9,4 @@ public class NBTIngredient extends PartialNBTIngredient {
     public NBTIngredient(ItemStack stack) {
         super(Set.of(stack.getItem()), stack.getTag());
     }
-
 }
