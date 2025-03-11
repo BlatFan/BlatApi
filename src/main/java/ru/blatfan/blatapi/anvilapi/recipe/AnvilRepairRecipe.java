@@ -27,8 +27,7 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.Nullable;
-import ru.blatfan.blatapi.init.BARecipeSerializers;
-import ru.blatfan.blatapi.init.BARecipeTypes;
+import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.utils.ItemHelper;
 
 import java.util.List;
@@ -89,12 +88,12 @@ public class AnvilRepairRecipe implements IAnvilRepairRecipe {
 
     @Override
     public RecipeType<IAnvilRepairRecipe> getType() {
-        return BARecipeTypes.ANVIL_REPAIR.get();
+        return BARegistry.ANVIL_REPAIR.get();
     }
 
     @Override
     public RecipeSerializer<IAnvilRepairRecipe> getSerializer() {
-        return BARecipeSerializers.ANVIL_REPAIR.get();
+        return BARegistry.ANVIL_REPAIR_S.get();
     }
 
     public AnvilRepairRecipe addCriterion(String name, CriterionTriggerInstance criterion) {

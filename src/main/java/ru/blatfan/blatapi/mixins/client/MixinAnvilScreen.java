@@ -11,13 +11,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.blatfan.blatapi.init.BARecipeTypes;
+import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
+import ru.blatfan.blatapi.common.BARegistry;
 
 @Mixin(AnvilScreen.class)
 public abstract class MixinAnvilScreen extends ItemCombinerScreen<AnvilMenu> {
@@ -42,7 +44,7 @@ public abstract class MixinAnvilScreen extends ItemCombinerScreen<AnvilMenu> {
             this.setFocused(this.name);
         }
 
-        var recipe = level.getRecipeManager().getRecipeFor(BARecipeTypes.ANVIL.get(), new SimpleContainer(this.getMenu().getItems().toArray(ItemStack[]::new)), level).orElse(null);
+        var recipe = level.getRecipeManager().getRecipeFor(BARegistry.ANVIL.get(), new SimpleContainer(this.getMenu().getItems().toArray(ItemStack[]::new)), level).orElse(null);
 
         if (recipe != null) {
             this.name.setValue(menu.getSlot(2).hasItem() ? menu.getSlot(2).getItem().getHoverName().getString() : "");

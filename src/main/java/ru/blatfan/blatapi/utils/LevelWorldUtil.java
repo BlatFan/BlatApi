@@ -2,7 +2,7 @@ package ru.blatfan.blatapi.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import ru.blatfan.blatapi.core.BlockPosDim;
+import ru.blatfan.blatapi.common.core.BlockPosDim;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;

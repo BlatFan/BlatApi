@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.mixins.client;
 
+import ru.blatfan.blatapi.client.TOTHandler;
 import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
 import ru.blatfan.blatapi.fluffy_fur.common.item.IGuiParticleItem;
@@ -29,5 +30,6 @@ public abstract class GuiGraphicsMixin {
             builder.endBatch();
         }
         FluffyFurRenderTypes.customItemRenderBuilderGui.clear();
+        TOTHandler.render(((GuiGraphics)((Object)this)).pose(), stack, x, y);
     }
 }

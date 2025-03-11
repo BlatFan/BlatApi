@@ -20,8 +20,8 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
-import ru.blatfan.blatapi.recipe.IRecipePattern;
-import ru.blatfan.blatapi.recipe.SimpleShapedRecipe;
+import ru.blatfan.blatapi.common.recipe.IRecipePattern;
+import ru.blatfan.blatapi.common.recipe.SimpleShapedRecipe;
 
 import java.util.Map;
 

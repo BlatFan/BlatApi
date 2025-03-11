@@ -1,7 +1,9 @@
 package ru.blatfan.blatapi.jei;
 
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
 import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRepairRecipe;
 import ru.blatfan.blatapi.jei.category.AnvilRecipeCategory;
 import ru.blatfan.blatapi.mixins.common.AccessorJEIRecipeManager;
@@ -21,7 +23,7 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Blocks;
-import ru.blatfan.blatapi.init.BARecipeTypes;
+import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.utils.DisabledRecipes;
 import ru.blatfan.blatapi.utils.RecipeHelper;
 
@@ -47,7 +49,7 @@ public final class JeiIntegration implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(AnvilRecipeCategory.RECIPE_TYPE, RecipeHelper.getRecipeManager().getAllRecipesFor(BARecipeTypes.ANVIL.get()));
+        registration.addRecipes(AnvilRecipeCategory.RECIPE_TYPE, RecipeHelper.getRecipeManager().getAllRecipesFor(BARegistry.ANVIL.get()));
     }
 
     @Override
@@ -181,7 +183,7 @@ public final class JeiIntegration implements IModPlugin {
         recipes.addAll(recipesToAdd);
         
         List<IJeiAnvilRecipe> rec = new ArrayList<>();
-        for(Recipe<?> recipe1 : RecipeHelper.getRecipes(BARecipeTypes.ANVIL_REPAIR.get())){
+        for(Recipe<?> recipe1 : RecipeHelper.getRecipes(BARegistry.ANVIL_REPAIR.get())){
             IAnvilRepairRecipe recipe = (IAnvilRepairRecipe) recipe1;
             rec.add(new AnvilRecipe(
                 Stream.of(recipe.getBaseItem().getDefaultInstance()).peek(input -> input.setDamageValue(input.getMaxDamage())).toList(),

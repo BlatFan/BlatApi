@@ -47,6 +47,9 @@ public class MathUtils {
     public static float lerp(float a, float b, float t){
         return (1 - t) * a + t * b;
     }
+    public static double lerp(double a, double b, double t){
+        return (1 - t) * a + t * b;
+    }
 
 
     public static float lerpRot(float a, float b, float t) {

@@ -5,7 +5,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.BlatApi;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -47,7 +46,7 @@ public class AttributesUtil {
     AttributeInstance attr = player.getAttribute(ForgeMod.STEP_HEIGHT_ADDITION.get());
     attr.removeModifier(ID_STEP_HEIGHT);
     if (newVal != 0) {
-      AttributeModifier healthModifier = new AttributeModifier(ID_STEP_HEIGHT, BlatApi.MODID, newVal, AttributeModifier.Operation.ADDITION);
+      AttributeModifier healthModifier = new AttributeModifier(ID_STEP_HEIGHT, BlatApi.MOD_ID, newVal, AttributeModifier.Operation.ADDITION);
       attr.addPermanentModifier(healthModifier);
     }
   }

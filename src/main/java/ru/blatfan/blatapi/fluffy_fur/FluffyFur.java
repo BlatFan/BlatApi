@@ -25,16 +25,21 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.blatfan.blatapi.BlatApi;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class FluffyFur {
-    public static final String MOD_ID = BlatApi.MODID;
+    public static final String MOD_ID = BlatApi.MOD_ID;
 
     public static final ISidedProxy proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
     public static final Logger LOGGER = LogManager.getLogger();
+    
+    public static List<String> mcreatorModsList = new ArrayList<>();
     
     public FluffyFur(IEventBus eventBus) {
         FluffyFurItems.register(eventBus);
@@ -63,6 +68,28 @@ public class FluffyFur {
         FluffyFurPacketHandler.init();
         for (ItemSkin skin : ItemSkinHandler.getSkins()) {
             skin.setupSkinEntries();
+        }
+        for (Package pack: Arrays.stream(Package.getPackages()).toList()) {
+            String string = pack.getName();
+            int dots = 0;
+            for (char c : string.toCharArray()) {
+                if (c == '.') dots++;
+            }
+            if (dots == 2) {
+                if (pack.getName().startsWith("net.mcreator")) {
+                    int i = string.indexOf(".");
+                    string = string.substring(i + 1, string.length() - 1);
+                    i = string.indexOf(".");
+                    string = string.substring(i + 1);
+                    mcreatorModsList.add(string);
+                } else if (pack.getName().contains("procedures")) {
+                    int i = string.indexOf(".");
+                    string = string.substring(i + 1, string.length() - 1);
+                    i = string.indexOf(".");
+                    string = string.substring(0, i);
+                    mcreatorModsList.add(string);
+                }
+            }
         }
     }
 

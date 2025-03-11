@@ -7,7 +7,7 @@ import ru.blatfan.blatapi.utils.DisabledRecipes;
 import ru.blatfan.blatapi.utils.RecipeHelper;
 
 public final class AnvilAPI {
-    public static void load(IEventBus bus) {
+    public AnvilAPI(IEventBus bus) {
         bus.addListener(AnvilAPI::commonSetup);
     }
     

@@ -2,7 +2,7 @@ package ru.blatfan.blatapi.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import ru.blatfan.blatapi.core.BlockPosDim;
+import ru.blatfan.blatapi.common.core.BlockPosDim;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -25,8 +25,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
-import ru.blatfan.blatapi.core.Vector3;
-import ru.blatfan.blatapi.dim.DimensionTransit;
+import ru.blatfan.blatapi.common.core.Vector3;
 import ru.blatfan.blatapi.utils.packet.PacketRegistry;
 import ru.blatfan.blatapi.utils.packet.packet.PacketPlayerFalldamage;
 

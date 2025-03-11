@@ -11,8 +11,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import ru.blatfan.blatapi.biome_replacer.BABiomeSource;
-import ru.blatfan.blatapi.biome_replacer.BiomeRaplacerModule;
+import ru.blatfan.blatapi.common.biome_replacer.BABiomeSource;
+import ru.blatfan.blatapi.common.biome_replacer.BiomeRaplacerModule;
 
 import java.util.Set;
 import java.util.function.Supplier;

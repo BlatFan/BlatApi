@@ -4,8 +4,7 @@ import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
-import ru.blatfan.blatapi.init.BARecipeSerializers;
-import ru.blatfan.blatapi.init.BARecipeTypes;
+import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.utils.ItemHelper;
 import lombok.Getter;
 import net.minecraft.Util;
@@ -330,12 +329,12 @@ public class AnvilRecipe implements IAnvilRecipe {
 
     @Override
     public RecipeType<IAnvilRecipe> getType() {
-        return BARecipeTypes.ANVIL.get();
+        return BARegistry.ANVIL.get();
     }
-
+    
     @Override
     public RecipeSerializer<IAnvilRecipe> getSerializer() {
-        return BARecipeSerializers.ANVIL.get();
+        return BARegistry.ANVIL_S.get();
     }
 
     public AnvilRecipe addCriterion(String name, CriterionTriggerInstance criterion) {

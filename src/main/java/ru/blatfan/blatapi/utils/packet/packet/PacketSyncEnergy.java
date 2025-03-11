@@ -6,7 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
-import ru.blatfan.blatapi.core.IHasEnergy;
+import ru.blatfan.blatapi.common.core.IHasEnergy;
 
 public class PacketSyncEnergy extends BlatPacket {
 

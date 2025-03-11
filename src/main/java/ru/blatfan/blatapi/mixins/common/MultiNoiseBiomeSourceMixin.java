@@ -15,9 +15,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import ru.blatfan.blatapi.biome_replacer.BABiomeSource;
-import ru.blatfan.blatapi.biome_replacer.BiomeRaplacerModule;
-import ru.blatfan.blatapi.biome_replacer.TerrablenderHelper;
+import ru.blatfan.blatapi.common.biome_replacer.BABiomeSource;
+import ru.blatfan.blatapi.common.biome_replacer.BiomeRaplacerModule;
+import ru.blatfan.blatapi.common.biome_replacer.TerrablenderHelper;
 import ru.blatfan.blatapi.utils.BiomeHelper;
 
 import java.util.List;

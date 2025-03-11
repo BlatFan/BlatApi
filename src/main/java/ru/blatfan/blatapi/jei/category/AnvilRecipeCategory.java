@@ -27,7 +27,7 @@ import java.util.List;
 
 public final class AnvilRecipeCategory implements IRecipeCategory<IAnvilRecipe> {
     private static final ResourceLocation TEXTURE = BlatApi.loc("textures/gui/jei/anvil.png");
-    public static final RecipeType<IAnvilRecipe> RECIPE_TYPE = RecipeType.create(BlatApi.MODID, "anvil", IAnvilRecipe.class);
+    public static final RecipeType<IAnvilRecipe> RECIPE_TYPE = RecipeType.create(BlatApi.MOD_ID, "anvil", IAnvilRecipe.class);
 
     private final IDrawable background;
     private final IDrawable shapeless;

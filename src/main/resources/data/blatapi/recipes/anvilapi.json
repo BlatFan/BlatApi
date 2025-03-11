@@ -1,20 +1,19 @@
 {
-  "type": "minecraft:anvil",
+  "type": "blatapi:anvil",
   "inputs": [
     {
       "item": "minecraft:copper_ingot",
-      "count": 2,
-      "consume": false
+      "count": 2
     },
     {
-      "item": "minecraft:gold_ingot",
-      "count": 5
+      "item": "minecraft:copper_ingot",
+      "count": 2
     }
   ],
   "experience": 15,
   "shapeless": true,
   "result": {
-    "count": 3,
-    "item": "minecraft:diamond"
+    "item": "minecraft:copper_ingot",
+    "count": 4
   }
 }

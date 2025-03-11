@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import ru.blatfan.blatapi.biome_replacer.SurfaceRulesRegistry;
+import ru.blatfan.blatapi.common.biome_replacer.SurfaceRulesRegistry;
 
 import java.util.ArrayList;
 import java.util.List;

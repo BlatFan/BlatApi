@@ -41,6 +41,7 @@ public abstract class ItemInHandRendererMixin {
         if(FluffyFurClientConfig.ITEM_IN_HAND_PARTICLE.get() &&
             !stack.isEmpty() && stack.getItem() instanceof ParticleItem particleItem && particleItem.renderInHand())
             particleItem.guiParticle(poseStack, stack.getDescriptionId().length());
+        
     }
 
     @Inject(at = @At("HEAD"), method = "evaluateWhichHandsToRender", cancellable = true)

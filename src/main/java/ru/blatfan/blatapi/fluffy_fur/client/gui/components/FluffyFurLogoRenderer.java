@@ -5,6 +5,9 @@ import net.minecraft.client.gui.components.LogoRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import ru.blatfan.blatapi.common.core.Vector3;
+
+import static ru.blatfan.blatapi.utils.animation.AnimationCurve.*;
 
 @OnlyIn(Dist.CLIENT)
 public class FluffyFurLogoRenderer extends LogoRenderer {
@@ -14,10 +17,17 @@ public class FluffyFurLogoRenderer extends LogoRenderer {
         super(keepLogoThroughFade);
         this.logo = logo;
     }
-
+    
     @Override
     public void renderLogo(GuiGraphics guiGraphics, int screenWidth, float transparency) {
-        this.renderLogo(guiGraphics, screenWidth, transparency, 30);
+        Vector3 pos = bezier(
+            new Vector3(-5, 30, 0),
+            new Vector3(5, 25, 0),
+            new Vector3(5, 25, 0),
+            new Vector3(-5, 30, 0),
+            timeUnite()*5
+        );
+        this.renderLogo(guiGraphics, (int) Math.round(screenWidth+pos.x), transparency, (int) Math.round(pos.y));
     }
 
     @Override

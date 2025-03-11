@@ -1,6 +1,8 @@
 package ru.blatfan.blatapi.mixins.common;
 
-import ru.blatfan.blatapi.init.BARecipeTypes;
+import net.minecraft.world.item.crafting.RecipeType;
+import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
+import ru.blatfan.blatapi.common.BARegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.flag.FeatureElement;
@@ -28,7 +30,7 @@ public abstract class MixinItem implements FeatureElement, ItemLike, IForgeItem 
             container.addItem(stack);
             container.addItem(repairCandidate);
 
-            if (level.getRecipeManager().getRecipeFor(BARecipeTypes.ANVIL_REPAIR.get(), container, level).isPresent())
+            if (level.getRecipeManager().getRecipeFor(BARegistry.ANVIL_REPAIR.get(), container, level).isPresent())
                 callback.setReturnValue(true);
         }
     }

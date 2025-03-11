@@ -24,6 +24,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import ru.blatfan.blatapi.utils.ColorHelper;
+import ru.blatfan.blatapi.utils.GuiUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -212,6 +213,7 @@ public class FluffyFurMenuScreen extends Screen {
 
     public static void drawModList(GuiGraphics gui, int x, int y, int mouseX, int mouseY, float partialTicks) {
         gui.blit(BACKGROUND, x, y, 0, 100, 120, 100, 256, 256);
+        
         int s = mods.size() - 5;
         if (s > 0) {
             float slider = (float) modsScroll / s;
@@ -222,6 +224,20 @@ public class FluffyFurMenuScreen extends Screen {
         Component component = Component.translatable("gui.blatapi.menu.mods");
         drawBlackBackground(gui, x + 60, y - 12, font.width(component) + 8, mouseX, mouseY, partialTicks);
         gui.drawCenteredString(font, component, x + 60, y - 11, 16777215);
+        
+        if (!FluffyFur.mcreatorModsList.isEmpty()) {
+            component = Component.translatable("gui.blatapi.menu.mcreator_mods").append(" " + FluffyFur.mcreatorModsList.size());
+            drawBlackBackground(gui, x + 60, y - 24, font.width(component) + 8, mouseX, mouseY, partialTicks);
+            gui.drawCenteredString(font, component, x + 60, y - 23, 16777215);
+            
+            if (mouseX >= x + 60 - (font.width(component) / 2f) - 4 && mouseY >= y - 24 && mouseX <= x + 60 + (font.width(component) / 2f) + 4 && mouseY < y - 14) {
+                List<Component> list = new ArrayList<>();
+                for (String string : FluffyFur.mcreatorModsList) {
+                    list.add(Component.literal(string));
+                }
+                gui.renderTooltip(Minecraft.getInstance().font, list, Optional.empty(), mouseX, mouseY);
+            }
+        }
 
         for (int i = 0; i < 5; i++) {
             int index = modsScroll + i;

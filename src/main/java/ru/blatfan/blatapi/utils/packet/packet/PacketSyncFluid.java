@@ -8,7 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.network.NetworkEvent;
-import ru.blatfan.blatapi.core.IHasFluid;
+import ru.blatfan.blatapi.common.core.IHasFluid;
 
 public class PacketSyncFluid extends BlatPacket {
 

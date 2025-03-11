@@ -1,6 +1,8 @@
 package ru.blatfan.blatapi.mixins.common;
 
-import ru.blatfan.blatapi.init.BARecipeTypes;
+import net.minecraft.world.item.crafting.RecipeType;
+import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
+import ru.blatfan.blatapi.common.BARegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.Containers;
@@ -60,7 +62,7 @@ public abstract class MixinAnvilMenu extends ItemCombinerMenu {
 
         var breakChance = ForgeHooks.onAnvilRepair(player, stack, this.inputSlots.getItem(0), this.inputSlots.getItem(1));
 
-        var recipe = this.player.level().getRecipeManager().getRecipeFor(BARecipeTypes.ANVIL.get(), this.inputSlots, this.player.level()).orElse(null);
+        var recipe = this.player.level().getRecipeManager().getRecipeFor(BARegistry.ANVIL.get(), this.inputSlots, this.player.level()).orElse(null);
 
         if (recipe != null) {
             var input1 = this.inputSlots.getItem(0);
@@ -160,7 +162,7 @@ public abstract class MixinAnvilMenu extends ItemCombinerMenu {
     @Inject(at = @At("HEAD"), method = "createResult", cancellable = true)
     public void createResult(CallbackInfo callback) {
         var level = this.player.level();
-        var recipe = level.getRecipeManager().getRecipeFor(BARecipeTypes.ANVIL.get(), this.inputSlots, level).orElse(null);
+        var recipe = level.getRecipeManager().getRecipeFor(BARegistry.ANVIL.get(), this.inputSlots, level).orElse(null);
 
         if (recipe != null) {
             var stack = recipe.getResultItem(level.registryAccess());
