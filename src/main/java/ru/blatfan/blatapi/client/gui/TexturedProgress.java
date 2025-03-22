@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class TexturedProgress {
-
   protected final Font font;
   protected final int x;
   protected final int y;

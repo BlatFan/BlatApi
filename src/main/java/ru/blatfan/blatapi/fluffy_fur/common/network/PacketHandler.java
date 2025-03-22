@@ -8,10 +8,19 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkDirection;
+import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+import java.util.Objects;
+
 public abstract class PacketHandler {
+    public static ServerPlayer getPlayer(NetworkEvent.Context context) {
+        if (context.getDirection() != NetworkDirection.PLAY_TO_SERVER)
+            throw new IllegalArgumentException("Wrong side for server packet handler " + context.getDirection());
+        context.setPacketHandled(true);
+        return Objects.requireNonNull(context.getSender());
+    }
 
     public static final PacketDistributor<Pair<Level, BlockPos>> TRACKING_CHUNK_AND_NEAR = new PacketDistributor<>(
             (_d, pairSupplier) -> {

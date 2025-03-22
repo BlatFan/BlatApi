@@ -52,7 +52,7 @@ public class FluffyFurClient {
     public static FluffyFurPanorama VANILLA_PANORAMA;
 
     public static void setupMenu() {
-        MOD_INSTANCE = new FluffyFurMod(FluffyFur.MOD_ID, "BlatApi", "0.2.0").setDev("BlatFan").setItem(new ItemStack(Items.AMETHYST_SHARD))
+        MOD_INSTANCE = new FluffyFurMod(FluffyFur.MOD_ID, "BlatApi", "0.2.1").setDev("BlatFan").setItem(new ItemStack(Items.AMETHYST_SHARD))
                 .setNameColor(new Color(142, 95, 239))
                 .setVersionColor(new Color(65, 36, 138))
                 .setDescription(Component.translatable("mod_description.blatapi"))
