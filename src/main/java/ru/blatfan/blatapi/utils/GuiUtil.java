@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuiUtil {
@@ -135,5 +136,31 @@ public class GuiUtil {
         bufferbuilder.vertex(matrix4f, (float)x1, (float)y1, (float)z).uv(u1, v1).endVertex();
         bufferbuilder.vertex(matrix4f, (float)x1, (float)y0, (float)z).uv(u1, v0).endVertex();
         BufferUploader.drawWithShader(bufferbuilder.end());
+    }
+    
+    public static List<String> splitText(String text, int max, float scale) {
+        List<String> result = new ArrayList<>();
+        StringBuilder currentLine = new StringBuilder();
+        int currentWidth = 0;
+        Font font = Minecraft.getInstance().font;
+        
+        String[] words = text.split(" ");
+        for (String word : words) {
+            int wordWidth = (int) (font.width(word + " ")*scale);
+            if(word.equals("\n") || currentWidth+wordWidth>max){
+                result.add(currentLine.toString());
+                currentWidth=word.equals("\n") ? 0 : wordWidth;
+                currentLine=new StringBuilder();
+                if(!word.equals("\n")) currentLine.append(word).append(" ");
+            } else {
+                currentWidth += wordWidth;
+                currentLine.append(word).append(" ");
+            }
+        }
+        
+        return result;
+    }
+    public static List<String> splitText(String text, int max) {
+        return splitText(text, max, 1);
     }
 }

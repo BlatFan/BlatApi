@@ -140,7 +140,7 @@ public class FluffyFurMenuScreen extends Screen {
         List<Component> lines = getDescription(mod);
         int links = mod.getLinks().size();
         int l = lines.size() - links;
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 13; i++) {
             int index = descriptionScroll + i;
             if (index < 0) break;
             if (index > lines.size() - 1) break;
@@ -150,7 +150,7 @@ public class FluffyFurMenuScreen extends Screen {
                     line.withStyle(ChatFormatting.UNDERLINE);
                 }
             }
-            gui.drawString(font, line, x + 5, y + 5 + (i * (font.lineHeight + 1)), 16777215);
+            GuiUtil.drawScaledString(gui, line, x + 5, (int) (y + 5 + (i * (font.lineHeight + 1)*0.7f)), new Color(16777215), 0.7f);
         }
 
         int s = lines.size() - 9;
@@ -296,28 +296,14 @@ public class FluffyFurMenuScreen extends Screen {
     public static List<Component> getDescription(FluffyFurMod mod) {
         String text = mod.getDescription().getString();
         int w = 145;
-
-        Font font = Minecraft.getInstance().font;
         List<Component> lines = new ArrayList<>();
-        String[] words = text.split(" ");
-        String line = "";
-        for (String s : words) {
-            if (s.equals("\n")) {
-                lines.add(Component.literal(line));
-                line = "";
-            } else if (font.width(line) + font.width(s) > w) {
-                lines.add(Component.literal(line));
-                line = s + " ";
-            }
-            else line += s + " ";
-        }
-        if (!line.isEmpty()) lines.add(Component.literal(line));
-        if (mod.getLinks().size() > 0) {
+        for (String s : GuiUtil.splitText(text, w, 0.7f))
+            lines.add(Component.literal(s));
+        if (!mod.getLinks().isEmpty()) {
             lines.add(Component.empty());
             lines.add(Component.translatable("gui.blatapi.menu.links").withStyle(ChatFormatting.GRAY));
-            for (FluffyFurMod.Link link : mod.getLinks()) {
+            for (FluffyFurMod.Link link : mod.getLinks())
                 lines.add(link.getComponent());
-            }
         }
 
         return lines;
@@ -409,7 +395,7 @@ public class FluffyFurMenuScreen extends Screen {
             if (descriptionScroll - add < 0) {
                 return false;
             }
-            if (descriptionScroll - add > lines.size() - 9) {
+            if (descriptionScroll - add > lines.size() - 13) {
                 return false;
             }
             descriptionScroll = descriptionScroll - add;
