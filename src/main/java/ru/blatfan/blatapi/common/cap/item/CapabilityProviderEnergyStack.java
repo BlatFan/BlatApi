@@ -13,7 +13,7 @@ public class CapabilityProviderEnergyStack implements ICapabilitySerializable<Co
 
   private static final String NBTENERGY = "energy";
   CustomEnergyStorage energy;
-  private LazyOptional<IEnergyStorage> energyCap = LazyOptional.of(() -> energy);
+  private final LazyOptional<IEnergyStorage> energyCap;
 
   public CapabilityProviderEnergyStack(int max) {
     energy = new CustomEnergyStorage(max, max);

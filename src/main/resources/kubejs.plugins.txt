@@ -1,0 +1,1 @@
+ru.blatfan.blatapi.compat.BAKubeJS

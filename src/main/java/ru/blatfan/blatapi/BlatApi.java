@@ -20,6 +20,8 @@ import ru.blatfan.blatapi.utils.packet.PacketRegistry;
 @Mod(BlatApi.MOD_ID)
 public class BlatApi {
     public static final String MOD_ID = "blatapi";
+    public static final String MOD_NAME = "blatapi";
+    public static final String MOD_VERSION = "0.2.2";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatAPI");
     
     

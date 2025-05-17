@@ -8,16 +8,16 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
-import ru.blatfan.blatapi.common.cap.CustomEnergyStorage;
+import ru.blatfan.blatapi.common.cap.FloatEnergyStorage;
 import ru.blatfan.blatapi.utils.NBTHelper;
 
-public class EnergyCapabilityItemStack implements ICapabilityProvider {
+public class FloatEnergyCapabilityItemStack implements ICapabilityProvider {
   private final LazyOptional<IEnergyStorage> energy;
-  private final int max;
+  private final int originalCapacity;
   private final ItemStack stack;
 
   private IEnergyStorage createEnergy() {
-    return new CustomEnergyStorage(max) {
+    return new FloatEnergyStorage(originalCapacity) {
       private CompoundTag getTag(){
         return NBTHelper.getTagCompound(stack, tag);
       }
@@ -26,24 +26,41 @@ public class EnergyCapabilityItemStack implements ICapabilityProvider {
       public int getEnergyStored() {
         return getTag().getInt("energy");
       }
-
+      
       @Override
       public void setEnergy(int energy) {
-        getTag().putInt(tag, energy);
+        getTag().putInt("energy", energy);
         super.setEnergy(energy);
+      }
+      
+      public void setCapacity(int newCapacity){
+        getTag().putInt("capacity", newCapacity);
+        this.capacity=newCapacity;
+      }
+      
+      public void setMaxReceive(int newMaxReceive){
+        getTag().putInt("maxReceive", newMaxReceive);
+        this.maxReceive=newMaxReceive;
+      }
+      
+      public void setMaxExtract(int newMaxExtract){
+        getTag().putInt("maxExtract", newMaxExtract);
+        this.maxExtract=newMaxExtract;
+      }
+      
+      public int getMaxReceive() {
+        return getTag().getInt("maxReceive");
+      }
+      public int getMaxExtract() {
+        return getTag().getInt("maxExtract");
       }
     };
   }
 
-  public EnergyCapabilityItemStack(final ItemStack stack, int capacity) {
-    this.max = capacity;
+  public FloatEnergyCapabilityItemStack(final ItemStack stack, int capacity) {
+    this.originalCapacity = capacity;
     this.stack = stack;
     energy = LazyOptional.of(this::createEnergy);
-  }
-
-  @Override
-  public String toString() {
-    return "EnergyCapabilityItemStack [energy=" + energy + ", max=" + max + "]";
   }
 
   @Override

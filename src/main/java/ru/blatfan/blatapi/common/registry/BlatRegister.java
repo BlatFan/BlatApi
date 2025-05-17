@@ -1,6 +1,5 @@
 package ru.blatfan.blatapi.common.registry;
 
-import lombok.Getter;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
@@ -37,9 +36,11 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProviderType;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -51,6 +52,7 @@ public class BlatRegister {
     public final String modid;
     public final DeferredRegister<Block> BLOCKS;
     public final DeferredRegister<Fluid> FLUIDS;
+    public final DeferredRegister<FluidType> FLUID_TYPES;
     public final DeferredRegister<Item> ITEMS;
     public final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TAB;
     public final DeferredRegister<MobEffect> MOB_EFFECTS;
@@ -80,12 +82,14 @@ public class BlatRegister {
     public final DeferredRegister<FoliagePlacerType<?>> FOLIAGE_PLACER_TYPES;
     public final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATOR_TYPES;
     public final DeferredRegister<Biome> BIOMES;
+    public final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE;
     
     public BlatRegister(String modid) {
         this.modid = modid;
         
         BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, modid);
         FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, modid);
+        FLUID_TYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, modid);
         ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, modid);
         CREATIVE_MODE_TAB = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, modid);
         MOB_EFFECTS = DeferredRegister.create(ForgeRegistries.MOB_EFFECTS, modid);
@@ -115,6 +119,7 @@ public class BlatRegister {
         FOLIAGE_PLACER_TYPES = DeferredRegister.create(ForgeRegistries.FOLIAGE_PLACER_TYPES, modid);
         TREE_DECORATOR_TYPES = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, modid);
         BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, modid);
+        TRUNK_PLACER_TYPE = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, modid);
     }
     
     public void register(IEventBus eventBus){
@@ -151,49 +156,55 @@ public class BlatRegister {
         BIOMES.register(eventBus);
     }
     
-    public RegistryObject<Block> block(String id, Supplier<Block> supplier){
+    public RegistryObject<? extends Block> block(String id, Supplier<Block> supplier){
         BlatRegistryEvent<Block> e = new BlatRegistryEvent<>(this, ForgeRegistries.BLOCKS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return BLOCKS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Fluid> fluid(String id, Supplier<Fluid> supplier){
+    public RegistryObject<? extends Fluid> fluid(String id, Supplier<Fluid> supplier){
         BlatRegistryEvent<Fluid> e = new BlatRegistryEvent<>(this, ForgeRegistries.FLUIDS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return FLUIDS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Item> item(String id, Supplier<Item> supplier){
+    public RegistryObject<? extends FluidType> fluid_type(String id, Supplier<FluidType> supplier){
+        BlatRegistryEvent<FluidType> e = new BlatRegistryEvent<>(this, ForgeRegistries.Keys.FLUID_TYPES, new Pair<>(id, supplier));
+        MinecraftForge.EVENT_BUS.post(e);
+        return FLUID_TYPES.register(e.getObject().getA(), e.getObject().getB());
+    }
+    
+    public RegistryObject<? extends Item> item(String id, Supplier<Item> supplier){
         BlatRegistryEvent<Item> e = new BlatRegistryEvent<>(this, ForgeRegistries.ITEMS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return ITEMS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<CreativeModeTab> creative_mode_tab(String id, Supplier<CreativeModeTab> supplier){
+    public RegistryObject<? extends CreativeModeTab> creative_mode_tab(String id, Supplier<CreativeModeTab> supplier){
         BlatRegistryEvent<CreativeModeTab> e = new BlatRegistryEvent<>(this, Registries.CREATIVE_MODE_TAB, new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return CREATIVE_MODE_TAB.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<MobEffect> mob_effect(String id, Supplier<MobEffect> supplier){
+    public RegistryObject<? extends MobEffect> mob_effect(String id, Supplier<MobEffect> supplier){
         BlatRegistryEvent<MobEffect> e = new BlatRegistryEvent<>(this, ForgeRegistries.MOB_EFFECTS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return MOB_EFFECTS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<SoundEvent> sound_event(String id, Supplier<SoundEvent> supplier){
+    public RegistryObject<? extends SoundEvent> sound_event(String id, Supplier<SoundEvent> supplier){
         BlatRegistryEvent<SoundEvent> e = new BlatRegistryEvent<>(this, ForgeRegistries.SOUND_EVENTS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return SOUND_EVENTS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Potion> potion(String id, Supplier<Potion> supplier){
+    public RegistryObject<? extends Potion> potion(String id, Supplier<Potion> supplier){
         BlatRegistryEvent<Potion> e = new BlatRegistryEvent<>(this, ForgeRegistries.POTIONS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return POTIONS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Enchantment> enchantment(String id, Supplier<Enchantment> supplier){
+    public RegistryObject<? extends Enchantment> enchantment(String id, Supplier<Enchantment> supplier){
         BlatRegistryEvent<Enchantment> e = new BlatRegistryEvent<>(this, ForgeRegistries.ENCHANTMENTS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return ENCHANTMENTS.register(e.getObject().getA(), e.getObject().getB());
@@ -223,7 +234,7 @@ public class BlatRegister {
         return (RegistryObject<T>)MENU_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<PaintingVariant> painting_variant(String id, Supplier<PaintingVariant> supplier){
+    public RegistryObject<? extends PaintingVariant> painting_variant(String id, Supplier<PaintingVariant> supplier){
         BlatRegistryEvent<PaintingVariant> e = new BlatRegistryEvent<>(this, ForgeRegistries.PAINTING_VARIANTS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return PAINTING_VARIANTS.register(e.getObject().getA(), e.getObject().getB());
@@ -241,97 +252,103 @@ public class BlatRegister {
         return (RegistryObject<T>)RECIPE_SERIALIZERS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Attribute> attribute(String id, Supplier<Attribute> supplier){
+    public RegistryObject<? extends Attribute> attribute(String id, Supplier<Attribute> supplier){
         BlatRegistryEvent<Attribute> e = new BlatRegistryEvent<>(this, ForgeRegistries.ATTRIBUTES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return ATTRIBUTES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<StatType<?>> stat_type(String id, Supplier<StatType<?>> supplier){
+    public RegistryObject<? extends StatType<?>> stat_type(String id, Supplier<StatType<?>> supplier){
         BlatRegistryEvent<StatType<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.STAT_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return STAT_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<ArgumentTypeInfo<?,?>> command_argument_type(String id, Supplier<ArgumentTypeInfo<?,?>> supplier){
+    public RegistryObject<? extends ArgumentTypeInfo<?,?>> command_argument_type(String id, Supplier<ArgumentTypeInfo<?,?>> supplier){
         BlatRegistryEvent<ArgumentTypeInfo<?,?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.COMMAND_ARGUMENT_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return COMMAND_ARGUMENT_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<VillagerProfession> villager_profession(String id, Supplier<VillagerProfession> supplier){
+    public RegistryObject<? extends VillagerProfession> villager_profession(String id, Supplier<VillagerProfession> supplier){
         BlatRegistryEvent<VillagerProfession> e = new BlatRegistryEvent<>(this, ForgeRegistries.VILLAGER_PROFESSIONS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return VILLAGER_PROFESSIONS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<PoiType> poi_type(String id, Supplier<PoiType> supplier){
+    public RegistryObject<? extends PoiType> poi_type(String id, Supplier<PoiType> supplier){
         BlatRegistryEvent<PoiType> e = new BlatRegistryEvent<>(this, ForgeRegistries.POI_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return POI_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<MemoryModuleType<?>> memory_module_type(String id, Supplier<MemoryModuleType<?>> supplier){
+    public RegistryObject<? extends MemoryModuleType<?>> memory_module_type(String id, Supplier<MemoryModuleType<?>> supplier){
         BlatRegistryEvent<MemoryModuleType<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.MEMORY_MODULE_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return MEMORY_MODULE_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<SensorType<?>> sensor_type(String id, Supplier<SensorType<?>> supplier){
+    public RegistryObject<? extends SensorType<?>> sensor_type(String id, Supplier<SensorType<?>> supplier){
         BlatRegistryEvent<SensorType<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.SENSOR_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return SENSOR_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Schedule> schedule(String id, Supplier<Schedule> supplier){
+    public RegistryObject<? extends Schedule> schedule(String id, Supplier<Schedule> supplier){
         BlatRegistryEvent<Schedule> e = new BlatRegistryEvent<>(this, ForgeRegistries.SCHEDULES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return SCHEDULES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Activity> activitie(String id, Supplier<Activity> supplier){
+    public RegistryObject<? extends Activity> activitie(String id, Supplier<Activity> supplier){
         BlatRegistryEvent<Activity> e = new BlatRegistryEvent<>(this, ForgeRegistries.ACTIVITIES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return ACTIVITIES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<WorldCarver<?>> world_carver(String id, Supplier<WorldCarver<?>> supplier){
+    public RegistryObject<? extends WorldCarver<?>> world_carver(String id, Supplier<WorldCarver<?>> supplier){
         BlatRegistryEvent<WorldCarver<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.WORLD_CARVERS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return WORLD_CARVERS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Feature<?>> feature(String id, Supplier<Feature<?>> supplier){
+    public RegistryObject<? extends Feature<?>> feature(String id, Supplier<Feature<?>> supplier){
         BlatRegistryEvent<Feature<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.FEATURES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return FEATURES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<ChunkStatus> chunk_statu(String id, Supplier<ChunkStatus> supplier){
+    public RegistryObject<? extends ChunkStatus> chunk_statu(String id, Supplier<ChunkStatus> supplier){
         BlatRegistryEvent<ChunkStatus> e = new BlatRegistryEvent<>(this, ForgeRegistries.CHUNK_STATUS.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return CHUNK_STATUS.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<BlockStateProviderType<?>> block_state_provider_type(String id, Supplier<BlockStateProviderType<?>> supplier){
+    public RegistryObject<? extends BlockStateProviderType<?>> block_state_provider_type(String id, Supplier<BlockStateProviderType<?>> supplier){
         BlatRegistryEvent<BlockStateProviderType<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.BLOCK_STATE_PROVIDER_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return BLOCK_STATE_PROVIDER_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<FoliagePlacerType<?>> foliage_placer_type(String id, Supplier<FoliagePlacerType<?>> supplier){
+    public RegistryObject<? extends FoliagePlacerType<?>> foliage_placer_type(String id, Supplier<FoliagePlacerType<?>> supplier){
         BlatRegistryEvent<FoliagePlacerType<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.FOLIAGE_PLACER_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return FOLIAGE_PLACER_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<TreeDecoratorType<?>> tree_decorator_type(String id, Supplier<TreeDecoratorType<?>> supplier){
+    public RegistryObject<? extends TreeDecoratorType<?>> tree_decorator_type(String id, Supplier<TreeDecoratorType<?>> supplier){
         BlatRegistryEvent<TreeDecoratorType<?>> e = new BlatRegistryEvent<>(this, ForgeRegistries.TREE_DECORATOR_TYPES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return TREE_DECORATOR_TYPES.register(e.getObject().getA(), e.getObject().getB());
     }
     
-    public RegistryObject<Biome> biome(String id, Supplier<Biome> supplier){
+    public RegistryObject<? extends TrunkPlacerType<?>> trunk_placer_type(String id, Supplier<TrunkPlacerType<?>> supplier){
+        BlatRegistryEvent<TrunkPlacerType<?>> e = new BlatRegistryEvent<>(this, Registries.TRUNK_PLACER_TYPE, new Pair<>(id, supplier));
+        MinecraftForge.EVENT_BUS.post(e);
+        return TRUNK_PLACER_TYPE.register(e.getObject().getA(), e.getObject().getB());
+    }
+    
+    public RegistryObject<? extends Biome> biome(String id, Supplier<Biome> supplier){
         BlatRegistryEvent<Biome> e = new BlatRegistryEvent<>(this, ForgeRegistries.BIOMES.getRegistryKey(), new Pair<>(id, supplier));
         MinecraftForge.EVENT_BUS.post(e);
         return BIOMES.register(e.getObject().getA(), e.getObject().getB());
@@ -341,15 +358,15 @@ public class BlatRegister {
         return recipe_type(id, ()-> RecipeType.simple(new ResourceLocation(modid, id)));
     }
     
-    public RegistryObject<Block> block(String id){
+    public RegistryObject<? extends Block> block(String id){
         return block(id, ()-> new Block(BlockBehaviour.Properties.of()));
     }
     
-    public RegistryObject<Item> item(String id){
+    public RegistryObject<? extends Item> item(String id){
         return item(id, ()-> new Item(new Item.Properties()));
     }
     
-    public RegistryObject<SoundEvent> sound_event(String name){
+    public RegistryObject<? extends SoundEvent> sound_event(String name){
         return sound_event(name, ()-> SoundEvent.createVariableRangeEvent(new ResourceLocation(modid, name)));
     }
     public  <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory, float width, float height, int trackingRange, EntityType.EntityFactory<T> factory) {

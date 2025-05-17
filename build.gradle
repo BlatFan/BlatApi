@@ -86,6 +86,18 @@ repositories {
     maven { url = "https://modmaven.k-4u.nl"}
     maven { url = "https://cursemaven.com" }
     maven { url = "https://maven.blamejared.com" }
+    maven {
+        url = "https://maven.saps.dev/minecraft"
+        content {
+            includeGroup "dev.latvian.mods"
+        }
+    }
+    maven {
+        url = "https://maven.architectury.dev"
+        content {
+            includeGroup "dev.architectury"
+        }
+    }
 }
 
 dependencies {
@@ -98,6 +110,10 @@ dependencies {
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+${minecraft_version}")
     compileOnly fg.deobf("curse.maven:oculus-581495:5299671")
     compileOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${minecraft_version}-${terrablender_version}")
+
+    implementation fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
+    implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
+    implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
 
     runtimeOnly fg.deobf("curse.maven:jade-324717:5493390")
     runtimeOnly fg.deobf("curse.maven:fusion-connected-textures-854949:5129294")

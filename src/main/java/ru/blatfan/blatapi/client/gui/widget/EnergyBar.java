@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.client.gui;
+package ru.blatfan.blatapi.client.gui.widget;
 
 import java.util.ArrayList;
 import java.util.List;

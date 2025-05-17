@@ -10,6 +10,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -121,5 +122,35 @@ public class PlayerUtil {
       optional = Player.findRespawnPositionAndUseSpawnBlock((ServerLevel) player.level(), respawnPos, 0.0F, true, true);
     }
     return optional;
+  }
+  public static boolean hasFreeSlot(Player player){
+    return getFreeSlot(player)>-1;
+  }
+  public static int getFreeSlot(Player player) {
+    return player.getInventory().getFreeSlot();
+  }
+  public static void addItem(Player player, ItemStack stack){
+    ItemEntity entityItem = new ItemEntity(player.level(), player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
+    entityItem.setUnlimitedLifetime();
+    entityItem.setNoPickUpDelay();
+    player.level().addFreshEntity(entityItem);
+  }
+  public static boolean hasItem(Player player, ItemStack stack){
+    boolean res = false;
+    for (ItemStack itemstack : player.getInventory().items) {
+      res = stack.getCount() <= itemstack.getCount() && itemstack.is(stack.getItem());
+      if(res) break;
+    }
+    return res;
+  }
+  public static void removeItem(Player player, ItemStack stack){
+    for (int i = 0; i < player.getInventory().items.size(); i++) {
+      int remaining = stack.getCount();
+      ItemStack itemstack = player.getInventory().items.get(i);
+      if (itemstack.getItem() == stack.getItem()) {
+        int removed = Math.min(itemstack.getCount(), remaining);
+        itemstack.shrink(removed);
+      }
+    }
   }
 }

@@ -108,15 +108,18 @@ public final class NBTHelper {
 	}
 	
 	public static void validateCompound(ItemStack stack) {
-		if (!stack.hasTag()) {
-			var tag = new CompoundTag();
-
-			stack.setTag(tag);
-		}
+		if (!stack.hasTag())
+			stack.setTag(new CompoundTag());
 	}
 	
 	public static CompoundTag getTagCompound(ItemStack stack) {
 		validateCompound(stack);
 		return stack.getTag();
+	}
+	
+	public static CompoundTag getTagCompound(ItemStack stack, String tag) {
+		validateCompound(stack);
+		if(!stack.getTag().contains(tag)) stack.getTag().put(tag, new CompoundTag());
+		return stack.getTag().getCompound(tag);
 	}
 }
