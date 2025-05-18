@@ -10,7 +10,7 @@
   
   "_comment_2": "Fluffy Fur",
   "_comment_3": "Menu",
-  "mod_description.blatapi": "BlatApi - библиотека от BlatFan. \n Библиотека включает: \n * Fluffy Fur от MaxBogomol. \n * Elysium API(Biome Replacer) от ThatJadenXgamer. \n * Cucumber Library от BlakeBr0.",
+  "mod_description.blatapi": "BlatApi - библиотека от BlatFan. \n Библиотека включает: \n * Fluffy Fur от MaxBogomol. \n * Elysium API(Biome Replacer) от ThatJadenXgamer. \n * Cucumber Library от BlakeBr0. \n * Filters API от ZiYueCommentary.",
   "panorama.minecraft.vanilla": "Ванилла",
   "panorama.blatapi.blat_zone": "BlatZone",
   
@@ -37,6 +37,12 @@
   "gui.blatapi.skin_menu.empty": "Пустой",
   "gui.blatapi.skin_menu.cape.blatfan": "BlatFan",
   "gui.blatapi.skin_menu.effect.emerald": "Emerald",
+  
+  "filters.scroll_up": "Прокрутить вверх",
+  "filters.scroll_down": "Прокрутить вниз",
+  "filters.enable_all": "Вкл все категории",
+  "filters.disable_all": "Выкл все категории",
+  "filters.uncategorized": "Без категории",
   
   "_comment_5": "Key binds",
   "key.category.blatapi.fluffy_fur": "BlatApi - Fluffy Fur",
