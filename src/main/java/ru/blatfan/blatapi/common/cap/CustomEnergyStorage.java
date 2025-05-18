@@ -6,7 +6,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.energy.EnergyStorage;
 
 public class CustomEnergyStorage extends EnergyStorage implements INBTSerializable<Tag> {
-
   public final String tag;
 
   public CustomEnergyStorage(int capacity, int maxTransfer, String tag) {
