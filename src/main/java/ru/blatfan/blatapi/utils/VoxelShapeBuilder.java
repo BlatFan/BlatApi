@@ -5,7 +5,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class VoxelShapeBuilder {
-    private VoxelShape shape;
+    private VoxelShape shape = Shapes.empty();
     
     protected VoxelShapeBuilder(){}
     
