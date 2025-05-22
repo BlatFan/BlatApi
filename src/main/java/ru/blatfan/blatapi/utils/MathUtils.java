@@ -1,7 +1,5 @@
 package ru.blatfan.blatapi.utils;
 
-import java.util.ArrayList;
-
 public class MathUtils {
 
     public static float PI = 3.14159265358979323846f;

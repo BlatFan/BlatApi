@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.util;
+package ru.blatfan.blatapi.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;

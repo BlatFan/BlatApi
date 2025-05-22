@@ -21,7 +21,7 @@ import ru.blatfan.blatapi.utils.packet.PacketRegistry;
 public class BlatApi {
     public static final String MOD_ID = "blatapi";
     public static final String MOD_NAME = "BlatApi";
-    public static final String MOD_VERSION = "0.2.3";
+    public static final String MOD_VERSION = "0.2.4";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatAPI");
     
     

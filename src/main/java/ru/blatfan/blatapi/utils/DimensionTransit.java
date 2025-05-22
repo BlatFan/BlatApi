@@ -15,10 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
 import ru.blatfan.blatapi.common.core.BlockPosDim;
 
-/**
- * 
- * @see com/lothrazar/cyclic/world/
- */
 public class DimensionTransit implements ITeleporter {
 
   protected ServerLevel world;

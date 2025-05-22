@@ -5,15 +5,24 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class VoxelShapeBuilder {
-    private VoxelShape shape = Shapes.empty();
+    protected VoxelShape shape = Shapes.empty();
     
-    protected VoxelShapeBuilder(){}
+    protected VoxelShapeBuilder(){ init();}
+    protected void init(){}
     
     public static VoxelShapeBuilder create(){
         return new VoxelShapeBuilder();
     }
+    public static VoxelShapeBuilder create(VoxelShape shape1){
+        return new VoxelShapeBuilder(){
+            @Override
+            protected void init() {
+                this.shape=shape1;
+            }
+        };
+    }
     
-    private VoxelShapeBuilder action(VoxelShape add, BooleanOp function){
+    protected VoxelShapeBuilder action(VoxelShape add, BooleanOp function){
         shape = Shapes.join(shape, add, function);
         return this;
     }
