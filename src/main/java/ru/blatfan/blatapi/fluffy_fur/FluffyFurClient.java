@@ -16,6 +16,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import ru.blatfan.blatapi.utils.Text;
 
 import java.awt.*;
 
@@ -62,7 +63,7 @@ public class FluffyFurClient {
                 .addModrinthLink("https://modrinth.com/mod/blatapi")
                 .addDiscordLink("https://discord.gg/eHJChH9mqH")
         ;
-        VANILLA_PANORAMA = new FluffyFurPanorama("minecraft:vanilla", Component.translatable("panorama.minecraft.vanilla")).setItem(new ItemStack(Items.GRASS_BLOCK));
+        VANILLA_PANORAMA = new FluffyFurPanorama("minecraft:vanilla", Text.create("panorama.minecraft.vanilla")).setItem(new ItemStack(Items.GRASS_BLOCK));
         
         registerMod(MOD_INSTANCE);
         registerPanorama(VANILLA_PANORAMA);
