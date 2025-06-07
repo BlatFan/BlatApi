@@ -231,7 +231,7 @@ public class EntityUtil {
     for (Entity entity : all) {
       if (entity == null)
         continue;
-      if (entity instanceof Player && ((Player) entity).isCrouching())
+      if (entity instanceof Player && entity.isCrouching())
         continue;
       
       BlockPos p = entity.blockPosition();
@@ -260,15 +260,15 @@ public class EntityUtil {
     entity.setDeltaMovement(motionX, motionY, motionZ);
   }
 
-  public static void addOrMergePotionEffect(LivingEntity player, MobEffectInstance newp) {
-    if (player.hasEffect(newp.getEffect())) {
-      MobEffectInstance p = player.getEffect(newp.getEffect());
+  public static void addOrMergePotionEffect(LivingEntity entity, MobEffectInstance newp) {
+    if (entity.hasEffect(newp.getEffect())) {
+      MobEffectInstance p = entity.getEffect(newp.getEffect());
       int ampMax = Math.max(p.getAmplifier(), newp.getAmplifier());
       int dur = newp.getDuration() + p.getDuration();
-      player.addEffect(new MobEffectInstance(newp.getEffect(), dur, ampMax));
+      entity.addEffect(new MobEffectInstance(newp.getEffect(), dur, ampMax));
     }
     else {
-      player.addEffect(newp);
+      entity.addEffect(newp);
     }
   }
 
@@ -381,29 +381,11 @@ public class EntityUtil {
     entity.setDeltaMovement(x, entity.getDeltaMovement().y, z);
   }
 
-  public static void setCooldownItem(Player player, Item item, int cooldown) {
-    player.getCooldowns().addCooldown(item, cooldown);
-  }
-
   public static Attribute getAttributeJump(Horse ahorse) {
     return Attributes.JUMP_STRENGTH; //was reflection lol
   }
 
   public static void eatingHorse(Horse ahorse) {
     ahorse.eating(); // requires accesstransformer.cfg 
-  }
-  
-  public static void dimensionTeleport(ServerPlayer player, ServerLevel world, BlockPosDim loc) {
-    if (player instanceof FakePlayer) {
-      return;
-    }
-    if (!player.canChangeDimensions()) {
-      return;
-    }
-    if (!world.isClientSide) {
-      DimensionTransit transit = new DimensionTransit(world, loc);
-      transit.teleport(player);
-      player.changeDimension(transit.getTargetLevel(), transit);
-    }
   }
 }

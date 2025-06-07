@@ -17,6 +17,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.FakePlayer;
+import ru.blatfan.blatapi.common.core.BlockPosDim;
 
 public class PlayerUtil {
 
@@ -159,5 +161,22 @@ public class PlayerUtil {
   }
   public static int itemCount(Player player, Item item) {
     return itemCount(player, new ItemStack(item));
+  }
+  
+  public static void setCooldownItem(Player player, Item item, int cooldown) {
+    player.getCooldowns().addCooldown(item, cooldown);
+  }
+  public static void dimensionTeleport(ServerPlayer player, ServerLevel world, BlockPosDim loc) {
+    if (player instanceof FakePlayer) {
+      return;
+    }
+    if (!player.canChangeDimensions()) {
+      return;
+    }
+    if (!world.isClientSide) {
+      DimensionTransit transit = new DimensionTransit(world, loc);
+      transit.teleport(player);
+      player.changeDimension(transit.getTargetLevel(), transit);
+    }
   }
 }
