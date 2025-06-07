@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import ru.blatfan.blatapi.anvilapi.AnvilAPI;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.common.biome_replacer.BiomeRaplacerModule;
-import ru.blatfan.blatapi.common.events.BlatBlockEvents;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 
 @Mod(BlatApi.MOD_ID)
@@ -32,7 +31,6 @@ public class BlatApi {
         new FluffyFur(bus);
         new BiomeRaplacerModule(bus);
         new AnvilAPI(bus);
-        new BlatBlockEvents();
         
         bus.addListener(this::setup);
         ModLoadingContext.get().registerExtensionPoint(IExtensionPoint.DisplayTest.class, () -> new IExtensionPoint.DisplayTest(() -> "ANY", (remote, isServer) -> true));
