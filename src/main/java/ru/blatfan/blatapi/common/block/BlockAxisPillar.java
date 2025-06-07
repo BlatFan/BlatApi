@@ -10,12 +10,11 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 
-public abstract class BlockAxisPillar extends BlatBlock {
-
+public abstract class BlockAxisPillar extends Block {
   public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 
   public BlockAxisPillar(Properties p) {
-    super(p, new BlatBlock.Settings());
+    super(p);
   }
 
   @Override

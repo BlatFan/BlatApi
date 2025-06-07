@@ -15,13 +15,12 @@ import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.common.biome_replacer.BiomeRaplacerModule;
 import ru.blatfan.blatapi.common.events.BlatBlockEvents;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
-import ru.blatfan.blatapi.utils.packet.PacketRegistry;
 
 @Mod(BlatApi.MOD_ID)
 public class BlatApi {
     public static final String MOD_ID = "blatapi";
     public static final String MOD_NAME = "BlatApi";
-    public static final String MOD_VERSION = "0.2.5";
+    public static final String MOD_VERSION = "0.2.6";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatAPI");
     
     
@@ -40,7 +39,6 @@ public class BlatApi {
     }
     
     private void setup(final FMLCommonSetupEvent event) {
-        PacketRegistry.setup();
         InterModComms.getMessages(MOD_ID).forEach(x ->
             LOGGER.info("registration from " + x.senderModId() + " | " + x.messageSupplier().get()));
     }

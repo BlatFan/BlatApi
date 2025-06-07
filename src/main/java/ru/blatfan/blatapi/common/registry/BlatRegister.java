@@ -28,6 +28,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.chunk.ChunkStatus;
@@ -125,6 +126,7 @@ public class BlatRegister {
     public void register(IEventBus eventBus){
         BLOCKS.register(eventBus);
         FLUIDS.register(eventBus);
+        FLUID_TYPES.register(eventBus);
         ITEMS.register(eventBus);
         CREATIVE_MODE_TAB.register(eventBus);
         MOB_EFFECTS.register(eventBus);
@@ -154,6 +156,7 @@ public class BlatRegister {
         FOLIAGE_PLACER_TYPES.register(eventBus);
         TREE_DECORATOR_TYPES.register(eventBus);
         BIOMES.register(eventBus);
+        TRUNK_PLACER_TYPE.register(eventBus);
     }
     
     public RegistryObject<Block> block(String id, Supplier<Block> supplier){
@@ -369,11 +372,15 @@ public class BlatRegister {
     public RegistryObject<SoundEvent> sound_event(String name){
         return sound_event(name, ()-> SoundEvent.createVariableRangeEvent(new ResourceLocation(modid, name)));
     }
-    public  <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory, float width, float height, int trackingRange, EntityType.EntityFactory<T> factory) {
+    public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory, float width, float height, int trackingRange, EntityType.EntityFactory<T> factory) {
         return entity_type(name, ()->EntityType.Builder.of(factory, mobCategory)
             .setTrackingRange(trackingRange)
             .setUpdateInterval(1)
             .sized(width, height)
             .build(modid + ":" + name));
+    }
+    
+    public <T extends BlockEntity> RegistryObject<BlockEntityType<?>> block_entity_type(String id, BlockEntityType.BlockEntitySupplier<T> pFactory, Block... pValidBlocks){
+        return block_entity_type(id, () -> BlockEntityType.Builder.of(pFactory, pValidBlocks).build(null));
     }
 }

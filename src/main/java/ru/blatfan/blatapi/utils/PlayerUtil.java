@@ -136,21 +136,28 @@ public class PlayerUtil {
     player.level().addFreshEntity(entityItem);
   }
   public static boolean hasItem(Player player, ItemStack stack){
-    boolean res = false;
-    for (ItemStack itemstack : player.getInventory().items) {
-      res = stack.getCount() <= itemstack.getCount() && itemstack.is(stack.getItem());
-      if(res) break;
-    }
-    return res;
+    return itemCount(player, stack)>0;
   }
-  public static void removeItem(Player player, ItemStack stack){
+  public static int removeItem(Player player, ItemStack stack){
     for (int i = 0; i < player.getInventory().items.size(); i++) {
       int remaining = stack.getCount();
       ItemStack itemstack = player.getInventory().items.get(i);
       if (itemstack.getItem() == stack.getItem()) {
         int removed = Math.min(itemstack.getCount(), remaining);
         itemstack.shrink(removed);
+        return removed;
       }
     }
+    return 0;
+  }
+  public static int itemCount(Player player, ItemStack stack) {
+    int res = 0;
+    for(ItemStack itemstack : player.getInventory().items)
+      if(ItemHelper.areStacksEqual(itemstack, stack))
+        res+=itemstack.getCount();
+    return res;
+  }
+  public static int itemCount(Player player, Item item) {
+    return itemCount(player, new ItemStack(item));
   }
 }
