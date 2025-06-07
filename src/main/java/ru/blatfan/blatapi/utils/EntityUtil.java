@@ -26,8 +26,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
 import ru.blatfan.blatapi.common.core.Vector3;
-import ru.blatfan.blatapi.utils.packet.PacketRegistry;
-import ru.blatfan.blatapi.utils.packet.packet.PacketPlayerFalldamage;
 
 public class EntityUtil {
 
@@ -394,19 +392,7 @@ public class EntityUtil {
   public static void eatingHorse(Horse ahorse) {
     ahorse.eating(); // requires accesstransformer.cfg 
   }
-
-  public static void tryMakeEntityClimb(Level worldIn, LivingEntity entity, double climbSpeed) {
-    if (entity.isCrouching()) {
-      entity.setDeltaMovement(entity.getDeltaMovement().x, 0.0, entity.getDeltaMovement().z);
-    }
-    else if (entity.zza > 0.0F && entity.getDeltaMovement().y < climbSpeed) {
-      entity.setDeltaMovement(entity.getDeltaMovement().x, climbSpeed, entity.getDeltaMovement().z);
-      entity.fallDistance = 0.0F;
-    } //setting fall distance on clientside wont work
-    if (worldIn.isClientSide && entity.tickCount % TICKS_FALLDIST_SYNC == 0)
-      PacketRegistry.INSTANCE.sendToServer(new PacketPlayerFalldamage());
-  }
-
+  
   public static void dimensionTeleport(ServerPlayer player, ServerLevel world, BlockPosDim loc) {
     if (player instanceof FakePlayer) {
       return;
