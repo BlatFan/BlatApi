@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.common.registry;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;

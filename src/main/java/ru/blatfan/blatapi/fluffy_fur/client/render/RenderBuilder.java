@@ -6,7 +6,7 @@ import com.mojang.math.Axis;
 import ru.blatfan.blatapi.fluffy_fur.client.event.ClientTickHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.render.trail.TrailPoint;
 import ru.blatfan.blatapi.fluffy_fur.client.render.trail.TrailRenderPoint;
-import ru.blatfan.blatapi.fluffy_fur.util.RenderUtil;
+import ru.blatfan.blatapi.utils.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;

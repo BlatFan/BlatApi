@@ -1,9 +1,8 @@
-package ru.blatfan.blatapi.anvilapi.recipe;
+package ru.blatfan.blatapi.common.recipe;
 
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.utils.ItemHelper;
 import lombok.Getter;

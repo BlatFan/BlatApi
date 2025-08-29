@@ -17,7 +17,7 @@ import ru.blatfan.blatapi.client.render.FluidRenderMap;
 
 public class FluidBar {
 
-  public static final ResourceLocation FLUID_WIDGET = BlatApi.loc("textures/gui/fluid.png");
+  public ResourceLocation FLUID_WIDGET = BlatApi.loc("textures/gui/fluid.png");
   public String emtpyTooltip = "0";
   @Getter
   private Font font;
@@ -59,9 +59,8 @@ public class FluidBar {
     float amount = fluid.getAmount();
     float scale = amount / capacity;
     int fluidAmount = (int) (scale * height);
-    TextureAtlasSprite sprite = FluidRenderMap.getFluidTexture(fluid, FluidRenderMap.FluidFlow.STILL);
+    TextureAtlasSprite sprite = FluidRenderMap.getCachedFluidTexture(fluid, FluidRenderMap.FluidFlow.STILL);
     if (fluid.getFluid() == Fluids.WATER) {
-      //hack in the blue because water is grey and is filled in by the biome when in-world
       RenderSystem.setShaderColor(0, 0, 1, 1);
     }
     int xPosition = x + 1;
@@ -69,12 +68,9 @@ public class FluidBar {
     int maximum = height - 2;
     int desiredWidth = width - 2;
     int desiredHeight = fluidAmount - 2;
-    // the .getBlitOffset() no longer exists.
-    //good news we can drop vertexbuilder sprites and use gg blit this way
-    // RenderUtils.drawTiledSprite(gg, xPosition,yPosition,yOffset, width - 2, fluidAmount - 2, sprite);
     gg.blit(xPosition, yPosition + (maximum - desiredHeight), 0, desiredWidth, desiredHeight, sprite);
     if (fluid.getFluid() == Fluids.WATER) {
-      RenderSystem.setShaderColor(1, 1, 1, 1); //un-apply the water filter
+      RenderSystem.setShaderColor(1, 1, 1, 1);
     }
   }
 

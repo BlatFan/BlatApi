@@ -1,7 +1,5 @@
 package ru.blatfan.blatapi.mixins.common;
 
-import net.minecraft.world.item.crafting.RecipeType;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
 import ru.blatfan.blatapi.common.BARegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.SimpleContainer;

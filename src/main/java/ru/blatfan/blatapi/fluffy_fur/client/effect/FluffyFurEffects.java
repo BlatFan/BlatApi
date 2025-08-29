@@ -17,7 +17,7 @@ import ru.blatfan.blatapi.fluffy_fur.client.shader.postprocess.GlowPostProcessIn
 import ru.blatfan.blatapi.fluffy_fur.common.easing.Easing;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurParticles;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
-import ru.blatfan.blatapi.fluffy_fur.util.RenderUtil;
+import ru.blatfan.blatapi.utils.RenderUtil;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LightningBolt;

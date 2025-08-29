@@ -1,7 +1,7 @@
 package ru.blatfan.blatapi.fluffy_fur.client.particle;
 
 import ru.blatfan.blatapi.fluffy_fur.client.particle.options.FluidParticleOptions;
-import ru.blatfan.blatapi.fluffy_fur.util.RenderUtil;
+import ru.blatfan.blatapi.utils.RenderUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.material.Fluids;

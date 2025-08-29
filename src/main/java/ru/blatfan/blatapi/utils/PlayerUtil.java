@@ -2,6 +2,9 @@ package ru.blatfan.blatapi.utils;
 
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -14,6 +17,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
@@ -85,10 +89,11 @@ public class PlayerUtil {
     ItemStack stack;
     for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
       stack = player.getInventory().getItem(i);
-      if (!stack.isEmpty() &&
-          stack.getItem() != null &&
-          Block.byItem(stack.getItem()) == targetState.getBlock()) {
-        return i;
+      if (!stack.isEmpty()) {
+          stack.getItem();
+          if (Block.byItem(stack.getItem()) == targetState.getBlock()) {
+              return i;
+          }
       }
     }
     return ret;
@@ -96,17 +101,17 @@ public class PlayerUtil {
 
   public static BlockState getBlockstateFromSlot(Player player, int slot) {
     ItemStack stack = player.getInventory().getItem(slot);
-    if (!stack.isEmpty() &&
-        stack.getItem() != null &&
-        Block.byItem(stack.getItem()) != null) {
-      Block b = Block.byItem(stack.getItem());
-      return b.defaultBlockState();
+    if (!stack.isEmpty()) {
+        stack.getItem();
+        Block.byItem(stack.getItem());
+        Block b = Block.byItem(stack.getItem());
+        return b.defaultBlockState();
     }
     return null;
   }
 
   public static void decrStackSize(Player player, int slot) {
-    if (player.isCreative() == false && slot >= 0) {
+    if (!player.isCreative() && slot >= 0) {
       player.getInventory().removeItem(slot, 1);
     }
   }
@@ -132,37 +137,110 @@ public class PlayerUtil {
     return player.getInventory().getFreeSlot();
   }
   public static void addItem(Player player, ItemStack stack){
-    ItemEntity entityItem = new ItemEntity(player.level(), player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
-    entityItem.setUnlimitedLifetime();
-    entityItem.setNoPickUpDelay();
-    player.level().addFreshEntity(entityItem);
+    if (!player.getInventory().add(stack)) {
+      Level level = player.level();
+      ItemEntity entityItem = new ItemEntity(level, player.getX(), player.getY() + 0.5, player.getZ(), stack);
+      entityItem.setPickUpDelay(0);
+      level.addFreshEntity(entityItem);
+    }
   }
   public static boolean hasItem(Player player, ItemStack stack){
     return itemCount(player, stack)>0;
   }
-  public static int removeItem(Player player, ItemStack stack){
-    for (int i = 0; i < player.getInventory().items.size(); i++) {
-      int remaining = stack.getCount();
-      ItemStack itemstack = player.getInventory().items.get(i);
-      if (itemstack.getItem() == stack.getItem()) {
-        int removed = Math.min(itemstack.getCount(), remaining);
-        itemstack.shrink(removed);
-        return removed;
+  public static int removeItem(Player player, ItemStack stack, int count){
+    int remaining = count;
+    
+    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+      ItemStack slotStack = player.getInventory().getItem(i);
+      
+      if (ItemHelper.areStacksEqual(slotStack, stack)) {
+        int toRemove = Math.min(slotStack.getCount(), remaining);
+        slotStack.shrink(toRemove);
+        remaining -= toRemove;
+        
+        if (remaining <= 0)
+          break;
       }
     }
-    return 0;
+    
+    return count - remaining;
+  }
+  public static int removeItem(Player player, ItemStack stack) {
+    return removeItem(player, stack, 1);
   }
   public static int itemCount(Player player, ItemStack stack) {
-    int res = 0;
-    for(ItemStack itemstack : player.getInventory().items)
-      if(ItemHelper.areStacksEqual(itemstack, stack))
-        res+=itemstack.getCount();
-    return res;
+    int count = 0;
+    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+      ItemStack slotStack = player.getInventory().getItem(i);
+      if (ItemHelper.areStacksEqual(slotStack, stack))
+        count += slotStack.getCount();
+    }
+    return count;
   }
   public static int itemCount(Player player, Item item) {
-    return itemCount(player, new ItemStack(item));
+    int count = 0;
+    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+      ItemStack slotStack = player.getInventory().getItem(i);
+      if (slotStack.is(item))
+        count += slotStack.getCount();
+    }
+    return count;
   }
-  
+  public static boolean hasEnoughItems(Player player, ItemStack stack, int requiredCount) {
+    return itemCount(player, stack) >= requiredCount;
+  }
+  public static NonNullList<ItemStack> copyInventory(Player player) {
+    NonNullList<ItemStack> copy = NonNullList.withSize(player.getInventory().getContainerSize(), ItemStack.EMPTY);
+    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+      ItemStack stack = player.getInventory().getItem(i);
+      copy.set(i, stack.copy());
+    }
+    return copy;
+  }
+  public static int clearItem(Player player, ItemStack stack) {
+    int removed = 0;
+    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+      ItemStack slotStack = player.getInventory().getItem(i);
+      if (ItemHelper.areStacksEqual(slotStack, stack)) {
+        removed += slotStack.getCount();
+        player.getInventory().setItem(i, ItemStack.EMPTY);
+      }
+    }
+    return removed;
+  }
+  public static CompoundTag serializeInventory(Player player) {
+    CompoundTag nbt = new CompoundTag();
+    ListTag inventoryList = new ListTag();
+    
+    for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+      ItemStack stack = player.getInventory().getItem(i);
+      
+      if (!stack.isEmpty()) {
+        CompoundTag itemTag = new CompoundTag();
+        itemTag.putByte("Slot", (byte) i);
+        stack.save(itemTag);
+        inventoryList.add(itemTag);
+      }
+    }
+    
+    nbt.put("Inventory", inventoryList);
+    return nbt;
+  }
+  public static void deserializeInventory(Player player, CompoundTag nbt) {
+    if (nbt.contains("Inventory", 9)) {
+      ListTag inventoryList = nbt.getList("Inventory", 10);
+      
+      for (int i = 0; i < inventoryList.size(); i++) {
+        CompoundTag itemTag = inventoryList.getCompound(i);
+        int slot = itemTag.getByte("Slot") & 255;
+        
+        if (slot >= 0 && slot < player.getInventory().getContainerSize()) {
+          ItemStack stack = ItemStack.of(itemTag);
+          player.getInventory().setItem(slot, stack);
+        }
+      }
+    }
+  }
   public static void setCooldownItem(Player player, Item item, int cooldown) {
     player.getCooldowns().addCooldown(item, cooldown);
   }

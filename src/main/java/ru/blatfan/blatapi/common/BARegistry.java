@@ -5,10 +5,10 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRepairRecipe;
-import ru.blatfan.blatapi.anvilapi.recipe.AnvilRecipe;
-import ru.blatfan.blatapi.anvilapi.recipe.AnvilRepairRecipe;
+import ru.blatfan.blatapi.common.recipe.IAnvilRecipe;
+import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
+import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
+import ru.blatfan.blatapi.common.recipe.AnvilRepairRecipe;
 import ru.blatfan.blatapi.common.registry.BlatRegister;
 
 public class BARegistry {

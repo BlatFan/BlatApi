@@ -1,8 +1,6 @@
 package ru.blatfan.blatapi.utils;
 
-import net.minecraft.util.FastColor;
 import org.joml.Vector3f;
-
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -18,19 +16,19 @@ public class ColorHelper {
     }
 
     public static int getColor(Color color) {
-        return FastColor.ARGB32.color(color.getAlpha(), color.getRed(), color.getGreen(), color.getBlue());
+        return color.getRGB();
     }
 
     public static int getColor(int r, int g, int b) {
-        return FastColor.ARGB32.color(255, r, g, b);
+        return getColor(new Color(r,g,b));
     }
 
     public static int getColor(int r, int g, int b, int a) {
-        return FastColor.ARGB32.color(a, r, g, b);
+        return getColor(new Color(r,g,b,a));
     }
 
     public static int getColor(float r, float g, float b, float a) {
-        return FastColor.ARGB32.color((int) (a * 255f), (int) (r * 255f), (int) (g * 255f), (int) (b * 255f));
+        return getColor(new Color(r,g,b,a));
     }
     
     public static Color rainbowColor(float ticks) {

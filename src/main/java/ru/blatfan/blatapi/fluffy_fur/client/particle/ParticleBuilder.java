@@ -3,7 +3,7 @@ package ru.blatfan.blatapi.fluffy_fur.client.particle;
 import ru.blatfan.blatapi.fluffy_fur.client.particle.behavior.ParticleBehavior;
 import ru.blatfan.blatapi.fluffy_fur.client.particle.data.*;
 import ru.blatfan.blatapi.fluffy_fur.client.particle.options.GenericParticleOptions;
-import ru.blatfan.blatapi.fluffy_fur.util.RenderUtil;
+import ru.blatfan.blatapi.utils.RenderUtil;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleRenderType;

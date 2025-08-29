@@ -1,9 +1,9 @@
-package ru.blatfan.blatapi.jei.category;
+package ru.blatfan.blatapi.compat.jei.category;
 
 import net.minecraft.client.gui.Font;
 import net.minecraft.world.entity.player.Player;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
+import ru.blatfan.blatapi.common.recipe.IAnvilRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;

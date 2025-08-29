@@ -1,6 +1,7 @@
 package ru.blatfan.blatapi.utils;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import net.minecraft.core.NonNullList;
@@ -42,8 +43,11 @@ public class RecipeUtil {
         }
     }
     
-    public static NonNullList<Ingredient> getIngFromJson(JsonObject jsonObject){
-        JsonArray jIngs = GsonHelper.getAsJsonArray(jsonObject, "ingredients");
+    public static NonNullList<Ingredient> getIngFromJson(JsonObject json){
+        return getIngFromJson(json.get("ingredients"));
+    }
+    public static NonNullList<Ingredient> getIngFromJson(JsonElement ingObject){
+        JsonArray jIngs = ingObject.getAsJsonArray();
         NonNullList<Ingredient> ings = NonNullList.withSize(jIngs.size(), Ingredient.of(Items.AIR));
         for(int i=0; i<ings.size(); i++)
             ings.set(i, Ingredient.fromJson(jIngs.get(i)));

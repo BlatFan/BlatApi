@@ -14,7 +14,7 @@ import java.util.List;
 public class Text implements Component {
     private final MutableComponent component;
     
-    protected Text(MutableComponent component) {
+    private Text(MutableComponent component) {
         this.component = component;
     }
     
@@ -29,6 +29,15 @@ public class Text implements Component {
     public Text add(String c){
         component.append(Component.translatable(c));
         return this;
+    }
+    
+    public Text add(Component c){
+        component.append(c);
+        return this;
+    }
+    
+    public Text space(){
+        return add(" ");
     }
     
     @OnlyIn(Dist.CLIENT)

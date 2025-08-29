@@ -1,7 +1,7 @@
 package ru.blatfan.blatapi.fluffy_fur.common.network;
 
+import ru.blatfan.blatapi.common.player_stages.PlayerStagesSync;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
-import ru.blatfan.blatapi.fluffy_fur.common.network.block.PlushHeartsPacket;
 import ru.blatfan.blatapi.fluffy_fur.common.network.item.TestStickPacket;
 import ru.blatfan.blatapi.fluffy_fur.common.network.playerskin.*;
 import net.minecraft.core.BlockPos;
@@ -24,9 +24,9 @@ public class FluffyFurPacketHandler extends PacketHandler {
         PlayerSkinSetCapePacket.register(HANDLER, id++);
         PlayerSkinChangeEffectPacket.register(HANDLER, id++);
         PlayerSkinChangePacket.register(HANDLER, id++);
-        PlushHeartsPacket.register(HANDLER, id++);
         BloodPacket.register(HANDLER, id++);
         TestStickPacket.register(HANDLER, id++);
+        PlayerStagesSync.register(HANDLER, id++);
     }
 
     public static SimpleChannel getHandler() {

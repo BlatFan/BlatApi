@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.fluffy_fur.util;
+package ru.blatfan.blatapi.utils;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -33,7 +33,6 @@ import net.minecraftforge.fluids.FluidType;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import ru.blatfan.blatapi.utils.ColorHelper;
 
 import java.awt.*;
 import java.util.Optional;

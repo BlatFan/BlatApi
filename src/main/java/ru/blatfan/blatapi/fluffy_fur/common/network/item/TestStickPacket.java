@@ -15,7 +15,7 @@ import ru.blatfan.blatapi.fluffy_fur.common.network.TwoPositionClientPacket;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurParticles;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
 import ru.blatfan.blatapi.fluffy_fur.registry.common.item.FluffyFurItems;
-import ru.blatfan.blatapi.fluffy_fur.util.RenderUtil;
+import ru.blatfan.blatapi.utils.RenderUtil;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;

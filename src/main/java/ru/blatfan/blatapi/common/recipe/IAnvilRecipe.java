@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.anvilapi.api.recipe;
+package ru.blatfan.blatapi.common.recipe;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

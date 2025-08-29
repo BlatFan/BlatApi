@@ -4,7 +4,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
 public class MobUtil {
-
   public static void removeAttackTargets(LivingEntity attacker) {
     attacker.setLastHurtByMob(null);
     attacker.setLastHurtMob(null);

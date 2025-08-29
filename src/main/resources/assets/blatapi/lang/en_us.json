@@ -1,4 +1,17 @@
 {
+  "_comment_0": "Commands",
+  "commands.blatapi.player_stages.get": "%s has stage %s: %s",
+  "commands.blatapi.player_stages.set": "Set stage %s to %s for %s",
+  "commands.blatapi.player_stages.list_header": "Stages for %s (%d):",
+  "commands.blatapi.player_stages.no_stages": "%s has no stages",
+  "commands.blatapi.player_stages.available_stages": "Available stages:",
+  "argument.blatapi.player_stages.invalid_stage": "Stage '%s' is not valid",
+  "command.blatapi.player_stages.description": "Manage player progression stages",
+  "command.blatapi.player_stages.get.description": "Get the value of a stage for a player",
+  "command.blatapi.player_stages.set.description": "Set a stage value for a player",
+  "command.blatapi.player_stages.all.description": "List all stages of a player",
+  "command.blatapi.player_stages.list.description": "List all available stages in the system",
+  
   "_comment_1": "AnvilApi",
   "tooltip.blatapi.shapeless": "Shapeless",
   "tooltip.blatapi.returns": "Returns",
@@ -10,7 +23,7 @@
   
   "_comment_2": "Fluffy Fur",
   "_comment_3": "Menu",
-  "mod_description.blatapi": "BlatApi - a mod library by BlatFan. \n Library includes: \n * Fluffy Fur by MaxBogomol. \n * Elysium API(Biome Replacer) by ThatJadenXgamer. \n * Cucumber Library by BlakeBr0. \n * Filters API by ZiYueCommentary.",
+  "mod_description.blatapi": "BlatApi - a mod library by BlatFan. \n Library includes: \n * Fluffy Fur by MaxBogomol. \n * Elysium API(Biome Replacer) by ThatJadenXgamer. \n * Cucumber Library by BlakeBr0.",
   
   "panorama.minecraft.vanilla": "Vanilla",
   "panorama.blatapi.blat_zone": "BlatZone",

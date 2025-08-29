@@ -7,21 +7,28 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import ru.blatfan.blatapi.BlatApi;
 
 public class EnergyBar {
-  public static final ResourceLocation ENERGY_BAR = BlatApi.loc("textures/gui/energy_bar.png");
+  public ResourceLocation ENERGY_BAR = BlatApi.loc("textures/gui/energy_bar.png");
+  @Getter @Setter
   private int x = 154;
+  @Getter @Setter
   private int y = 8;
-  public int capacity;
+  private final int capacity;
+  @Getter @Setter
   private int width = 16;
   @Getter @Setter
   private int height = 62;
-  public int guiLeft;
-  public int guiTop;
-  public boolean visible = true;
+  @Getter @Setter
+  private int guiLeft;
+  @Getter @Setter
+  private int guiTop;
+  @Getter @Setter
+  private boolean visible = true;
   private final Font font;
 
   public EnergyBar(Font font, int cap) {
@@ -35,9 +42,8 @@ public class EnergyBar {
   }
 
   public void draw(GuiGraphics gg, float energ) {
-    if (!visible) {
+    if (!visible)
       return;
-    }
     int relX = guiLeft + x;
     int relY = guiTop + y;
     gg.blit(ENERGY_BAR, relX, relY, 16, 0, width, getHeight(), 32, getHeight());

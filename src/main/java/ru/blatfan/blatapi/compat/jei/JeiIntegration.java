@@ -1,11 +1,9 @@
-package ru.blatfan.blatapi.jei;
+package ru.blatfan.blatapi.compat.jei;
 
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeType;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRecipe;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRepairRecipe;
-import ru.blatfan.blatapi.jei.category.AnvilRecipeCategory;
+import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
+import ru.blatfan.blatapi.compat.jei.category.AnvilRecipeCategory;
 import ru.blatfan.blatapi.mixins.common.AccessorJEIRecipeManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;

@@ -3,105 +3,142 @@ package ru.blatfan.blatapi.utils;
 import com.google.common.base.Stopwatch;
 import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import lombok.Getter;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.blatfan.blatapi.BlatApi;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
+@Mod.EventBusSubscriber(modid = BlatApi.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class RecipeHelper {
+    private static final Logger LOGGER = LogManager.getLogger("BA | Recipe Helper");
     private static RecipeManager MANAGER;
-    @Getter
-    private static Collection<Recipe<?>> recipes = new ArrayList<>();
-
+    private static final Collection<Recipe<?>> recipes = Collections.newSetFromMap(new ConcurrentHashMap<>());
+    private static boolean initialized = false;
+    
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onAddReloadListeners(AddReloadListenerEvent event) {
+    public static void onAddReloadListeners(AddReloadListenerEvent event) {
         MANAGER = event.getServerResources().getRecipeManager();
+        initialized = true;
+        LOGGER.info("RecipeManager initialized with {} recipes", MANAGER.getRecipes().size());
     }
-
+    
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onRecipesUpdated(RecipesUpdatedEvent event) {
+    public static void onRecipesUpdated(RecipesUpdatedEvent event) {
         MANAGER = event.getRecipeManager();
+        initialized = true;
+        LOGGER.info("Recipes updated, now contains {} recipes", MANAGER.getRecipes().size());
     }
-
+    
     public static RecipeManager getRecipeManager() {
-        for(Recipe<?> recipe : MANAGER.getRecipes()){
-            if(!recipes.contains(recipe))
-                addRecipe(recipe);
+        if (!initialized || MANAGER == null) {
+            LOGGER.warn("RecipeManager accessed before initialization, returning empty manager");
+            return createFallbackManager();
         }
-        MANAGER.replaceRecipes(recipes);
-
         return MANAGER;
     }
     
-    public static <T extends RecipeType<?>> List<Recipe<?>> getRecipes(T type) {
-        List<Recipe<?>> list = new ArrayList<>();
-        for(Recipe<?> recipe : recipes)
-            if(recipe.getType()==type)
-                list.add(recipe);
-        return list;
+    private static RecipeManager createFallbackManager() {
+        return new RecipeManager();
     }
-
+    
+    public static <C extends Container, T extends Recipe<C>> List<T> getRecipes(RecipeType<T> type) {
+        if (!initialized || MANAGER == null) {
+            LOGGER.warn("RecipeManager not initialized, returning empty list");
+            return Collections.emptyList();
+        }
+        return List.copyOf(MANAGER.getAllRecipesFor(type));
+    }
+    
     public static void addRecipe(Recipe<?> recipe) {
-        recipes.add(recipe);
+        if (recipe != null) {
+            recipes.add(recipe);
+            LOGGER.debug("Added custom recipe: {}", recipe.getId());
+        }
     }
+    
     public static void remRecipe(Recipe<?> recipe) {
-        recipes.remove(recipe);
+        if (recipe != null) {
+            recipes.remove(recipe);
+            LOGGER.debug("Removed custom recipe: {}", recipe.getId());
+        }
     }
+    
     public static void remRecipe(ResourceLocation id) {
-        for(Recipe<?> recipe : recipes)
-            if(recipe.getId()==id)
-                remRecipe(recipe);
+        if (id != null) {
+            recipes.removeIf(recipe -> id.equals(recipe.getId()));
+            LOGGER.debug("Removed custom recipe by ID: {}", id);
+        }
     }
     
     public static void fireRecipeManagerLoadedEvent(Map<RecipeType<?>, Object> map, ImmutableMap.Builder<ResourceLocation, Recipe<?>> builder) {
-        var stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        int count = 0;
         
-        for (var recipe : recipes) {
-            var recipeType = recipe.getType();
-            var recipeId = recipe.getId();
-            var recipeMap = map.get(recipeType);
-            
-            // Mohist (and I think another custom server) change it to this because annoying hacky hybrid server reasons
-            if (recipeMap instanceof Object2ObjectLinkedOpenHashMap<?, ?>) {
-                var o2oRecipeMap = (Object2ObjectLinkedOpenHashMap<Object, Object>) recipeMap;
-                o2oRecipeMap.put(recipeId, recipe);
-            } else if (recipeMap instanceof ImmutableMap.Builder<?, ?>) {
-                var recipeMapBuilder = (ImmutableMap.Builder<Object, Object>) recipeMap;
-                recipeMapBuilder.put(recipeId, recipe);
-            } else if (recipeMap == null) {
-                var recipeMapBuilder = ImmutableMap.builder();
-                recipeMapBuilder.put(recipeId, recipe);
-                map.put(recipeType, recipeMapBuilder);
-            } else {
-                BlatApi.LOGGER.error("Failed to register recipe {} to map of type {}", recipeId, recipeMap.getClass());
+        for (Recipe<?> recipe : recipes) {
+            try {
+                RecipeType<?> recipeType = recipe.getType();
+                ResourceLocation recipeId = recipe.getId();
+                
+                Object recipeMap = map.get(recipeType);
+                if (recipeMap instanceof Object2ObjectLinkedOpenHashMap) {
+                    ((Object2ObjectLinkedOpenHashMap<ResourceLocation, Recipe<?>>) recipeMap).put(recipeId, recipe);
+                    count++;
+                } else if (recipeMap instanceof ImmutableMap.Builder) {
+                    ((ImmutableMap.Builder<ResourceLocation, Recipe<?>>) recipeMap).put(recipeId, recipe);
+                    count++;
+                } else if (recipeMap == null) {
+                    Object2ObjectLinkedOpenHashMap<ResourceLocation, Recipe<?>> newMap = new Object2ObjectLinkedOpenHashMap<>();
+                    newMap.put(recipeId, recipe);
+                    map.put(recipeType, newMap);
+                    count++;
+                } else {
+                    LOGGER.error("Failed to register recipe {} to map of type {}", recipeId, recipeMap.getClass());
+                }
+                
+                builder.put(recipeId, recipe);
+            } catch (Exception e) {
+                LOGGER.error("Error registering custom recipe {}: {}", recipe.getId(), e.getMessage());
             }
-            
-            builder.put(recipeId, recipe);
         }
         
-        BlatApi.LOGGER.info("Registered {} recipes in {} ms", recipes.size(), stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+        LOGGER.info("Registered {} custom recipes in {} ms", count, stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
     }
     
     public static void fireRecipeManagerLoadedEventKubeJSEdition(Map<ResourceLocation, Recipe<?>> recipesByName) {
-        var stopwatch = Stopwatch.createStarted();
+        Stopwatch stopwatch = Stopwatch.createStarted();
+        int count = 0;
         
-        for (var recipe : recipes) {
-            recipesByName.put(recipe.getId(), recipe);
+        for (Recipe<?> recipe : recipes) {
+            try {
+                recipesByName.put(recipe.getId(), recipe);
+                count++;
+            } catch (Exception e) {
+                LOGGER.error("Error registering custom recipe {} in KubeJS mode: {}", recipe.getId(), e.getMessage());
+            }
         }
         
-        BlatApi.LOGGER.info("Registered {} recipes in {} ms (KubeJS mode)", recipes.size(), stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+        LOGGER.info("Registered {} custom recipes in {} ms (KubeJS mode)", count, stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+    }
+    
+    public static Collection<Recipe<?>> getCustomRecipes() {
+        return Collections.unmodifiableCollection(recipes);
+    }
+    
+    public static void clearCustomRecipes() {
+        recipes.clear();
+        LOGGER.info("Cleared all custom recipes");
     }
 }

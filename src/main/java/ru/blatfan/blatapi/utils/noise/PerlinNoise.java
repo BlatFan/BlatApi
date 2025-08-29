@@ -4,8 +4,6 @@ package ru.blatfan.blatapi.utils.noise;
 import java.util.Random;
 
 public class PerlinNoise {
-
-
     private double seed;
     private long default_size;
     private int[] p;

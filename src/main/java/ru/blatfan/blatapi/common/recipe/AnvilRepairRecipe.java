@@ -1,8 +1,7 @@
-package ru.blatfan.blatapi.anvilapi.recipe;
+package ru.blatfan.blatapi.common.recipe;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import ru.blatfan.blatapi.anvilapi.api.recipe.IAnvilRepairRecipe;
 import lombok.Getter;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRewards;

@@ -4,60 +4,108 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 
-@SuppressWarnings("serial")
-public class FluidRenderMap<V> extends Object2ObjectOpenCustomHashMap<FluidStack, V> {
+import javax.annotation.Nullable;
+import java.util.Objects;
 
+public class FluidRenderMap<V> extends Object2ObjectOpenCustomHashMap<FluidStack, V> {
+  
   public enum FluidFlow {
     STILL, FLOWING
   }
-
+  
   public FluidRenderMap() {
     super(FluidHashStrategy.INSTANCE);
   }
-
+  
+  @Nullable
   public static TextureAtlasSprite getFluidTexture(FluidStack fluidStack, FluidFlow type) {
+    if (fluidStack == null || fluidStack.isEmpty()) {
+      return getMissingTexture();
+    }
+    
     Fluid fluid = fluidStack.getFluid();
-    ResourceLocation spriteLocation;
     IClientFluidTypeExtensions fluidAttributes = IClientFluidTypeExtensions.of(fluid);
-    if (type == FluidFlow.STILL) {
-      spriteLocation = fluidAttributes.getStillTexture(fluidStack);
+    
+    if (fluidAttributes == null) {
+      return getMissingTexture();
     }
-    else {
-      spriteLocation = fluidAttributes.getFlowingTexture(fluidStack);
+    
+    ResourceLocation spriteLocation;
+    try {
+      if (type == FluidFlow.STILL) {
+        spriteLocation = fluidAttributes.getStillTexture(fluidStack);
+      } else {
+        spriteLocation = fluidAttributes.getFlowingTexture(fluidStack);
+      }
+      
+      if (spriteLocation == null) {
+        return getMissingTexture();
+      }
+      
+      return getSprite(spriteLocation);
+    } catch (Exception e) {
+      Minecraft.getInstance().getProfiler().popPush("fluidTextureError");
+      return getMissingTexture();
     }
-    return getSprite(spriteLocation);
   }
-
+  
   public static TextureAtlasSprite getSprite(ResourceLocation spriteLocation) {
-    return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(spriteLocation);
+    try {
+      return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(spriteLocation);
+    } catch (Exception e) {
+      return getMissingTexture();
+    }
   }
-
+  
+  public static TextureAtlasSprite getMissingTexture() {
+    try {
+      return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+          .apply(new ResourceLocation("minecraft:missingno"));
+    } catch (Exception e) {
+      return null;
+    }
+  }
+  
   public static class FluidHashStrategy implements Hash.Strategy<FluidStack> {
-
-    public static FluidHashStrategy INSTANCE = new FluidHashStrategy();
-
+    
+    public static final FluidHashStrategy INSTANCE = new FluidHashStrategy();
+    
     @Override
     public int hashCode(FluidStack stack) {
       if (stack == null || stack.isEmpty()) {
         return 0;
       }
-      int code = 1;
-      code = 31 * code + stack.getFluid().hashCode();
+      
+      int code = stack.getFluid().hashCode();
       if (stack.hasTag()) {
         code = 31 * code + stack.getTag().hashCode();
       }
       return code;
     }
-
+    
     @Override
     public boolean equals(FluidStack a, FluidStack b) {
-      return a == null ? b == null : b != null && a.isFluidEqual(b);
+      if (a == b) return true;
+      if (a == null || b == null) return false;
+      return a.isFluidEqual(b);
     }
+  }
+  
+  public static TextureAtlasSprite getCachedFluidTexture(FluidStack fluidStack, FluidFlow type) {
+    TextureCache.FluidTextureKey key = TextureCache.createKey(fluidStack, type);
+    TextureAtlasSprite cached = TextureCache.get(key);
+    if (cached != null)
+      return cached;
+    TextureAtlasSprite texture = getFluidTexture(fluidStack, type);
+    if (texture != null)
+      TextureCache.put(key, texture);
+    return texture;
   }
 }

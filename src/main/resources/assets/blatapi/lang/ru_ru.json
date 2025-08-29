@@ -1,4 +1,17 @@
 {
+  "_comment_0": "Commands",
+  "commands.blatapi.player_stages.get": "%s имеет стадию %s: %s",
+  "commands.blatapi.player_stages.set": "Стадия %s установлена в %s для %s",
+  "commands.blatapi.player_stages.list_header": "Стадии для %s (%d):",
+  "commands.blatapi.player_stages.no_stages": "%s не имеет стадий",
+  "commands.blatapi.player_stages.available_stages": "Доступные стадии:",
+  "argument.blatapi.player_stages.invalid_stage": "Стадия '%s' недействительна",
+  "command.blatapi.player_stages.description": "Управление стадиями прогрессии игрока",
+  "command.blatapi.player_stages.get.description": "Получить значение стадии для игрока",
+  "command.blatapi.player_stages.set.description": "Установить значение стадии для игрока",
+  "command.blatapi.player_stages.all.description": "Показать все стадии игрока",
+  "command.blatapi.player_stages.list.description": "Показать все доступные стадии в системе",
+  
   "_comment_1": "AnvilApi",
   "tooltip.blatapi.shapeless": "Бесформенный",
   "tooltip.blatapi.returns": "Выход",
@@ -10,7 +23,7 @@
   
   "_comment_2": "Fluffy Fur",
   "_comment_3": "Menu",
-  "mod_description.blatapi": "BlatApi - библиотека от BlatFan. \n Библиотека включает: \n * Fluffy Fur от MaxBogomol. \n * Elysium API(Biome Replacer) от ThatJadenXgamer. \n * Cucumber Library от BlakeBr0. \n * Filters API от ZiYueCommentary.",
+  "mod_description.blatapi": "BlatApi - библиотека от BlatFan. \n Библиотека включает: \n * Fluffy Fur от MaxBogomol. \n * Elysium API(Biome Replacer) от ThatJadenXgamer. \n * Cucumber Library от BlakeBr0.",
   "panorama.minecraft.vanilla": "Ванилла",
   "panorama.blatapi.blat_zone": "BlatZone",
   
