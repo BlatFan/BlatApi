@@ -83,34 +83,37 @@ public final class RecipeHelper {
         }
     }
     
-    public static void fireRecipeManagerLoadedEvent(Map<RecipeType<?>, Object> map, ImmutableMap.Builder<ResourceLocation, Recipe<?>> builder) {
+    public static void fireRecipeManagerLoadedEvent(Map<RecipeType<?>, ImmutableMap.Builder<ResourceLocation, Recipe<?>>> map, ImmutableMap.Builder<ResourceLocation, Recipe<?>> builder) {
         Stopwatch stopwatch = Stopwatch.createStarted();
         int count = 0;
+        
+        LOGGER.info("Starting recipe registration for {} custom recipes", recipes.size());
         
         for (Recipe<?> recipe : recipes) {
             try {
                 RecipeType<?> recipeType = recipe.getType();
                 ResourceLocation recipeId = recipe.getId();
                 
-                Object recipeMap = map.get(recipeType);
-                if (recipeMap instanceof Object2ObjectLinkedOpenHashMap) {
-                    ((Object2ObjectLinkedOpenHashMap<ResourceLocation, Recipe<?>>) recipeMap).put(recipeId, recipe);
+                LOGGER.debug("Processing recipe: {} of type {}", recipeId, recipeType);
+                
+                ImmutableMap.Builder<ResourceLocation, Recipe<?>> recipeMap = map.get(recipeType);
+                LOGGER.debug("Recipe map type for {}: {}", recipeType, recipeMap != null ? recipeMap.getClass().getName() : "null");
+                
+                if (recipeMap instanceof ImmutableMap.Builder) {
+                    recipeMap.put(recipeId, recipe);
                     count++;
-                } else if (recipeMap instanceof ImmutableMap.Builder) {
-                    ((ImmutableMap.Builder<ResourceLocation, Recipe<?>>) recipeMap).put(recipeId, recipe);
-                    count++;
-                } else if (recipeMap == null) {
-                    Object2ObjectLinkedOpenHashMap<ResourceLocation, Recipe<?>> newMap = new Object2ObjectLinkedOpenHashMap<>();
+                    LOGGER.debug("Added to ImmutableMap.Builder");
+                } else {
+                    ImmutableMap.Builder<ResourceLocation, Recipe<?>> newMap = new ImmutableMap.Builder<>();
                     newMap.put(recipeId, recipe);
                     map.put(recipeType, newMap);
                     count++;
-                } else {
-                    LOGGER.error("Failed to register recipe {} to map of type {}", recipeId, recipeMap.getClass());
+                    LOGGER.debug("Created new ImmutableMap.Builder");
                 }
                 
                 builder.put(recipeId, recipe);
             } catch (Exception e) {
-                LOGGER.error("Error registering custom recipe {}: {}", recipe.getId(), e.getMessage());
+                LOGGER.error("Error registering recipe {}: {}", recipe.getId(), e.getMessage(), e);
             }
         }
         
