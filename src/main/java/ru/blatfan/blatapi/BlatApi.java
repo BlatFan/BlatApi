@@ -40,7 +40,7 @@ public class BlatApi {
     
     private void setup(final FMLCommonSetupEvent event) {
         InterModComms.getMessages(MOD_ID).forEach(x ->
-            LOGGER.info("registration from " + x.senderModId() + " | " + x.messageSupplier().get()));
+            LOGGER.info("registration from {} | {}", x.senderModId(), x.messageSupplier().get()));
         MinecraftForge.EVENT_BUS.register(RecipeHelper.class);
         MinecraftForge.EVENT_BUS.register(DisabledRecipes.class);
     }
