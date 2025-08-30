@@ -181,8 +181,7 @@ public final class JeiIntegration implements IModPlugin {
         recipes.addAll(recipesToAdd);
         
         List<IJeiAnvilRecipe> rec = new ArrayList<>();
-        for(Recipe<?> recipe1 : RecipeHelper.getRecipes(BARegistry.ANVIL_REPAIR.get())){
-            IAnvilRepairRecipe recipe = (IAnvilRepairRecipe) recipe1;
+        for(IAnvilRepairRecipe recipe : RecipeHelper.getRecipes(BARegistry.ANVIL_REPAIR.get())){
             rec.add(new AnvilRecipe(
                 Stream.of(recipe.getBaseItem().getDefaultInstance()).peek(input -> input.setDamageValue(input.getMaxDamage())).toList(),
                 Arrays.asList(recipe.getRepairItem().getItems()),

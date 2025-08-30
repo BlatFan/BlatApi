@@ -2,6 +2,7 @@ package ru.blatfan.blatapi.fluffy_fur.common.block.entity;
 
 import com.google.common.base.Preconditions;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.Container;
@@ -14,10 +15,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.jetbrains.annotations.Nullable;
+import ru.blatfan.blatapi.utils.BlockRendererUtil;
+
+import javax.annotation.Nonnull;
 
 public abstract class BlockSimpleInventory extends BlockEntityBase {
-
     private final SimpleContainer itemHandler = createItemHandler();
 
     public BlockSimpleInventory(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -38,6 +45,14 @@ public abstract class BlockSimpleInventory extends BlockEntityBase {
             ret.set(i, inv.getItem(i));
         }
         return ret;
+    }
+    
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER)
+            return BlockRendererUtil.getLazyItems(this).cast();
+        return super.getCapability(cap, side);
     }
 
     @Override

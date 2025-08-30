@@ -257,4 +257,17 @@ public class PlayerUtil {
       player.changeDimension(transit.getTargetLevel(), transit);
     }
   }
+  public static CompoundTag getPersistedDataSubcompound(Player player, String subCompoundKey) {
+    CompoundTag forgeData = player.getPersistentData();
+    if (!forgeData.contains(Player.PERSISTED_NBT_TAG)) {
+      forgeData.put(Player.PERSISTED_NBT_TAG, new CompoundTag());
+    }
+    
+    CompoundTag persistedData = forgeData.getCompound(Player.PERSISTED_NBT_TAG);
+    if (!persistedData.contains(subCompoundKey)) {
+      persistedData.put(subCompoundKey, new CompoundTag());
+    }
+    
+    return persistedData.getCompound(subCompoundKey);
+  }
 }

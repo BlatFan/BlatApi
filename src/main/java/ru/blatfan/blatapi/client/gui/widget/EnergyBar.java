@@ -5,58 +5,50 @@ import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.energy.IEnergyStorage;
 import ru.blatfan.blatapi.BlatApi;
 
-public class EnergyBar {
-  public ResourceLocation ENERGY_BAR = BlatApi.loc("textures/gui/energy_bar.png");
-  @Getter @Setter
-  private int x = 154;
-  @Getter @Setter
-  private int y = 8;
-  private final int capacity;
-  @Getter @Setter
-  private int width = 16;
-  @Getter @Setter
-  private int height = 62;
-  @Getter @Setter
-  private int guiLeft;
-  @Getter @Setter
-  private int guiTop;
-  @Getter @Setter
-  private boolean visible = true;
-  private final Font font;
-
-  public EnergyBar(Font font, int cap) {
-    this.capacity = cap;
-    this.font = font;
+public class EnergyBar extends AbstractWidget {
+  public final ResourceLocation ENERGY_BAR;
+  private final IEnergyStorage energy;
+  
+  public EnergyBar(int pX, int pY, int pWidth, ResourceLocation energyBar, IEnergyStorage energy) {
+    super(pX, pY, pWidth, 62*(pWidth/16), Component.literal("Energy Bar"));
+      ENERGY_BAR = energyBar;
+      this.energy = energy;
   }
-
+  public EnergyBar(int pX, int pY, int pWidth, IEnergyStorage energy) {
+    this(pX, pY, pWidth, BlatApi.loc("textures/gui/energy_bar.png"), energy);
+  }
+  
   public boolean isMouseover(int mouseX, int mouseY) {
-    return guiLeft + x < mouseX && mouseX < guiLeft + x + width
-        && guiTop + y < mouseY && mouseY < guiTop + y + getHeight();
+    return getX() < mouseX && mouseX < getX() + width
+        && getY() < mouseY && mouseY < getY() + getHeight();
   }
-
-  public void draw(GuiGraphics gg, float energ) {
+  
+  @Override
+  protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float pPartialTick) {
     if (!visible)
       return;
-    int relX = guiLeft + x;
-    int relY = guiTop + y;
-    gg.blit(ENERGY_BAR, relX, relY, 16, 0, width, getHeight(), 32, getHeight());
-    final float pct = Math.min(energ / capacity, 1.0F);
-    gg.blit(ENERGY_BAR, relX, relY, 0, 0, width, getHeight() - (int) (getHeight() * pct), 32, getHeight());
-  }
-
-  public void renderHoveredToolTip(GuiGraphics ms, int mouseX, int mouseY, int energ) {
+    gui.blit(ENERGY_BAR, getX(), getY(), width, 0, width, getHeight(), width*2, getHeight());
+    final float pct = Math.min((float) energy.getEnergyStored() / energy.getMaxEnergyStored(), 1.0F);
+    gui.blit(ENERGY_BAR, getX(), getY(), 0, 0, width, getHeight() - (int) (getHeight() * pct), width*2, getHeight());
     if (visible && this.isMouseover(mouseX, mouseY)) {
-      String tt = energ + "/" + this.capacity;
+      String tt = energy.getEnergyStored() + "FE /" + energy.getMaxEnergyStored()+"FE";
       List<Component> list = new ArrayList<>();
       list.add(Component.translatable(tt));
-      ms.renderComponentTooltip(font, list, mouseX, mouseY);
+      gui.renderComponentTooltip(Minecraft.getInstance().font, list, mouseX, mouseY);
     }
   }
+  
+  @Override
+  protected void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {}
 }

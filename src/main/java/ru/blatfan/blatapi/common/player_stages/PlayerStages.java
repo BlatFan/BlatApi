@@ -60,7 +60,7 @@ public class PlayerStages implements ICapacity<PlayerStages> {
     public void fromNBT(Tag tag) {
         data.clear();
         CompoundTag nbt = (CompoundTag) tag;
-        for(String key : allStages)
+        for(String key : nbt.getAllKeys())
             data.put(key, nbt.getBoolean(key));
     }
     

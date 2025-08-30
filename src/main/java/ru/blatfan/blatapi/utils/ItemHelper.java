@@ -5,7 +5,10 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.registries.ForgeRegistries;
+import ru.blatfan.blatapi.BlatApi;
 
 import java.util.Objects;
 
@@ -75,5 +78,15 @@ public final class ItemHelper {
             return stack2.copy();
 
         return grow(stack1, stack2.getCount());
+    }
+    
+    public static void registerCompostable(float chance, ItemLike item) {
+        synchronized (ComposterBlock.COMPOSTABLES) {
+            try {
+                ComposterBlock.COMPOSTABLES.put(item, chance);
+            } catch (Exception ex) {
+                BlatApi.LOGGER.error("Failed to register compostable item: {}, chance {}", ForgeRegistries.ITEMS.getKey(item.asItem()), chance);
+            }
+        }
     }
 }

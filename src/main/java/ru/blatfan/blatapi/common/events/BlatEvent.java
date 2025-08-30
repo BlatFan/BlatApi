@@ -1,8 +1,9 @@
 package ru.blatfan.blatapi.common.events;
 
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
 
-public abstract class BlatEvent {
+public abstract class BlatEvent extends Event {
 
   /**
    * Create this in your mods constructor or any time after that. Instance does not need to be stored

@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.utils;
 
+import lombok.Setter;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -18,7 +19,9 @@ import java.util.function.Function;
 public class BaseItemStackHandler extends ItemStackHandler {
     private final Runnable onContentsChanged;
     private final Map<Integer, Integer> slotSizeMap;
+    @Setter
     private BiFunction<Integer, ItemStack, Boolean> canInsert = null;
+    @Setter
     private Function<Integer, Boolean> canExtract = null;
     private int maxStackSize = 64;
     private int[] outputSlots = null;
@@ -132,11 +135,7 @@ public class BaseItemStackHandler extends ItemStackHandler {
     public NonNullList<ItemStack> getStacks() {
         return this.stacks;
     }
-
-    public int[] getOutputSlots() {
-        return this.outputSlots;
-    }
-
+    
     public void setDefaultSlotLimit(int size) {
         this.maxStackSize = size;
     }
@@ -153,15 +152,7 @@ public class BaseItemStackHandler extends ItemStackHandler {
 
         this.slotSizeMap.put(slot, size);
     }
-
-    public void setCanInsert(BiFunction<Integer, ItemStack, Boolean> validator) {
-        this.canInsert = validator;
-    }
-
-    public void setCanExtract(Function<Integer, Boolean> canExtract) {
-        this.canExtract = canExtract;
-    }
-
+    
     public void setOutputSlots(int... slots) {
         this.outputSlots = slots;
     }

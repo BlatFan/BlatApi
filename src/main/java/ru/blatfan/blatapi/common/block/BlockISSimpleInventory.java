@@ -26,13 +26,6 @@ public abstract class BlockISSimpleInventory extends BlockEntity {
     
     protected abstract BaseItemStackHandler createItemHandler();
     
-    public void drop(Level level, BlockPos pos){
-        SimpleContainer container = new SimpleContainer(itemHandler.getSlots());
-        for(int i=0; i<itemHandler.getSlots(); i++)
-            container.addItem(itemHandler.getStackInSlot(i));
-        Containers.dropContents(level, pos, container);
-    }
-    
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this, BlockEntity::saveWithFullMetadata);

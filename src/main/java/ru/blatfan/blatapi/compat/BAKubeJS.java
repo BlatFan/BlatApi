@@ -12,6 +12,6 @@ import java.util.Map;
 public class BAKubeJS extends KubeJSPlugin {
     @Override
     public void injectRuntimeRecipes(RecipesEventJS event, RecipeManager manager, Map<ResourceLocation, Recipe<?>> recipesByName) {
-        RecipeHelper.fireRecipeManagerLoadedEventKubeJSEdition(recipesByName);
+        RecipeHelper.fireRecipeManagerLoadedEventKubeJSEdition(manager, recipesByName);
     }
 }

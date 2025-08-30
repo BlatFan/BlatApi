@@ -1,11 +1,12 @@
 package ru.blatfan.blatapi.utils.animation;
 
 import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
 import ru.blatfan.blatapi.common.core.Vector3;
 
 public class AnimationCurve {
-    public static double timeUnite(){
-        return (Util.getMillis() % 1000L) / 4000.0F;
+    public static float timeUnite(){
+        return Minecraft.getInstance().getPartialTick();
     }
     
     public static Vector3 bezier(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, double timeUnite) {

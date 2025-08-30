@@ -40,6 +40,6 @@ public class RecipeManagerMixin {
         Map<RecipeType<?>, ImmutableMap.Builder<ResourceLocation, Recipe<?>>> map, // recipes
         ImmutableMap.Builder<ResourceLocation, Recipe<?>> builder // byName
     ) {
-        RecipeHelper.fireRecipeManagerLoadedEvent(map, builder);
+        RecipeHelper.fireRecipeManagerLoadedEvent((RecipeManager) (Object) this, (Map<RecipeType<?>, Object>) (Object) map, builder);
     }
 }

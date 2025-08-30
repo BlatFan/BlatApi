@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Setter;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import ru.blatfan.blatapi.BlatApi;
 
-public class TexturedProgress {
-  protected final Font font;
+public class TexturedProgress{
   protected final int x;
   protected final int y;
   protected final int width;
@@ -20,14 +21,16 @@ public class TexturedProgress {
   public int guiTop;
   public int max = 1;
   @Setter
-  protected boolean topDown = true;
-
-  public TexturedProgress(Font parent, int x, int y, ResourceLocation texture) {
-    this(parent, x, y, 14, 14, texture);
+  protected boolean topDown = false;
+  
+  public TexturedProgress(int x, int y) {
+    this(x, y, BlatApi.loc("textures/gui/progress_bar.png"));
+  }
+  public TexturedProgress(int x, int y, ResourceLocation texture) {
+    this(x, y, 22, 16, texture);
   }
 
-  public TexturedProgress(Font parent, int x, int y, int width, int height, ResourceLocation texture) {
-    this.font = parent;
+  public TexturedProgress(int x, int y, int width, int height, ResourceLocation texture) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -48,20 +51,20 @@ public class TexturedProgress {
     if (this.topDown) {
       gg.blit(texture, relX, relY, 0, 0, width, height, width, height * 2);
       int rHeight = height - (int) (height * Math.min(current / max, 1.0F));
-      gg.blit(texture, relX, relY, 0, height, width, rHeight, width, height * 2);
+      if (current != 0)
+        gg.blit(texture, relX, relY, 0, height, width, height-rHeight, width, height * 2);
     }
     else { //Left-Right mode
-      gg.blit(texture, relX, relY, 0, height, width, height, width, height * 2);
+      gg.blit(texture, relX, relY, 0, 0, width, height, width, height * 2);
       int rWidth = (int) (width * Math.min(current / max, 1.0F));
-      if (current != 0) {
-        gg.blit(texture, relX, relY, 0, 0, width - rWidth, height, width, height * 2);
-      }
+      if (current != 0)
+        gg.blit(texture, relX, relY, 0, height, rWidth, height, width, height * 2);
     }
   }
 
   public void renderHoveredToolTip(GuiGraphics gg, int mouseX, int mouseY, int curr) {
     if (this.isMouseover(mouseX, mouseY) && curr > 0) {
-      String display = "";
+      String display;
       int seconds = curr / 20;
       if (curr > 20 * 60) {
         //if more than 120 secs which is two minutes
@@ -70,7 +73,7 @@ public class TexturedProgress {
         display = minutes + "m " + remainder + "s";
       }
       else if (curr > 20 * 5) {
-        //if more than 20 seconds, show seconds not ticks 
+        //if more than 20 seconds, show seconds not ticks
         display = seconds + "s";
       }
       else {
@@ -78,7 +81,7 @@ public class TexturedProgress {
       }
       List<Component> list = new ArrayList<>();
       list.add(Component.translatable(display));
-      gg.renderComponentTooltip(font, list, mouseX, mouseY);
+      gg.renderComponentTooltip(Minecraft.getInstance().font, list, mouseX, mouseY);
     }
   }
 }
