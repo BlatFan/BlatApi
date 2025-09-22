@@ -1,0 +1,11 @@
+{
+  "texture": "blatapi:textures/gui/book/book.png",
+  "title": "Test Guide Book",
+  "author": "BlatFan",
+  "title_color": "#DE39E8",
+  "tooltip": "Test Guide Book tooltip",
+  "model": "minecraft:book",
+  "pedestal": {
+    "item": "minecraft:bedrock"
+  }
+}

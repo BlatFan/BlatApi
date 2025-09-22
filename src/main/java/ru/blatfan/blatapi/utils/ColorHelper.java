@@ -14,7 +14,12 @@ public class ColorHelper {
     public static void RGBToHSV(Color color, float[] hsv) {
         Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsv);
     }
-
+    
+    public static Color getColor(String color) {
+        if(!color.startsWith("#")) return Color.decode("#"+color);
+        return Color.decode(color);
+    }
+    
     public static int getColor(Color color) {
         return color.getRGB();
     }

@@ -27,6 +27,9 @@ import ru.blatfan.blatapi.common.recipe.SimpleShapedRecipe;
 import java.util.Map;
 
 public class RecipeUtil {
+    public static ItemStack itemStackFromJson(JsonElement pStackElement) {
+        return CraftingHelper.getItemStack(pStackElement.getAsJsonObject(), true, true);
+    }
     public static ItemStack itemStackFromJson(JsonObject pStackObject) {
         return CraftingHelper.getItemStack(pStackObject, true, true);
     }
@@ -92,7 +95,7 @@ public class RecipeUtil {
     
     public static FluidStack deserializeFluidStack(JsonObject json) {
         String fluidName = GsonHelper.getAsString(json, "fluid");
-        Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidName));
+        Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(fluidName));
         if (fluid == null || fluid == Fluids.EMPTY) {
             throw new JsonSyntaxException("Unknown fluid " + fluidName);
         }
@@ -102,7 +105,7 @@ public class RecipeUtil {
     
     public static MobEffectInstance deserializeMobEffect(JsonObject json) {
         String effectName = GsonHelper.getAsString(json, "effect");
-        MobEffect mobEffect = ForgeRegistries.MOB_EFFECTS.getValue(new ResourceLocation(effectName));
+        MobEffect mobEffect = ForgeRegistries.MOB_EFFECTS.getValue(ResourceLocation.tryParse(effectName));
         if (mobEffect == null) {
             throw new JsonSyntaxException("Unknown effect " + effectName);
         }
@@ -135,7 +138,7 @@ public class RecipeUtil {
     
     public static Enchantment deserializeEnchantment(JsonObject json) {
         String enchantmentName = GsonHelper.getAsString(json, "enchantment");
-        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantmentName));
+        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(enchantmentName));
         if (enchantment == null) {
             throw new JsonSyntaxException("Unknown enchantment " + enchantmentName);
         }

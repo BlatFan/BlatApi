@@ -1,0 +1,266 @@
+{
+  "title": "Test Guide Book Entry 2",
+  "description": "Test Guide Book Desc",
+  "icon": {
+    "item": "minecraft:diamond"
+  },
+  "category": "blatapi:test",
+  "x": 1,
+  "y": 1,
+  "view": [
+    {
+      "type": "blatapi:book_entry",
+      "book_entry": "blatapi:test"
+    }
+  ],
+  "pages": [
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:wooden_pickaxe"],
+      "item_page": [
+        {
+          "item": "minecraft:cobblestone",
+          "tooltips": [
+            "item_tooltips",
+            "Test Tooltip text"
+          ],
+          "pedestal": true
+        }
+      ]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:cooked_beef"],
+      "item_page": [
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        },
+        {
+          "item": "minecraft:cobblestone",
+          "count": 100
+        }
+      ]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:wooden_pickaxe"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:cooked_beef"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:wooden_pickaxe"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:cooked_beef"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:wooden_pickaxe"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:cooked_beef"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:wooden_pickaxe"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:cooked_beef"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:wooden_pickaxe"]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Test Text",
+      "separator": false,
+      "recipes": ["minecraft:cooked_beef"]
+    }
+  ]
+}

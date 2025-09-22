@@ -3,6 +3,8 @@ package ru.blatfan.blatapi.common.recipe;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.world.item.Items;
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.utils.ItemHelper;
 import lombok.Getter;
@@ -40,7 +42,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AnvilRecipe implements IAnvilRecipe {
-    private final ResourceLocation serializerName;
+    public static final ResourceLocation type = BlatApi.loc("anvil");
 
     private final List<ICondition> conditions = Lists.newArrayList();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
@@ -91,8 +93,6 @@ public class AnvilRecipe implements IAnvilRecipe {
     }
 
     protected AnvilRecipe(ResourceLocation id, ItemStack result, NonNullList<Ingredient> inputs, NonNullList<ItemStack> returns, List<CompoundTag> nbt, List<Boolean> strictNbt, List<Boolean> consumes, List<Boolean> useDurability, List<Integer> counts, boolean shapeless, int experience) {
-        this.serializerName = new ResourceLocation("anvil");
-
         this.id = id;
         this.result = result;
         this.inputs = inputs;
@@ -251,7 +251,7 @@ public class AnvilRecipe implements IAnvilRecipe {
     public int getExperience() {
         return this.experience;
     }
-
+    
     @Override
     public ItemStack assemble(Container container, RegistryAccess access) {
         return this.getResultItem(access).copy();
@@ -325,6 +325,11 @@ public class AnvilRecipe implements IAnvilRecipe {
     public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
+    
+    @Override
+    public ItemStack getToastSymbol() {
+        return new ItemStack(Items.ANVIL);
+    }
 
     @Override
     public RecipeType<IAnvilRecipe> getType() {
@@ -346,7 +351,7 @@ public class AnvilRecipe implements IAnvilRecipe {
         if (this.advancementBuilder.getCriteria().isEmpty())
             throw new IllegalStateException("No way of obtaining recipe " + id);
 
-        this.advancementBuilder.parent(new ResourceLocation("recipes/root"))
+        this.advancementBuilder.parent(ResourceLocation.tryParse("recipes/root"))
                 .addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(ContextAwarePredicate.ANY, id))
                 .rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumer.accept(new Result(id));
@@ -498,7 +503,7 @@ public class AnvilRecipe implements IAnvilRecipe {
         public JsonObject serializeRecipe() {
             var jsonObject = new JsonObject();
 
-            jsonObject.addProperty("type", serializerName.toString());
+            jsonObject.addProperty("type", type.toString());
 
             if (!conditions.isEmpty()) {
                 var conditionsArray = new JsonArray();
@@ -550,7 +555,7 @@ public class AnvilRecipe implements IAnvilRecipe {
         @Nonnull
         @Override
         public RecipeSerializer<?> getType() {
-            return ForgeRegistries.RECIPE_SERIALIZERS.getValue(serializerName);
+            return ForgeRegistries.RECIPE_SERIALIZERS.getValue(type);
         }
 
         @Nullable

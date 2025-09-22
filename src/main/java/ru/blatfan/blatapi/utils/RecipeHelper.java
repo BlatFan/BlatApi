@@ -27,16 +27,10 @@ import java.util.concurrent.TimeUnit;
 public final class RecipeHelper {
     private static RecipeManager recipeManager;
     private static final Logger LOGGER = LogManager.getLogger("BA | Recipe Helper");
-    private static final Map<ResourceLocation, Recipe<?>> recipesBuffer = new HashMap<>();
     
     public static RecipeManager getRecipeManager() {
         if(recipeManager==null) return new RecipeManager(ICondition.IContext.EMPTY);
         return recipeManager;
-    }
-    
-    public static void addToBuffer(Recipe<?> recipe){
-        if(recipesBuffer.containsKey(recipe.getId())) recipesBuffer.remove(recipe.getId());
-        recipesBuffer.put(recipe.getId(), recipe);
     }
     
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -49,14 +43,14 @@ public final class RecipeHelper {
         recipeManager = event.getRecipeManager();
     }
     
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void buffer(RecipeManagerLoadingEvent event) {
-        recipesBuffer.values().forEach(event::addRecipe);
-        recipesBuffer.clear();
-    }
-    
     public static Map<RecipeType<?>, Map<ResourceLocation, Recipe<?>>> getRecipes() {
         return getRecipeManager().recipes;
+    }
+    
+    public static Recipe<?> getRecipe(ResourceLocation id){
+        for(Recipe<?> recipe : getRecipeManager().getRecipes())
+            if(recipe.getId().equals(id)) return recipe;
+        return null;
     }
     
     public static <C extends Container, T extends Recipe<C>> List<T> getRecipes(RecipeType<T> type) {

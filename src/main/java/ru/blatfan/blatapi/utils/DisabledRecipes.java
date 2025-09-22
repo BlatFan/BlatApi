@@ -152,10 +152,10 @@ public final class DisabledRecipes implements ResourceManagerReloadListener {
                             baseItem = CraftingHelper.getIngredient(baseItemJson, false);
                     }
 
-                    enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(GsonHelper.getAsString(enchantmentJson.getAsJsonObject(), "enchantment")));
+                    enchantment = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(GsonHelper.getAsString(enchantmentJson.getAsJsonObject(), "enchantment")));
                     enchantmentLevel = GsonHelper.getAsInt(enchantmentJson.getAsJsonObject(), "level", -1);
                 } else
-                    enchantment = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(enchantmentJson.getAsString()));
+                    enchantment = ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(enchantmentJson.getAsString()));
 
                 ENCHANTMENTS.add(Pair.of(Pair.of(enchantment, enchantmentLevel), baseItem));
             }

@@ -313,7 +313,7 @@ public abstract class FluidIngredient {
          */
         private static FluidMatch deserialize(JsonObject json) {
             String fluidName = GsonHelper.getAsString(json, "name");
-            Fluid fluid = ForgeRegistries.FLUIDS.getValue(new ResourceLocation(fluidName));
+            Fluid fluid = ForgeRegistries.FLUIDS.getValue(ResourceLocation.tryParse(fluidName));
             if (fluid == null || fluid == Fluids.EMPTY) {
                 throw new JsonSyntaxException("Unknown fluid '" + fluidName + "'");
             }

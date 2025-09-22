@@ -2,9 +2,9 @@ package ru.blatfan.blatapi.common.player_stages;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.common.MinecraftForge;
 import ru.blatfan.blatapi.fluffy_fur.common.network.FluffyFurPacketHandler;
 import ru.blatfan.blatapi.utils.ICapacity;
 
@@ -13,6 +13,12 @@ import java.util.*;
 public class PlayerStages implements ICapacity<PlayerStages> {
     public static final List<String> allStages = new ArrayList<>();
     private final Map<String, Boolean> data = new HashMap<>();
+    
+    private static boolean sendEvent(Player player, String key, boolean value){
+        PlayerStageEvent event = new PlayerStageEvent(player, key, value);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.isValue();
+    }
     
     @Override
     public void sync(Entity entity) {
@@ -30,20 +36,28 @@ public class PlayerStages implements ICapacity<PlayerStages> {
     
     public static boolean get(Player player, String key){
         PlayerStages stages = get(player);
-        return stages.data.get(key);
+        return stages.data.getOrDefault(key, false);
     }
     
     public static void add(Player player, String key){
         if(!allStages.contains(key)) allStages.add(key);
         player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.data.put(key, true);
+            playerStages.data.put(key, sendEvent(player, key, true));
+            playerStages.sync(player);
+        });
+    }
+    
+    public static void set(Player player, String key, boolean b){
+        if(!allStages.contains(key)) allStages.add(key);
+        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
+            playerStages.data.put(key, sendEvent(player, key, b));
             playerStages.sync(player);
         });
     }
     
     public static void remove(Player player, String key){
         player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.data.put(key, false);
+            playerStages.data.put(key, sendEvent(player, key, false));
             playerStages.sync(player);
         });
     }

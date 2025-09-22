@@ -84,7 +84,7 @@ public class FluffyFurMenuScreen extends Screen {
     public void setLocalPanorama(FluffyFurPanorama panorama) {
         float spin = this.panorama.spin;
         float bob = this.panorama.bob;
-        ResourceLocation base = new ResourceLocation("textures/gui/title/background/panorama");
+        ResourceLocation base = ResourceLocation.tryParse("textures/gui/title/background/panorama");
         if (panorama.getTexture() != null) {
             base = panorama.getTexture();
         }

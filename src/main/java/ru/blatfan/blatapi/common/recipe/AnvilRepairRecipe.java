@@ -17,6 +17,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -26,6 +27,7 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.Nullable;
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.utils.ItemHelper;
 
@@ -33,7 +35,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class AnvilRepairRecipe implements IAnvilRepairRecipe {
-    private final ResourceLocation serializerName;
+    public static final ResourceLocation type = BlatApi.loc("anvil_repair");
 
     private final List<ICondition> conditions = Lists.newArrayList();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.advancement();
@@ -43,8 +45,6 @@ public class AnvilRepairRecipe implements IAnvilRepairRecipe {
     private final Ingredient repairItem;
 
     public AnvilRepairRecipe(ResourceLocation id, Item baseItem, Ingredient repairItem) {
-        this.serializerName = new ResourceLocation("anvil_repair");
-
         this.id = id;
         this.baseItem = baseItem;
         this.repairItem = repairItem;
@@ -84,6 +84,11 @@ public class AnvilRepairRecipe implements IAnvilRepairRecipe {
     public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
+    
+    @Override
+    public ItemStack getToastSymbol() {
+        return new ItemStack(Items.ANVIL);
+    }
 
     @Override
     public RecipeType<IAnvilRepairRecipe> getType() {
@@ -105,7 +110,7 @@ public class AnvilRepairRecipe implements IAnvilRepairRecipe {
         if (this.advancementBuilder.getCriteria().isEmpty())
             throw new IllegalStateException("No way of obtaining recipe " + id);
 
-        this.advancementBuilder.parent(new ResourceLocation("recipes/root"))
+        this.advancementBuilder.parent(ResourceLocation.tryParse("recipes/root"))
                 .addCriterion("has_the_recipe", new RecipeUnlockedTrigger.TriggerInstance(ContextAwarePredicate.ANY, id))
                 .rewards(AdvancementRewards.Builder.recipe(id)).requirements(RequirementsStrategy.OR);
         consumer.accept(new Result(id));
@@ -157,7 +162,7 @@ public class AnvilRepairRecipe implements IAnvilRepairRecipe {
         public JsonObject serializeRecipe() {
             var json = new JsonObject();
 
-            json.addProperty("type", serializerName.toString());
+            json.addProperty("type", type.toString());
 
             if (!conditions.isEmpty()) {
                 var conditionsArray = new JsonArray();
@@ -181,7 +186,7 @@ public class AnvilRepairRecipe implements IAnvilRepairRecipe {
 
         @Override
         public RecipeSerializer<?> getType() {
-            return ForgeRegistries.RECIPE_SERIALIZERS.getValue(serializerName);
+            return ForgeRegistries.RECIPE_SERIALIZERS.getValue(type);
         }
 
         @Nullable
