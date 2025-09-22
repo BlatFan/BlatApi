@@ -12,7 +12,21 @@
   "command.blatapi.player_stages.all.description": "Показать все стадии игрока",
   "command.blatapi.player_stages.list.description": "Показать все доступные стадии в системе",
   
-  "_comment_1": "AnvilApi",
+  "_comment_1": "Tasks, rewards, multiblocks",
+  "commands.blatapi.player_stages.available_multiblocks": "Доступные мультиблоки:",
+  "task.blatapi.position": "Позиция: %s %s %s",
+  "task.blatapi.stage": "Стадия:",
+  "task.blatapi.advancement": "Достижение: %s",
+  "task.blatapi.book_entry": "Знание из книги: %s",
+  "task.blatapi.craft": "Создать: ",
+  "task.blatapi.eat": "Съесть: ",
+  "task.blatapi.kill": "Убить: ",
+  "multiblock.blatapi.complete": "Завершено!",
+  "multiblock.blatapi.not_anchored": "Не закреплен",
+  "multiblock.blatapi.remove_blocks": "Убрать блоки",
+  "guide_book.blatapi.author": "Автор: ",
+  
+  "_comment_2": "AnvilApi",
   "tooltip.blatapi.shapeless": "Бесформенный",
   "tooltip.blatapi.returns": "Выход",
   "tooltip.blatapi.consumes": "Потребляет",
@@ -21,7 +35,6 @@
   "tooltip.blatapi.yes": "Да",
   "tooltip.blatapi.no": "Нет",
   
-  "_comment_2": "Fluffy Fur",
   "_comment_3": "Menu",
   "mod_description.blatapi": "BlatApi - библиотека от BlatFan. \n Библиотека включает: \n * Fluffy Fur от MaxBogomol. \n * Elysium API(Biome Replacer) от ThatJadenXgamer. \n * Cucumber Library от BlakeBr0.",
   "panorama.minecraft.vanilla": "Ванилла",
@@ -50,12 +63,6 @@
   "gui.blatapi.skin_menu.empty": "Пустой",
   "gui.blatapi.skin_menu.cape.blatfan": "BlatFan",
   "gui.blatapi.skin_menu.effect.emerald": "Emerald",
-  
-  "filters.scroll_up": "Прокрутить вверх",
-  "filters.scroll_down": "Прокрутить вниз",
-  "filters.enable_all": "Вкл все категории",
-  "filters.disable_all": "Выкл все категории",
-  "filters.uncategorized": "Без категории",
   
   "_comment_5": "Key binds",
   "key.category.blatapi.fluffy_fur": "BlatApi - Fluffy Fur",

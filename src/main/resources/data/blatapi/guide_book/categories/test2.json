@@ -1,0 +1,22 @@
+{
+  "sort": 2,
+  "title": "Test Guide Book Category 2",
+  "title_color": "#DE39E8",
+  "book": "blatapi:test",
+  "icon": {
+    "item": "minecraft:bedrock"
+  },
+  "tasks": [
+    {
+      "type": "blatapi:book_entry",
+      "book_entry": "blatapi:test"
+    }
+  ],
+  "background": [
+    {
+      "sort": 0,
+      "texture": "blatapi:textures/gui/book/space.png",
+      "speed": 0.25
+    }
+  ]
+}

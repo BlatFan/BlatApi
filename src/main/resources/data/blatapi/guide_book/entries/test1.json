@@ -1,0 +1,92 @@
+{
+  "title": "Test Guide Book Entry 1",
+  "description": "Test Guide Book Desc",
+  "icon": {
+    "item": "minecraft:diamond"
+  },
+  "category": "blatapi:test",
+  "x": 0,
+  "y": 0,
+  "view": [
+    {
+      "type": "blatapi:book_entry",
+      "book_entry": "blatapi:test"
+    }
+  ],
+  "tasks": [
+    {
+      "type": "blatapi:craft",
+      "item": {
+        "item": "minecraft:stick"
+      }
+    },
+    {
+      "type": "blatapi:kill",
+      "entity": "minecraft:zombie"
+    },
+    {
+      "type": "blatapi:eat",
+      "food": {
+        "item": "minecraft:cooked_beef"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "type": "blatapi:recipe",
+      "title": "Recipes",
+      "separator": true,
+      "recipes": [
+        "minecraft:wooden_pickaxe",
+        "minecraft:cooked_beef",
+        "blatapi:test"
+      ]
+    },
+    {
+      "type": "blatapi:recipe",
+      "title": "Recipes",
+      "separator": true,
+      "recipes": [
+        "minecraft:wooden_axe",
+        "minecraft:furnace",
+        "blatapi:tests"
+      ]
+    },
+    {
+      "type": "blatapi:entity",
+      "title": "Test Entity",
+      "title_color": "6c4198",
+      "entity": "minecraft:zombie",
+      "scale": 40,
+      "offsetX": 60,
+      "offsetY": 80,
+      "separator": true,
+      "color": "6c4198",
+      "text": [
+        "guide_book.blatapi.author"
+      ]
+    },
+    {
+      "type": "blatapi:image",
+      "title": "Image 1",
+      "separator": true,
+      "image": "blatapi:textures/gui/book/test_image.png",
+      "image_width": 256,
+      "text": [
+        "Test text Test text Test text Test text Test text Test text Test text Test text Test text "
+      ]
+    },
+    {
+      "type": "blatapi:image",
+      "title": "Image 2",
+      "separator": true,
+      "image": "blatapi:textures/gui/book/test_image1.png",
+      "image_width": 185,
+      "text": [
+        "Test text Test text Test text Test text Test text Test text Test text Test text Test text ",
+        "Test text Test text Test text Test text Test text Test text Test text Test text Test text ",
+        "Test text Test text Test text Test text Test text Test text Test text Test text Test text "
+      ]
+    }
+  ]
+}

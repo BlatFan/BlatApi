@@ -117,8 +117,8 @@ public class FluffyFurModsHandler {
     public static void setOpenPanorama(TitleScreen titleScreen, FluffyFurPanorama panorama) {
         float spin = titleScreen.panorama.spin;
         float bob = titleScreen.panorama.bob;
-        ResourceLocation base = new ResourceLocation("textures/gui/title/background/panorama");
-        ResourceLocation overlay = new ResourceLocation("textures/gui/title/background/panorama_overlay.png");
+        ResourceLocation base = ResourceLocation.tryParse("textures/gui/title/background/panorama");
+        ResourceLocation overlay = ResourceLocation.tryParse("textures/gui/title/background/panorama_overlay.png");
         if (panorama.getTexture() != null) {
             base = panorama.getTexture();
         }

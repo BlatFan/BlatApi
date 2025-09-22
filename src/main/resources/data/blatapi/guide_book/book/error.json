@@ -1,0 +1,10 @@
+{
+  "texture": "blatapi:textures/gui/book/book.png",
+  "title": "Unknown Book",
+  "author": "Unknown Author",
+  "title_color": "#DE39E8",
+  "tooltip": "Unknown",
+  "pedestal": {
+    "item": "minecraft:bedrock"
+  }
+}

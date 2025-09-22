@@ -1,0 +1,38 @@
+{
+  "type": "blatapi:dense",
+  "pattern": [
+    [
+      "GAG",
+      "AAA",
+      "GAG"
+    ],
+    [
+      "AAA",
+      "A0A",
+      "AHA"
+    ],
+    [
+      "GAG",
+      "AAA",
+      "GAG"
+    ]
+  ],
+  "mapping": {
+    "A": {
+      "type": "blatapi:block",
+      "block": "minecraft:stone_bricks"
+    },
+    "G": {
+      "type": "blatapi:block",
+      "block": "minecraft:gold_block"
+    },
+    "H":  {
+      "type": "blatapi:block",
+      "block": "minecraft:furnace"
+    },
+    "0":  {
+      "type": "blatapi:block",
+      "block": "minecraft:furnace"
+    }
+  }
+}

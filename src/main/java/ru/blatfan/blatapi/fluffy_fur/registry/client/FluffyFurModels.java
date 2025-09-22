@@ -70,7 +70,7 @@ public class FluffyFurModels {
         CustomModel customModel = new CustomModel(model, itemOverrides);
 
         for (int i = 0; i < 3; i++) {
-            BakedModel pullModel = map.get(new ModelResourceLocation(new ResourceLocation(item.toString() + "_pulling_" + String.valueOf(i)), "inventory"));
+            BakedModel pullModel = map.get(new ModelResourceLocation(ResourceLocation.tryParse(item.toString() + "_pulling_" + String.valueOf(i)), "inventory"));
             itemOverrides.models.add(pullModel);
         }
 

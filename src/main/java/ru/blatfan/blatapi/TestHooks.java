@@ -32,10 +32,8 @@ public class TestHooks {
         public static void onKeyPress(InputEvent event) {
             if(TestHooks.TEST.consumeClick()){
                 Minecraft mc = Minecraft.getInstance();
-                if(
-                    mc.player.getName().getString().equals("Dev") ||
-                    mc.player.getName().getString().equals("BlatFan")
-                )
+                String name = mc.player.getName().getString();
+                if(name.equals("Dev") || name.equals("BlatFan"))
                     mc.setScreen(new TestScreen());
             }
         }

@@ -1,0 +1,62 @@
+{
+  "title": "Test Guide Book Entry",
+  "description": "Test Guide Book Desc",
+  "icon": {
+    "item": "minecraft:diamond"
+  },
+  "category": "blatapi:test",
+  "x": 0,
+  "y": 0,
+  "advance": true,
+  "view": [
+    {
+      "type": "blatapi:not",
+      "task": {
+        "type": "blatapi:view_book_entry",
+        "book_entry": "blatapi:test1"
+      }
+    }
+  ],
+  "tasks": [
+    {
+      "type": "blatapi:eat",
+      "food": {
+        "item": "minecraft:cooked_beef"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "type": "blatapi:text",
+      "title": "Test Text",
+      "title_color": "6c4198",
+      "separator": true,
+      "color": "6c4198",
+      "text": [
+        "It was a perfectly ordinary day. \n The clouds moved slowly across the bright blue sky, while a gentle breeze wandered through the trees. \n Somewhere, a door creaked open and then quietly closed again.",
+        "The world continued in its usual rhythm, undisturbed and calm. Nothing out of the ordinary happened, and yet, in a way, that was exactly what made the moment special."
+      ]
+    },
+    {
+      "type": "blatapi:multiblock",
+      "title": "Test multiblock",
+      "title_color": "6c4198",
+      "separator": true,
+      "multiblock": "blatapi:test",
+      "buttonY": 80
+    },
+    {
+      "type": "blatapi:multiblock",
+      "title": "Test scaled multiblock",
+      "title_color": "6c4198",
+      "separator": true,
+      "multiblock": "blatapi:test",
+      "buttonY": 40,
+      "scale": 0.5,
+      "color": "6c4198",
+      "text": [
+        "Test text \n Test text \n Test text \n Test text Test text Test text Test text Test text Test text "
+      ]
+    }
+  ]
+}

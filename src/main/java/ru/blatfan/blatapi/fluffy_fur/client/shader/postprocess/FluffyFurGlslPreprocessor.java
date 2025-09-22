@@ -18,7 +18,7 @@ public class FluffyFurGlslPreprocessor extends GlslPreprocessor {
     @Nullable
     @Override
     public String applyImport(boolean useFullPath, String directory) {
-        ResourceLocation resourcelocation = new ResourceLocation(directory);
+        ResourceLocation resourcelocation = ResourceLocation.tryParse(directory);
         ResourceLocation resourcelocation1 = new ResourceLocation(resourcelocation.getNamespace(), "shaders/include/" + resourcelocation.getPath());
         try {
             Resource resource1 = Minecraft.getInstance().getResourceManager().getResource(resourcelocation1).get();

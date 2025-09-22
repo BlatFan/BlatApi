@@ -1,6 +1,8 @@
 package ru.blatfan.blatapi.compat.jei;
 
-import net.minecraft.world.item.crafting.Recipe;
+import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.runtime.IJeiRuntime;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
 import ru.blatfan.blatapi.compat.jei.category.AnvilRecipeCategory;
@@ -34,12 +36,39 @@ import java.util.stream.Stream;
 @JeiPlugin
 public final class JeiIntegration implements IModPlugin {
     public static final ResourceLocation UID = BlatApi.loc("jei_plugin");
+    public static IJeiRuntime jeiRuntime;
+    
+    public static void showRecipe(ItemStack stack) {
+        IFocus<?> focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.OUTPUT, VanillaTypes.ITEM_STACK, stack);
+        jeiRuntime.getRecipesGui().show(focus);
+    }
+    
+    public static void showUses(ItemStack stack) {
+        IFocus<?> focus = jeiRuntime.getJeiHelpers().getFocusFactory().createFocus(RecipeIngredientRole.INPUT, VanillaTypes.ITEM_STACK, stack);
+        jeiRuntime.getRecipesGui().show(focus);
+    }
 
     @Override
     public ResourceLocation getPluginUid() {
         return UID;
     }
-
+    
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        JeiIntegration.jeiRuntime = jeiRuntime;
+    }
+    
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+        
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, BARegistry.GUIDE_BOOK.get(), (stack, context) -> {
+            if (!stack.hasTag() || !stack.getTag().contains("guide_book_id")) {
+                return "";
+            }
+            return stack.getTag().getString("guide_book_id");
+        });
+    }
+    
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new AnvilRecipeCategory(registration.getJeiHelpers().getGuiHelper()));

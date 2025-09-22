@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.fluffy_fur.common.network;
 
+import ru.blatfan.blatapi.common.player_stages.PlayerStagesAdd;
 import ru.blatfan.blatapi.common.player_stages.PlayerStagesSync;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.fluffy_fur.common.network.item.TestStickPacket;
@@ -27,6 +28,8 @@ public class FluffyFurPacketHandler extends PacketHandler {
         BloodPacket.register(HANDLER, id++);
         TestStickPacket.register(HANDLER, id++);
         PlayerStagesSync.register(HANDLER, id++);
+        PlayerStagesAdd.register(HANDLER, id++);
+        RewardPacket.register(HANDLER, id++);
     }
 
     public static SimpleChannel getHandler() {

@@ -1,0 +1,31 @@
+{
+  "sort": 0,
+  "title": "Test Guide Book Category",
+  "title_color": "#DE39E8",
+  "book": "blatapi:test",
+  "icon": {
+    "item": "minecraft:dirt"
+  },
+  "background": [
+    {
+      "sort": 0,
+      "texture": "blatapi:textures/gui/book/space.png",
+      "speed": 0.25
+    },
+    {
+      "sort": 1,
+      "texture": "blatapi:textures/gui/book/dust.png",
+      "speed": 0.3
+    },
+    {
+      "sort": 2,
+      "texture": "blatapi:textures/gui/book/stars.png",
+      "speed": 0.4
+    },
+    {
+      "sort": 2,
+      "texture": "blatapi:textures/gui/book/stars2.png",
+      "speed": 0.5
+    }
+  ]
+}

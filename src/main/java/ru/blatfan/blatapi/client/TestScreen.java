@@ -10,7 +10,9 @@ import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.gui.widget.EnergyBar;
 import ru.blatfan.blatapi.client.gui.widget.FluidBar;
 import ru.blatfan.blatapi.client.gui.widget.TexturedProgress;
+import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.cap.FloatEnergyStorage;
+import ru.blatfan.blatapi.utils.GuiUtil;
 
 public class TestScreen extends Screen {
     public TestScreen() {
@@ -44,9 +46,9 @@ public class TestScreen extends Screen {
     private boolean invert = false;
     
     @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
-        tick+=invert? -pPartialTick : pPartialTick;
+    public void render(GuiGraphics gui, int mX, int mY, float partialTick) {
+        super.render(gui, mX, mY, partialTick);
+        tick+=invert? -partialTick : partialTick;
         float time = tick/60f%20;
         if(time>=1) invert=true;
         if(time<=0) invert=false;
@@ -55,9 +57,14 @@ public class TestScreen extends Screen {
         fluidTank.setFluid(new FluidStack(Fluids.WATER, (int) (fluidTank.getCapacity()*time)));
         fluidTank2.setFluid(new FluidStack(Fluids.LAVA, (int) (fluidTank2.getCapacity()*time)));
         
-        progress.draw(pGuiGraphics, time);
-        progress.renderHoveredToolTip(pGuiGraphics, pMouseX, pMouseY, (int) (time*60));
-        progress2.draw(pGuiGraphics, time);
-        progress2.renderHoveredToolTip(pGuiGraphics, pMouseX, pMouseY, (int) (time*60));
+        progress.draw(gui, time);
+        progress.renderHoveredToolTip(gui, mX, mY, (int) (time*60));
+        progress2.draw(gui, time);
+        progress2.renderHoveredToolTip(gui, mX, mY, (int) (time*60));
+        
+        GuiUtil.renderFlatPlayerHead(gui, 0, 0, 16, GuideClient.player);
+        GuiUtil.render3DPlayerHeadMouse(gui, 128, 128, 3, mX, mY, GuideClient.player);
+        GuiUtil.render3DPlayerHead(gui, 256, 128, 3, 0, 0, GuideClient.player);
+        GuiUtil.render3DPlayerHead(gui, 256+128, 128, 3, 30, 30, GuideClient.player);
     }
 }
