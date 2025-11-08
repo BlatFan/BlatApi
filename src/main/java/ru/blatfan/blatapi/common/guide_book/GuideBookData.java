@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.utils.RecipeUtil;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 
@@ -21,8 +21,8 @@ public class GuideBookData{
     private final Color titleColor;
     private final ItemStack pedestal;
     private final Component tooltip;
-    
     private final ResourceLocation model;
+    private final boolean toRegistry;
     
     public static GuideBookData json(JsonElement element) {
         JsonObject json = element.getAsJsonObject();
@@ -33,6 +33,7 @@ public class GuideBookData{
         ItemStack pedestal = json.has("pedestal") ? RecipeUtil.itemStackFromJson(json.get("pedestal")) : ItemStack.EMPTY;
         Component tooltip = json.has("tooltip") ? Text.create(json.get("tooltip").getAsString()) : Component.empty();
         ResourceLocation model = json.has("model") ? ResourceLocation.tryParse(json.get("model").getAsString()) : BlatApi.loc("guide_book");
-        return new GuideBookData(texture, title, author, titleColor, pedestal, tooltip, model);
+        boolean register = !json.has("to_registry") || json.get("to_registry").getAsBoolean();
+        return new GuideBookData(texture, title, author, titleColor, pedestal, tooltip, model, register);
     }
 }

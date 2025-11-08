@@ -6,6 +6,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.MinecraftForge;
 import ru.blatfan.blatapi.BlatApi;
@@ -16,6 +19,8 @@ import ru.blatfan.blatapi.common.guide_book.pages.*;
 import ru.blatfan.blatapi.api.event.GuideReload;
 import ru.blatfan.blatapi.common.multiblock.*;
 import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
+import ru.blatfan.blatapi.common.recipe.IngredientWithCount;
+import ru.blatfan.blatapi.utils.RecipeHelper;
 
 import java.util.Collections;
 import java.util.HashMap;

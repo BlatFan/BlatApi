@@ -1,1 +1,1 @@
-ru.blatfan.blatapi.compat.BAKubeJS
+ru.blatfan.blatapi.compat.kubejs.BAKubeJS

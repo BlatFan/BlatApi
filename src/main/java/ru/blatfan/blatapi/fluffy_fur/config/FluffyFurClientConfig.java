@@ -12,7 +12,7 @@ public class FluffyFurClientConfig {
     public static ForgeConfigSpec.ConfigValue<Double>
             SCREENSHAKE_INTENSITY;
     public static ForgeConfigSpec.ConfigValue<String>
-            PANORAMA;
+            PANORAMA, CUSTOM_WINDOW_TITLE;
 
     public FluffyFurClientConfig(ForgeConfigSpec.Builder builder) {
         builder.comment("Graphics").push("graphics");
@@ -35,7 +35,9 @@ public class FluffyFurClientConfig {
         MENU_BUTTON_ROW_X_OFFSET = builder.comment("Fluffy Fur menu button X offset with row.").define("menuButtonRowXOffset", 4);
         MENU_BUTTON_X_OFFSET = builder.comment("Fluffy Fur menu button X offset.").define("menuButtonXOffset", 0);
         MENU_BUTTON_Y_OFFSET = builder.comment("Fluffy Fur menu button Y offset.").define("menuButtonYOffset", 0);
+        CUSTOM_WINDOW_TITLE = builder.define("custom_window_title", "empty_title");
         builder.pop();
+        
     }
 
     public static final FluffyFurClientConfig INSTANCE;

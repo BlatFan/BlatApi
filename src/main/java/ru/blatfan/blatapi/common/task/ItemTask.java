@@ -5,12 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 
@@ -38,7 +37,7 @@ public class ItemTask extends Task {
     
     @Override
     public Component text(Player player) {
-        return Text.create(item.getDisplayName()).add(" x"+amount).withColor(Color.WHITE);
+        return Text.create(item.getHoverName()).add(" x"+amount).withColor(Color.WHITE);
     }
     
     @Override

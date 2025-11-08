@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.common.core;
+package ru.blatfan.blatapi.utils.collection;
 
 import net.minecraft.core.Vec3i;
 

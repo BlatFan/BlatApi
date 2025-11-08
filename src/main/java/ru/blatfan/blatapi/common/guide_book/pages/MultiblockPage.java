@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.datafixers.util.Pair;
 import com.mojang.math.Axis;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -26,7 +27,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.model.data.ModelData;
 import org.joml.Matrix4f;
 import org.joml.Vector4f;
-import com.mojang.datafixers.util.Pair;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.api.multiblock.Multiblock;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
@@ -37,8 +37,8 @@ import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.utils.ClientTicks;
 import ru.blatfan.blatapi.utils.ColorHelper;
 import ru.blatfan.blatapi.utils.GuiUtil;
-import ru.blatfan.blatapi.utils.Text;
-import ru.blatfan.blatapi.utils.SplitText;
+import ru.blatfan.blatapi.utils.collection.SplitText;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.util.*;
@@ -229,7 +229,7 @@ public class MultiblockPage extends GuideBookPage {
                     try {
                         BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
                         if (renderer != null) {
-                            renderer.render(be, ClientTicks.partialTicks, pose, buffers, 0xF000F0, OverlayTexture.NO_OVERLAY);
+                            renderer.render(be, ClientTicks.partialTicks, pose, buffers, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                         }
                     } catch (Exception e) {
                         this.erroredBlockEntities.add(be);

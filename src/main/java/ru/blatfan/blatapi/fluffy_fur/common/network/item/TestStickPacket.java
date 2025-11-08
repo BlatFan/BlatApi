@@ -15,7 +15,7 @@ import ru.blatfan.blatapi.fluffy_fur.common.network.TwoPositionClientPacket;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurParticles;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
 import ru.blatfan.blatapi.fluffy_fur.registry.common.item.FluffyFurItems;
-import ru.blatfan.blatapi.utils.RenderUtil;
+import ru.blatfan.blatapi.utils.GuiUtil;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvents;
@@ -282,7 +282,7 @@ public class TestStickPacket extends TwoPositionClientPacket {
                             .setColorData(ColorParticleData.create().setRandomColor().build())
                             .setTransparencyData(GenericParticleData.create(1, 1, 0).setEasing(Easing.QUARTIC_OUT).build())
                             .enableSecondColor()
-                            .setWidthFunction(RenderUtil.LINEAR_IN_ROUND_WIDTH_FUNCTION)
+                            .setWidthFunction(GuiUtil.LINEAR_IN_ROUND_WIDTH_FUNCTION)
                             .build())
                     .setColorData(ColorParticleData.create(0, 0, 1, 1, 0, 0).build())
                     .setTransparencyData(GenericParticleData.create(1, 1, 0).setEasing(Easing.QUARTIC_OUT).build())
@@ -376,21 +376,6 @@ public class TestStickPacket extends TwoPositionClientPacket {
                     .disableDistanceSpawn()
                     .repeat(level, pos.x(), pos.y(), pos.z(), 1);
             ScreenshakeHandler.addScreenshake(new ScreenshakeInstance(200).setIntensity(1f, 0).setEasing(Easing.QUINTIC_IN_OUT));
-        }
-
-        if (mode == 27) {
-            Vec3 pos = startPos.add(lookPos.scale(15f));
-            ParticleBuilder builder = ParticleBuilder.create(FluffyFurParticles.WISP)
-                    .setColorData(ColorParticleData.create(Color.WHITE).build())
-                    .setTransparencyData(GenericParticleData.create(1, 0).setEasing(Easing.QUARTIC_OUT).build())
-                    .setScaleData(GenericParticleData.create(0.1f).build())
-                    .setLifetime(20, 5);
-            ParticleBuilder blushBuilder = ParticleBuilder.create(FluffyFurParticles.WISP)
-                    .setColorData(ColorParticleData.create(Color.RED).build())
-                    .setTransparencyData(GenericParticleData.create(1, 0).setEasing(Easing.QUARTIC_OUT).build())
-                    .setScaleData(GenericParticleData.create(0.1f).build())
-                    .setLifetime(20, 5);
-            builder.spawnBoykisser(level, pos, 256, 256, 0.075f, blushBuilder, 3, 0.15f, 0.3f, 0.15f, 0.15f);
         }
 
         if (mode == 28) {

@@ -6,8 +6,6 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import ru.blatfan.blatapi.common.player_stages.PlayerStages;
 
 @AllArgsConstructor
@@ -18,7 +16,7 @@ public class StageTask extends Task{
     
     @Override
     public boolean get(Player player) {
-        return PlayerStages.get(player, stage);
+        return PlayerStages.has(player, stage);
     }
     
     public static StageTask fromJson(JsonObject json){

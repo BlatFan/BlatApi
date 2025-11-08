@@ -1,27 +1,21 @@
 package ru.blatfan.blatapi.utils.collection;
 
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@Getter@Setter
 public class Couple<K, V> {
-
-    private final K key;
-
-    private final V value;
+    private K key;
+    private V value;
 
     public Couple(K key, V value) {
         this.key = key;
         this.value = value;
     }
-
-    public K getKey() {
-        return key;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
+    
     @Override
     public String toString() {
         return key + "=" + value;

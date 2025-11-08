@@ -48,7 +48,12 @@ public abstract class ItemInHandRendererMixin {
     private static void fluffy_fur$evaluateWhichHandsToRender(LocalPlayer pPlayer, CallbackInfoReturnable<ItemInHandRenderer.HandRenderSelection> cir) {
         ItemStack itemStack = pPlayer.getUseItem();
         InteractionHand hand = pPlayer.getUsedItemHand();
-        for (Item item : BowHandler.getBows()) {
+        for (Item item : BowHandler.bows) {
+            if (itemStack.is(item)) {
+                cir.setReturnValue(ItemInHandRenderer.HandRenderSelection.onlyForHand(hand));
+            }
+        }
+        for (Item item : BowHandler.crossbows) {
             if (itemStack.is(item)) {
                 cir.setReturnValue(ItemInHandRenderer.HandRenderSelection.onlyForHand(hand));
             }

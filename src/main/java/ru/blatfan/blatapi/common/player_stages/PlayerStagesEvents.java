@@ -22,7 +22,7 @@ public class PlayerStagesEvents {
         Item item = event.getCrafting().getItem();
         if(event.getEntity().level().isClientSide) return;
         if(PlayerStages.allStages.contains(CraftTask.getStage(item)))
-            PlayerStages.add(event.getEntity(), CraftTask.getStage(item));
+            PlayerStages.setBool(event.getEntity(), CraftTask.getStage(item), true);
     }
     @SubscribeEvent
     public static void onPlayerKill(LivingDeathEvent event){
@@ -31,7 +31,7 @@ public class PlayerStagesEvents {
         if(!source.is(DamageTypes.PLAYER_ATTACK)) return;
         if(source.getDirectEntity() instanceof Player player)
             if(PlayerStages.allStages.contains(KillTask.getStage(entity.getType())))
-                PlayerStages.add(player, KillTask.getStage(entity.getType()));
+                PlayerStages.setBool(player, KillTask.getStage(entity.getType()), true);
     }
     
     @SubscribeEvent

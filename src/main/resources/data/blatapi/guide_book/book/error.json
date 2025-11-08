@@ -4,6 +4,7 @@
   "author": "Unknown Author",
   "title_color": "#DE39E8",
   "tooltip": "Unknown",
+  "to_registry": false,
   "pedestal": {
     "item": "minecraft:bedrock"
   }

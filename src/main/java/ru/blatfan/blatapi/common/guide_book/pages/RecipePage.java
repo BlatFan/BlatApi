@@ -13,7 +13,7 @@ import ru.blatfan.blatapi.client.guide_book.recipe_renderers.RecipeRenderer;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.utils.ColorHelper;
 import ru.blatfan.blatapi.utils.RecipeHelper;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.util.ArrayList;

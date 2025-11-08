@@ -3,6 +3,7 @@ package ru.blatfan.blatapi.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -21,15 +22,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import ru.blatfan.blatapi.common.core.Vector3;
+import ru.blatfan.blatapi.utils.collection.Vector3;
 
+@UtilityClass@SuppressWarnings("ALL")
 public class EntityUtil {
 
-  private static final double ENTITY_PULL_DIST = 0.4; //closer than this and nothing happens
-  private static final double ENTITY_PULL_SPEED_CUTOFF = 3; //closer than this and it slows down
+  private static final double ENTITY_PULL_DIST = 0.4;
+  private static final double ENTITY_PULL_SPEED_CUTOFF = 3;
   private static final float ITEMSPEEDFAR = 0.9F;
   private static final float ITEMSPEEDCLOSE = 0.2F;
-  private static final int TICKS_FALLDIST_SYNC = 22; //tick every so often
+  private static final int TICKS_FALLDIST_SYNC = 22;
 
   public static boolean haveSameDimension(Entity tamed, Entity owner) {
     return LevelWorldUtil.dimensionToString(tamed.level()).equalsIgnoreCase(

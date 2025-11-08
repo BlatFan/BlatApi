@@ -63,7 +63,15 @@ public class AnvilRecipe implements IAnvilRecipe {
     public AnvilRecipe(ResourceLocation id, ItemStack result, List<ItemStack> leftInput, List<ItemStack> rightInput, int experience) {
         this(id, result, NonNullList.of(Ingredient.EMPTY, Ingredient.of(leftInput.stream()), Ingredient.of(rightInput.stream())), Util.make(NonNullList.create(), returns -> returns.addAll(List.of(ItemStack.EMPTY, ItemStack.EMPTY))), Util.make(new ArrayList<>(), nbt -> nbt.addAll(List.of(leftInput.get(0).hasTag() ? leftInput.get(0).getTag() : new CompoundTag(), rightInput.get(0).hasTag() ? rightInput.get(0).getTag() : new CompoundTag()))), Util.make(new ArrayList<>(), strictNbt -> strictNbt.addAll(List.of(false, false))), Util.make(new ArrayList<>(), consumes -> consumes.addAll(List.of(true, true))), Util.make(new ArrayList<>(), useDurability -> useDurability.addAll(List.of(false, false))), List.of(leftInput.get(0).getCount(), rightInput.get(0).getCount()), false, experience);
     }
-
+    
+    public AnvilRecipe(ResourceLocation id, ItemStack result, IngredientWithCount leftInput, IngredientWithCount rightInput, int experience, boolean shapeless) {
+        this(id, result, NonNullList.of(Ingredient.EMPTY, leftInput, rightInput), Util.make(NonNullList.create(), returns -> returns.addAll(List.of(ItemStack.EMPTY, ItemStack.EMPTY))), Util.make(new ArrayList<>(), nbt -> nbt.addAll(List.of(new CompoundTag(), new CompoundTag()))), Util.make(new ArrayList<>(), strictNbt -> strictNbt.addAll(List.of(false, false))), Util.make(new ArrayList<>(), consumes -> consumes.addAll(List.of(true, true))), Util.make(new ArrayList<>(), useDurability -> useDurability.addAll(List.of(false, false))), List.of(leftInput.getCount(), rightInput.getCount()), shapeless, experience);
+    }
+    
+    public AnvilRecipe(ResourceLocation id, ItemStack result, IngredientWithCount leftInput, IngredientWithCount rightInput, int experience) {
+        this(id, result, leftInput, rightInput, experience, false);
+    }
+    
     public AnvilRecipe(ResourceLocation id, ItemStack result, ItemStack leftInput, ItemStack rightInput, int experience) {
         this(id, result, NonNullList.of(Ingredient.EMPTY, Ingredient.of(leftInput), Ingredient.of(rightInput)), Util.make(NonNullList.create(), returns -> returns.addAll(List.of(ItemStack.EMPTY, ItemStack.EMPTY))), Util.make(new ArrayList<>(), nbt -> nbt.addAll(List.of(leftInput.hasTag() ? leftInput.getTag() : new CompoundTag(), rightInput.hasTag() ? rightInput.getTag() : new CompoundTag()))), Util.make(new ArrayList<>(), strictNbt -> strictNbt.addAll(List.of(false, false))), Util.make(new ArrayList<>(), consumes -> consumes.addAll(List.of(true, true))), Util.make(new ArrayList<>(), useDurability -> useDurability.addAll(List.of(false, false))), List.of(leftInput.getCount(), rightInput.getCount()), false, experience);
     }
@@ -83,9 +91,12 @@ public class AnvilRecipe implements IAnvilRecipe {
     public AnvilRecipe(ResourceLocation id, ItemStack result, ItemStack leftInput, Ingredient rightInput, int rightInputCount, int experience) {
         this(id, result, NonNullList.of(Ingredient.EMPTY, Ingredient.of(leftInput), rightInput), Util.make(NonNullList.create(), returns -> returns.addAll(List.of(ItemStack.EMPTY, ItemStack.EMPTY))), Util.make(new ArrayList<>(), nbt -> nbt.addAll(List.of(leftInput.hasTag() ? leftInput.getTag() : new CompoundTag(), new CompoundTag()))), Util.make(new ArrayList<>(), strictNbt -> strictNbt.addAll(List.of(false, false))), Util.make(new ArrayList<>(), consumes -> consumes.addAll(List.of(true, true))), Util.make(new ArrayList<>(), useDurability -> useDurability.addAll(List.of(false, false))), List.of(leftInput.getCount(), rightInputCount), false, experience);
     }
-
+    
     public AnvilRecipe(ResourceLocation id, ItemStack result, Ingredient leftInput, int leftInputCount, Ingredient rightInput, int rightInputCount, int experience) {
         this(id, result, NonNullList.of(Ingredient.EMPTY, leftInput, rightInput), Util.make(NonNullList.create(), returns -> returns.addAll(List.of(ItemStack.EMPTY, ItemStack.EMPTY))), Util.make(new ArrayList<>(), nbt -> nbt.addAll(List.of(new CompoundTag(), new CompoundTag()))), Util.make(new ArrayList<>(), strictNbt -> strictNbt.addAll(List.of(false, false))), Util.make(new ArrayList<>(), consumes -> consumes.addAll(List.of(true, true))), Util.make(new ArrayList<>(), useDurability -> useDurability.addAll(List.of(false, false))), List.of(leftInputCount, rightInputCount), false, experience);
+    }
+    public AnvilRecipe(ResourceLocation id, ItemStack result, Ingredient leftInput, int leftInputCount, Ingredient rightInput, int rightInputCount, int experience, boolean shapeless) {
+        this(id, result, NonNullList.of(Ingredient.EMPTY, leftInput, rightInput), Util.make(NonNullList.create(), returns -> returns.addAll(List.of(ItemStack.EMPTY, ItemStack.EMPTY))), Util.make(new ArrayList<>(), nbt -> nbt.addAll(List.of(new CompoundTag(), new CompoundTag()))), Util.make(new ArrayList<>(), strictNbt -> strictNbt.addAll(List.of(false, false))), Util.make(new ArrayList<>(), consumes -> consumes.addAll(List.of(true, true))), Util.make(new ArrayList<>(), useDurability -> useDurability.addAll(List.of(false, false))), List.of(leftInputCount, rightInputCount), shapeless, experience);
     }
 
     public AnvilRecipe(ResourceLocation id, ItemStack result, Ingredient leftInput, Ingredient rightInput, int experience) {

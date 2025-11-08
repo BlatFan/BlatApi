@@ -8,7 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import ru.blatfan.blatapi.common.task.Task;
 import ru.blatfan.blatapi.utils.RecipeUtil;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.Color;
 import java.util.ArrayList;

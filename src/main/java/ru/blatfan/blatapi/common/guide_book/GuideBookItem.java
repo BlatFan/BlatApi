@@ -15,7 +15,7 @@ import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.utils.NBTHelper;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.util.List;
 

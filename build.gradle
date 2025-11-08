@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        // These repositories are only for Gradle plugins, put any other repositories in the repository block further below
         maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
         mavenCentral()
     }
@@ -12,6 +11,7 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'idea'
+    id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
@@ -19,7 +19,7 @@ plugins {
 apply plugin: 'org.spongepowered.mixin'
 
 group = mod_group_id
-version = mod_version
+version = "${minecraft_version}-${mod_version}"
 
 base {
     archivesName = mod_id
@@ -27,6 +27,20 @@ base {
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(17)
+    withSourcesJar()
+    withJavadocJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId = archivesBaseName
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
 }
 
 minecraft {
@@ -99,6 +113,8 @@ repositories {
             includeGroup "dev.architectury"
         }
     }
+    mavenLocal()
+    mavenCentral()
 }
 
 dependencies {
@@ -121,6 +137,7 @@ dependencies {
     runtimeOnly fg.deobf("curse.maven:configured-457570:5180900")
     runtimeOnly fg.deobf("curse.maven:model-gap-fix-676136:5200949")
     runtimeOnly fg.deobf("curse.maven:embeddium-908741:5566632")
+    runtimeOnly fg.deobf("curse.maven:ibe-editor-256822:4994072")
 
     compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.20'
@@ -158,6 +175,7 @@ tasks.named('jar', Jar).configure {
     }
 
     finalizedBy 'reobfJar'
+    finalizedBy 'publishToMavenLocal'
 }
 
 tasks.withType(JavaCompile).configureEach {

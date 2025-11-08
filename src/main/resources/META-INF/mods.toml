@@ -10,7 +10,7 @@ license = "${mod_license}"
     displayURL="https://github.com/BlatFan/mod_updates/blob/main/blatapi/links.md"
     logoFile="icon.png"
     credits="Thanks to MaxBogomol"
-    authors = "${mod_authors}"
+    authors = "BlatFan"
     description = '''${mod_description}'''
 
 [[dependencies."${mod_id}"]]

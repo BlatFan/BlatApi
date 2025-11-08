@@ -1,8 +1,8 @@
 package ru.blatfan.blatapi.client.gui.widget;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -10,25 +10,33 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.render.FluidRenderMap;
+import ru.blatfan.blatapi.utils.GuiUtil;
 
 public class FluidBar extends AbstractWidget {
   public final ResourceLocation FLUID_WIDGET;
   private final IFluidHandler fluidHandler;
   private final int tank;
+  private final float scale;
+  private final Color barColor;
   
-  public FluidBar(int pX, int pY, int pWidth, ResourceLocation fluidWidget, IFluidHandler fluidHandler, int tank) {
+  public FluidBar(int pX, int pY, int pWidth, ResourceLocation fluidWidget, IFluidHandler fluidHandler, int tank, Color barColor) {
     super(pX, pY, pWidth, 62*(pWidth/16), Component.literal("Fluid Bar"));
-    FLUID_WIDGET = fluidWidget;
-      this.fluidHandler = fluidHandler;
-      this.tank = tank;
+    this.FLUID_WIDGET = fluidWidget;
+    this.fluidHandler = fluidHandler;
+    this.tank = tank;
+    this.scale = pWidth/16f;
+    this.barColor = barColor;
+  }
+  public FluidBar(int pX, int pY, int pWidth, IFluidHandler fluidHandler, int tank, Color barColor){
+    this(pX, pY, pWidth, BlatApi.loc("textures/gui/fluid.png"), fluidHandler, tank, barColor);
   }
   public FluidBar(int pX, int pY, int pWidth, IFluidHandler fluidHandler, int tank){
-    this(pX, pY, pWidth, BlatApi.loc("textures/gui/fluid.png"), fluidHandler, tank);
+    this(pX, pY, pWidth, BlatApi.loc("textures/gui/fluid.png"), fluidHandler, tank, Color.WHITE);
   }
   
   public boolean isMouseover(int mouseX, int mouseY) {
@@ -38,37 +46,68 @@ public class FluidBar extends AbstractWidget {
   
   @Override
   protected void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float pPartialTick) {
+    gui.setColor(barColor.getRed()/255f, barColor.getGreen()/255f, barColor.getBlue()/255f, 1);
     gui.blit(FLUID_WIDGET,
         getX(), getY(), 0, 0,
         width, height,
-        width, height);
-    //NOW the fluid part
+        width*2, height);
+    gui.setColor(1, 1, 1, 1);
+    
     if (!(fluidHandler == null || fluidHandler.getTankCapacity(tank) == 0 || fluidHandler.getFluidInTank(tank).getAmount() == 0)) {
       float capacity = fluidHandler.getTankCapacity(tank);
       float amount = fluidHandler.getFluidInTank(tank).getAmount();
-      float scale = amount / capacity;
-      int fluidAmount = (int) (scale * height);
-      TextureAtlasSprite sprite = FluidRenderMap.getCachedFluidTexture(fluidHandler.getFluidInTank(tank), FluidRenderMap.FluidFlow.STILL);
-      if (fluidHandler.getFluidInTank(tank).getFluid() == Fluids.WATER)
-        RenderSystem.setShaderColor(0, 0, 1, 1);
-      int xPosition = getX() + 1;
-      int yPosition = getY() + 1;
-      int maximum = height - 2;
-      int desiredWidth = width - 2;
-      int desiredHeight = fluidAmount - 2;
-      gui.blit(xPosition, yPosition + (maximum - desiredHeight), 0, desiredWidth, desiredHeight, sprite);
-      RenderSystem.setShaderColor(1, 1, 1, 1);
-    }
-    if (this.isMouseover(mouseX, mouseY)) {
-      String tt = "0mb";
-      FluidStack current = fluidHandler.getFluidInTank(tank);
-      if (!current.isEmpty()) {
-        tt = current.getAmount() + "mb /" + fluidHandler.getTankCapacity(tank) + "mb " + current.getDisplayName().getString();
+      FluidStack fluidStack = fluidHandler.getFluidInTank(tank);
+
+      float fillRatio = Math.min(1.0f, amount / capacity);
+      int fluidHeight = Math.round(height * fillRatio);
+      
+      TextureAtlasSprite sprite = FluidRenderMap.getCachedFluidTexture(fluidStack, FluidRenderMap.FluidFlow.STILL);
+      int fluidColor = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
+
+      int xPosition = Math.round(getX() + scale);
+      int yPosition = Math.round(getY() + scale);
+      int maxHeight = Math.round(height - 2 * scale);
+      int renderWidth = Math.round(width - 2 * scale);
+      int renderHeight = Math.round(fluidHeight - 2 * scale);
+      
+      if (renderHeight > 0) {
+        float r = ((fluidColor >> 16) & 0xFF) / 255.0f;
+        float g = ((fluidColor >> 8) & 0xFF) / 255.0f;
+        float b = (fluidColor & 0xFF) / 255.0f;
+        float a = ((fluidColor >> 24) & 0xFF) / 255.0f;
+        
+        int tileSize = (int) (16*scale);
+        int yOffset = 0;
+        int remainingHeight = renderHeight;
+        
+        while (remainingHeight > 0) {
+          int currentTileHeight = Math.min(tileSize, remainingHeight);
+          int renderY = yPosition + maxHeight - yOffset - currentTileHeight;
+          
+          gui.blit(xPosition, renderY, 0, renderWidth, currentTileHeight, sprite, r, g, b, a);
+          
+          yOffset += currentTileHeight;
+          remainingHeight -= currentTileHeight;
+        }
       }
-      List<Component> list = new ArrayList<>();
-      list.add(Component.translatable(tt));
-      gui.renderComponentTooltip(Minecraft.getInstance().font, list, mouseX, mouseY);
+      if (this.isMouseover(mouseX, mouseY)) {
+        String tt = "0mb";
+        FluidStack current = fluidHandler.getFluidInTank(tank);
+        if (!current.isEmpty()) {
+          tt = current.getAmount() + "mb /" + fluidHandler.getTankCapacity(tank) + "mb " + current.getDisplayName().getString();
+        }
+        List<Component> list = new ArrayList<>();
+        list.add(Component.translatable(tt));
+        gui.renderComponentTooltip(Minecraft.getInstance().font, list, mouseX, mouseY);
+      }
     }
+    
+    gui.setColor(barColor.getRed()/255f, barColor.getGreen()/255f, barColor.getBlue()/255f, 1);
+    gui.blit(FLUID_WIDGET,
+        getX(), getY(), width, 0,
+        width, height,
+        width*2, height);
+    gui.setColor(1, 1, 1, 1);
   }
   
   @Override

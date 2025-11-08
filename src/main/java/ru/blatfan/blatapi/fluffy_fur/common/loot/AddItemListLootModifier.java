@@ -25,8 +25,8 @@ public class AddItemListLootModifier extends LootModifier {
 
     private final List<Item> items;
 
-    protected AddItemListLootModifier(LootItemCondition[] conditionsIn, List<Item> items) {
-        super(conditionsIn);
+    protected AddItemListLootModifier(LootItemCondition[] conditions, List<Item> items) {
+        super(conditions);
         this.items = items;
     }
 
@@ -35,7 +35,7 @@ public class AddItemListLootModifier extends LootModifier {
         ObjectArrayList<ItemStack> newLoot = new ObjectArrayList<>();
 
         for (LootItemCondition condition : this.conditions) {
-            if(!condition.test(context)) {
+            if (!condition.test(context)) {
                 return generatedLoot;
             }
         }

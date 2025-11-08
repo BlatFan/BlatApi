@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Random;
 import java.util.UUID;
 
+import lombok.experimental.UtilityClass;
 import ru.blatfan.blatapi.BlatApi;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeMod;
 
+@UtilityClass
 public class AttributesUtil {
 
   static final Random RAND = new Random();

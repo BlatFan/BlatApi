@@ -1,6 +1,8 @@
 package ru.blatfan.blatapi.utils;
 
 import java.util.Optional;
+
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -22,8 +24,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
-import ru.blatfan.blatapi.common.core.BlockPosDim;
 
+@UtilityClass@SuppressWarnings("ALL")
 public class PlayerUtil {
 
   public static void swapArmorStand(ArmorStand stand, Player player, InteractionHand hand) {

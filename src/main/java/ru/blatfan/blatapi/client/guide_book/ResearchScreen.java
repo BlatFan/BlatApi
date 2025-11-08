@@ -9,16 +9,16 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import ru.blatfan.blatapi.api.event.EntryClickedEvent;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.common.guide_book.GuideBookCategory;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
 import ru.blatfan.blatapi.common.guide_book.GuideBookEntry;
-import ru.blatfan.blatapi.api.event.EntryClickedEvent;
 import ru.blatfan.blatapi.common.player_stages.PlayerStages;
 import ru.blatfan.blatapi.common.task.BookEntryTask;
 import ru.blatfan.blatapi.common.task.Task;
 import ru.blatfan.blatapi.utils.MathUtils;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,9 +141,9 @@ public class ResearchScreen extends Screen {
             RenderSystem.setShaderColor(1, 1, 1, a);
             
             if(node.advance())
-                gui.blit(texture, node.x() - 5, node.y() - 5, 74, PlayerStages.get(GuideClient.player, id.toString()) ? 26 : 0, 26, 26, 256, 256);
+                gui.blit(texture, node.x() - 5, node.y() - 5, 74, PlayerStages.getBool(GuideClient.player, id.toString()) ? 26 : 0, 26, 26, 256, 256);
             else
-                gui.blit(texture, node.x() - 5, node.y() - 5, 48, PlayerStages.get(GuideClient.player, id.toString()) ? 26 : 0, 26, 26, 256, 256);
+                gui.blit(texture, node.x() - 5, node.y() - 5, 48, PlayerStages.getBool(GuideClient.player, id.toString()) ? 26 : 0, 26, 26, 256, 256);
             gui.renderFakeItem(node.icon(), node.x(), node.y());
             
             RenderSystem.setShaderColor(1, 1, 1, 1);
@@ -198,6 +198,8 @@ public class ResearchScreen extends Screen {
     
     public void renderTooltips(GuiGraphics gui, int mouseX, int mouseY) {
         if(guideBookGui!=null) return;
+        gui.pose().pushPose();
+        gui.pose().translate(0, 0, 1000);
         List<Component> list = new ArrayList<>();
         for (GuideBookEntry node : entries()) {
             double x = ((node.x()-5)*targetScale)+((double) width / 2+targetOffsetX);
@@ -224,6 +226,7 @@ public class ResearchScreen extends Screen {
         }
         if(!list.isEmpty())
             gui.renderComponentTooltip(getMinecraft().font, list, mouseX, mouseY);
+        gui.pose().popPose();
     }
     
     @Override
@@ -272,7 +275,8 @@ public class ResearchScreen extends Screen {
             return true;
         } else if(mouseX>width-36 && mouseX<width &&
             mouseY>16 && mouseY<height-24) {
-            targetOffset = Math.max(0, Math.min((categories().size() - 1) * 30, targetOffset - delta * 2));
+            targetOffset = Math.max(0, Math.min(Math.min(0,
+                ((categories().size() - 1) * 30)-height-24), targetOffset - delta * 2));
             return true;
         }
         return false;
@@ -287,7 +291,8 @@ public class ResearchScreen extends Screen {
             return true;
         } else if(mouseX>width-36 && mouseX<width &&
             mouseY>16 && mouseY<height-24 && button==0) {
-            targetOffset = Math.max(0, Math.min((categories().size() - 1) * 30, targetOffset + deltaY));
+            targetOffset = Math.max(0, Math.min(Math.min(0,
+                ((categories().size() - 1) * 30)-height-24), targetOffset + deltaY));
             return true;
         }
         return false;

@@ -14,6 +14,8 @@ import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.utils.*;
+import ru.blatfan.blatapi.utils.collection.SplitText;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.util.ArrayList;

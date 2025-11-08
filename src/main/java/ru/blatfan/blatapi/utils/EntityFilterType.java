@@ -1,7 +1,9 @@
-package ru.blatfan.blatapi.common.core;
+package ru.blatfan.blatapi.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.LivingEntity;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
+@SuppressWarnings("ALL")
 public enum EntityFilterType {
 
   //living DOES include players

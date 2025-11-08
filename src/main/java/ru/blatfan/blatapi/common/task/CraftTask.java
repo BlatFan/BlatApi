@@ -5,16 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.registries.ForgeRegistries;
 import ru.blatfan.blatapi.common.player_stages.PlayerStages;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 
@@ -25,13 +24,14 @@ public class CraftTask extends Task {
     private ItemStack item;
     
     public static String getStage(ItemLike item){
-        ResourceLocation id = BuiltInRegistries.ITEM.getKey(item.asItem());
+        ResourceLocation id = ForgeRegistries.ITEMS.getKey(item.asItem());
+        if(id==null) return "EMPTY";
         return "item_crafted_"+id.getNamespace()+"_"+id.getPath();
     }
     
     @Override
     public boolean get(Player player) {
-        return PlayerStages.get(player, getStage(item.getItem()));
+        return PlayerStages.getBool(player, getStage(item.getItem()));
     }
     
     public static CraftTask fromJson(JsonObject json){
@@ -43,7 +43,7 @@ public class CraftTask extends Task {
     
     @Override
     public Component text(Player player) {
-        return Text.create("task.blatapi.craft").add(item.getDisplayName()).withColor(Color.WHITE);
+        return Text.create("task.blatapi.craft").add(item.getHoverName()).withColor(Color.WHITE);
     }
     
     @Override

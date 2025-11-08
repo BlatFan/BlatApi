@@ -1,6 +1,7 @@
 package ru.blatfan.blatapi.fluffy_fur.registry.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
@@ -11,8 +12,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 public class FluffyFurKeyMappings {
-    private static final String CATEGORY = "key.category."+ FluffyFur.MOD_ID+".fluffy_fur";
-    public static final KeyMapping SKIN_MENU = new KeyMapping("key."+FluffyFur.MOD_ID+".skin_menu", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, CATEGORY);
+    public static final KeyMapping SKIN_MENU = new KeyMapping("key."+FluffyFur.MOD_ID+".skin_menu",
+        KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_UNKNOWN, BlatApi.MOD_NAME);
 
     @Mod.EventBusSubscriber(modid = FluffyFur.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientRegistryEvents {

@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.utils;
+package ru.blatfan.blatapi.utils.collection;
 
 import net.minecraft.client.Minecraft;
 

@@ -43,7 +43,7 @@ import ru.blatfan.blatapi.common.multiblock.matcher.DisplayOnlyMatcher;
 import ru.blatfan.blatapi.common.multiblock.matcher.Matchers;
 import ru.blatfan.blatapi.utils.ClientTicks;
 import ru.blatfan.blatapi.utils.GuiUtil;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.util.*;

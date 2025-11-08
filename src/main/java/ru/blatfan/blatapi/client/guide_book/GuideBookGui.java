@@ -68,9 +68,8 @@ public class GuideBookGui {
         
         for(int i=0; i<GuideManager.getBookExtensions().size(); i++) {
             BookGuiExtension ex = GuideManager.getBookExtensions().values().toArray(new BookGuiExtension[0])[i];
-            if(ex.willRenderBG(getEntry()))
-                gui.blit(data.getTexture(), guiLeft + 262, guiTop + 8 + (i*18), 100, 16, 41, 15, 256, 256);
-            ex.render(getEntry(), gui, guiLeft + 262, guiTop + 8 + (i*18), mX, mY, partialTick);
+            if(ex.shouldRender(getEntry()))
+                ex.render(data, getEntry(), gui, guiLeft + 262, guiTop + 8 + (i*18), mX, mY, partialTick);
         }
     }
     

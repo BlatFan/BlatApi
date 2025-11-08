@@ -1,9 +1,11 @@
 package ru.blatfan.blatapi.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
+@UtilityClass@SuppressWarnings("ALL")
 public final class NBTHelper {
 	public static void setTag(ItemStack stack, String key, Tag value) {
 		getTagCompound(stack).put(key, value);

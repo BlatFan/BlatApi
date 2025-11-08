@@ -3,6 +3,8 @@ package ru.blatfan.blatapi.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import lombok.experimental.UtilityClass;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
@@ -12,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.ForgeRegistries;
 
+@UtilityClass@SuppressWarnings("ALL")
 public class EnchantUtil {
 
   public static List<MobEffect> getNegativeEffects() {

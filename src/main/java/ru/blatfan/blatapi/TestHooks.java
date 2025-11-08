@@ -15,7 +15,7 @@ import ru.blatfan.blatapi.client.TestScreen;
 
 public class TestHooks {
     public static final KeyMapping TEST = new KeyMapping("Test",
-        KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_H), BlatApi.MOD_ID);
+        KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_H), BlatApi.MOD_NAME);
     
     public static void setup(){
         MinecraftForge.EVENT_BUS.register(CustomClientEventHandler.class);

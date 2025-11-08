@@ -1,6 +1,12 @@
 package ru.blatfan.blatapi.mixins.common;
 
 
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
+import ru.blatfan.blatapi.common.recipe.IngredientWithCount;
 import ru.blatfan.blatapi.utils.RecipeHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
@@ -26,13 +32,12 @@ public class RecipeManagerMixin {
      * <p>
      * Surely I'll come up with a better solution one day Clueless.
      */
-    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(
         at = @At(value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap;builder()Lcom/google/common/collect/ImmutableMap$Builder;", ordinal = 0),
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         locals = LocalCapture.CAPTURE_FAILHARD
     )
-    public void cucumber$apply(
+    public void apply(
         Map<ResourceLocation, JsonElement> p_44037_,
         ResourceManager p_44038_,
         ProfilerFiller p_44039_,

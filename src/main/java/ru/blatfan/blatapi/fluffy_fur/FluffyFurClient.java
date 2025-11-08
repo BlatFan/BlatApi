@@ -1,21 +1,22 @@
 package ru.blatfan.blatapi.fluffy_fur;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.world.InteractionResult;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
-import ru.blatfan.blatapi.common.guide_book.GuideBookItem;
+import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.fluffy_fur.client.event.FluffyFurClientEvents;
+import ru.blatfan.blatapi.fluffy_fur.client.render.LevelRenderHandler;
+import ru.blatfan.blatapi.fluffy_fur.client.shader.postprocess.PostProcessHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.splash.SplashHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurMod;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurModsHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurPanorama;
 import ru.blatfan.blatapi.fluffy_fur.integration.client.ShadersIntegration;
-import ru.blatfan.blatapi.fluffy_fur.registry.common.item.FluffyFurCreativeTabs;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,11 +26,9 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import ru.blatfan.blatapi.utils.ClientTicks;
-import ru.blatfan.blatapi.utils.Text;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
-
-import static ru.blatfan.blatapi.BlatApi.loc;
 
 public class FluffyFurClient {
 
@@ -41,8 +40,11 @@ public class FluffyFurClient {
             IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
             IEventBus forgeBus = MinecraftForge.EVENT_BUS;
             forgeBus.register(new FluffyFurClientEvents());
-
-            eventBus.addListener(FluffyFurCreativeTabs::addCreativeTabContent);
+            
+            forgeBus.addListener(EventPriority.LOWEST, LevelRenderHandler::onLevelRender);
+            forgeBus.addListener(EventPriority.LOWEST, PostProcessHandler::onLevelRender);
+            
+            eventBus.addListener(BARegistry.CreativeTabs::addCreativeTabContent);
         }
     }
 
@@ -108,7 +110,8 @@ public class FluffyFurClient {
                 .addModrinthLink("https://modrinth.com/mod/blatapi")
                 .addDiscordLink("https://discord.gg/eHJChH9mqH")
         ;
-        VANILLA_PANORAMA = new FluffyFurPanorama("minecraft:vanilla", Text.create("panorama.minecraft.vanilla")).setItem(new ItemStack(Items.GRASS_BLOCK));
+        VANILLA_PANORAMA = new FluffyFurPanorama("minecraft:vanilla", Text.create("panorama.minecraft.vanilla").withColor(Color.GREEN))
+            .setItem(new ItemStack(Items.GRASS_BLOCK));
         
         registerMod(MOD_INSTANCE);
         registerPanorama(VANILLA_PANORAMA);

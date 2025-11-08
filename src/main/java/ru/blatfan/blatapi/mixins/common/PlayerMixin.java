@@ -18,7 +18,7 @@ public abstract class PlayerMixin extends LivingEntity {
     @Override
     public ItemStack eat(Level pLevel, ItemStack pFood) {
         if(pFood.isEdible() && PlayerStages.allStages.contains(EatTask.getStage(pFood.getItem())))
-            PlayerStages.add((Player) ((Object) this), EatTask.getStage(pFood.getItem()));
+            PlayerStages.setBool((Player) ((Object) this), EatTask.getStage(pFood.getItem()), true);
         return super.eat(pLevel, pFood);
     }
 }

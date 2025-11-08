@@ -20,7 +20,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
-import ru.blatfan.blatapi.utils.BlockRendererUtil;
+import ru.blatfan.blatapi.utils.BlockUtil;
 
 import javax.annotation.Nonnull;
 
@@ -51,7 +51,7 @@ public abstract class BlockSimpleInventory extends BlockEntityBase {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return BlockRendererUtil.getLazyItems(this).cast();
+            return BlockUtil.getLazyItems(this).cast();
         return super.getCapability(cap, side);
     }
 

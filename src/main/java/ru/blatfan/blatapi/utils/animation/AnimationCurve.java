@@ -1,10 +1,12 @@
 package ru.blatfan.blatapi.utils.animation;
 
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import ru.blatfan.blatapi.common.core.Vector3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import ru.blatfan.blatapi.utils.collection.Vector3;
 
 public class AnimationCurve {
+    @OnlyIn(Dist.CLIENT)
     public static float timeUnite(){
         return Minecraft.getInstance().getPartialTick();
     }

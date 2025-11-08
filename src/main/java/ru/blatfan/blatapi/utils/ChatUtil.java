@@ -1,19 +1,21 @@
 package ru.blatfan.blatapi.utils;
 
 import com.mojang.brigadier.context.CommandContext;
+import lombok.experimental.UtilityClass;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
+import ru.blatfan.blatapi.utils.collection.Text;
 
+@UtilityClass
 public class ChatUtil {
 
-  public static MutableComponent ilang(String message) {
-    return Component.translatable(message);
+  public static Text ilang(String message) {
+    return Text.create(message);
   }
 
-  public static void addChatMessage(Player player, MutableComponent message) {
+  public static void addChatMessage(Player player, Component message) {
     if (player.level().isClientSide) {
       player.sendSystemMessage(message);
     }

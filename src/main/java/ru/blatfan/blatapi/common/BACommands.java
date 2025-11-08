@@ -1,34 +1,24 @@
 package ru.blatfan.blatapi.common;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
-import ru.blatfan.blatapi.common.player_stages.PlayerStages;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Mod.EventBusSubscriber
 public class BACommands {
     
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        PlayerStagesCommands.onRegisterCommands(event);
+        //PlayerStagesCommands.onRegisterCommands(event);
         MultiblockCommands.onRegisterCommands(event);
     }
     
@@ -72,7 +62,8 @@ public class BACommands {
             return MultiblockPreviewRenderer.buildMultiblock(context.getSource().getLevel());
         }
     }
-    
+    // TODO PlayerStagesCommands
+    /*
     public static class PlayerStagesCommands {
         private static final DynamicCommandExceptionType INVALID_STAGE = new DynamicCommandExceptionType(
             stage -> Component.translatable("argument.blatapi.player_stages.invalid_stage", stage)
@@ -206,5 +197,5 @@ public class BACommands {
         private static boolean isValidStage(String stage) {
             return PlayerStages.allStages.contains(stage);
         }
-    }
+    }*/
 }

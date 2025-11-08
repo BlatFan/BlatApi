@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Pair;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+@SuppressWarnings("ALL")
 public class FlexResourceLocation {
     private final List<Pair<Supplier<Boolean>, ResourceLocation>> data = new ArrayList<>();
     private final ResourceLocation defaultRL;

@@ -1,7 +1,7 @@
 package ru.blatfan.blatapi.fluffy_fur.client.particle;
 
 import ru.blatfan.blatapi.fluffy_fur.client.particle.options.FluidParticleOptions;
-import ru.blatfan.blatapi.utils.RenderUtil;
+import ru.blatfan.blatapi.utils.GuiUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.material.Fluids;
@@ -15,12 +15,12 @@ public class FluidParticle extends GenericParticle {
         if (!options.fluidStack.isEmpty()) {
             FluidType type = options.fluidStack.getFluid().getFluidType();
             IClientFluidTypeExtensions clientType = IClientFluidTypeExtensions.of(type);
-            TextureAtlasSprite sprite = RenderUtil.getSprite(clientType.getStillTexture(options.fluidStack));
-            if (options.flowing) sprite = RenderUtil.getSprite(clientType.getFlowingTexture(options.fluidStack));
+            TextureAtlasSprite sprite = GuiUtil.getSprite(clientType.getStillTexture(options.fluidStack));
+            if (options.flowing) sprite = GuiUtil.getSprite(clientType.getFlowingTexture(options.fluidStack));
             this.setSprite(sprite);
         } else {
             IClientFluidTypeExtensions clientType = IClientFluidTypeExtensions.of(Fluids.WATER);
-            TextureAtlasSprite sprite = RenderUtil.getSprite(clientType.getStillTexture());
+            TextureAtlasSprite sprite = GuiUtil.getSprite(clientType.getStillTexture());
             this.setSprite(sprite);
         }
     }

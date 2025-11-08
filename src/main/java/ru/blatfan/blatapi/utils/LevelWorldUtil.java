@@ -2,7 +2,8 @@ package ru.blatfan.blatapi.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import ru.blatfan.blatapi.common.core.BlockPosDim;
+
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.LeverBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+@UtilityClass@SuppressWarnings("ALL")
 public class LevelWorldUtil {
 
   public static Direction getRandomDirection(RandomSource rand) {
@@ -32,30 +34,25 @@ public class LevelWorldUtil {
   public static boolean removeFlowingLiquid(Level world, BlockPos pos, boolean nukeOption) {
     BlockState blockHere = world.getBlockState(pos);
     if (blockHere.hasProperty(BlockStateProperties.WATERLOGGED)) {
-      // un-water log
       return world.setBlock(pos, blockHere.setValue(BlockStateProperties.WATERLOGGED, false), 18);
     }
     if (blockHere.getBlock() instanceof BucketPickup) {
       BucketPickup block = (BucketPickup) blockHere.getBlock();
-      //
       ItemStack res = block.pickupBlock(world, pos, blockHere);
       if (!res.isEmpty()) {
-        // flowing block
         return world.setBlock(pos, Blocks.AIR.defaultBlockState(), 18);
       }
       else {
-        return true; // was source block
+        return true;
       }
     }
     else if (nukeOption) {
-      //ok just nuke it 
       return world.setBlock(pos, Blocks.AIR.defaultBlockState(), 18);
     }
     return false;
   }
 
   public static String dimensionToString(Level world) {
-    //example: returns "minecraft:overworld" resource location
     return world.dimension().location().toString();
   }
 
@@ -195,7 +192,6 @@ public class LevelWorldUtil {
     worldIn.updateNeighborsAt(blockPos, blockState.getBlock());
   }
 
-  @SuppressWarnings("deprecation")
   public static BlockPos findClosestBlock(final Player player, final Block blockHunt, final int radiusIn) {
     BlockPos found = null;
     int xMin = (int) player.getX() - radiusIn;

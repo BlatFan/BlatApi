@@ -23,14 +23,27 @@ public class TexturedProgress{
   @Setter
   protected boolean topDown = false;
   
-  public TexturedProgress(int x, int y) {
-    this(x, y, BlatApi.loc("textures/gui/progress_bar.png"));
+  public static TexturedProgress createHorizontal(int x, int y) {
+    return new TexturedProgress(x, y, 22, 16, BlatApi.loc("textures/gui/progress_bar.png"));
   }
-  public TexturedProgress(int x, int y, ResourceLocation texture) {
-    this(x, y, 22, 16, texture);
+  public static TexturedProgress createVertical(int x, int y) {
+    TexturedProgress vert = new TexturedProgress(x, y, 16, 22, BlatApi.loc("textures/gui/progress_bar_vertical.png"));
+    vert.setTopDown(true);
+    return vert;
+  }
+  public static TexturedProgress create(int x, int y, ResourceLocation texture) {
+    return new TexturedProgress(x, y, 22, 16, texture);
+  }
+  public static TexturedProgress create(int x, int y, int width, int height, ResourceLocation texture) {
+    return new TexturedProgress(x, y, width, height, texture);
+  }
+  public static TexturedProgress create(int x, int y, int width, int height, boolean topDown, ResourceLocation texture) {
+    TexturedProgress bar = new TexturedProgress(x, y, width, height, texture);
+    bar.setTopDown(topDown);
+    return bar;
   }
 
-  public TexturedProgress(int x, int y, int width, int height, ResourceLocation texture) {
+  protected TexturedProgress(int x, int y, int width, int height, ResourceLocation texture) {
     this.x = x;
     this.y = y;
     this.width = width;
@@ -54,7 +67,7 @@ public class TexturedProgress{
       if (current != 0)
         gg.blit(texture, relX, relY, 0, height, width, height-rHeight, width, height * 2);
     }
-    else { //Left-Right mode
+    else {
       gg.blit(texture, relX, relY, 0, 0, width, height, width, height * 2);
       int rWidth = (int) (width * Math.min(current / max, 1.0F));
       if (current != 0)

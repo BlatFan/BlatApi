@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.mixins.client;
 
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
 import ru.blatfan.blatapi.fluffy_fur.client.sound.MusicHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.sound.MusicModifier;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,51 +22,51 @@ import java.util.Random;
 
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
-
     @Unique
     Random fluffy_fur$random = new Random();
-
-    @Inject(method = "getSituationalMusic", at = @At("TAIL"), cancellable = true)
+    
+    @Inject(method = "getSituationalMusic", at = @At("RETURN"), cancellable = true)
     private void fluffy_fur$getSituationalMusic(final CallbackInfoReturnable<Music> cir) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.screen instanceof WinScreen) {
-            return;
-        }
-
+        if (minecraft.screen instanceof WinScreen) return;
+        
         List<Music> possibleMusic = new ArrayList<>();
         List<Music> menuMusic = new ArrayList<>();
         Music defaultMusic = cir.getReturnValue();
-
-        for (MusicModifier modifier : MusicHandler.getModifiers()) {
+        List<MusicModifier> menuModifiers = new ArrayList<>(MusicHandler.getModifiers());
+        
+        for (MusicModifier modifier : menuModifiers)
             if (modifier.isCanPlay(defaultMusic, minecraft)) {
                 Music music = modifier.play(defaultMusic, minecraft);
-                if (music != null) {
-                    if (modifier.isMenu(defaultMusic, minecraft)) {
-                        menuMusic.add(music);
-                    } else {
-                        possibleMusic.add(music);
-                    }
-                }
+                if (music != null)
+                    if (modifier.isMenu(defaultMusic, minecraft)) menuMusic.add(music);
+                    else possibleMusic.add(music);
             }
-        }
-
-        if (menuMusic.size() > 0) {
+        
+        if (!menuMusic.isEmpty()) {
             if (minecraft.screen instanceof TitleScreen || defaultMusic == Musics.MENU) {
                 if (!menuMusic.contains(defaultMusic)) {
                     cir.setReturnValue(menuMusic.get(fluffy_fur$random.nextInt(0, menuMusic.size())));
+                    return;
                 }
             }
         }
-
-        if (possibleMusic.size() > 0) {
+        
+        if (!possibleMusic.isEmpty()) {
             cir.setReturnValue(possibleMusic.get(fluffy_fur$random.nextInt(0, possibleMusic.size())));
         }
     }
-
+    
     @Inject(at = @At("RETURN"), method = "isDemo", cancellable = true)
     public void fluffy_fur$isDemo(CallbackInfoReturnable<Boolean> cir) {
         if (FluffyFurClient.optifinePresent) {
             cir.setReturnValue(true);
         }
+    }
+
+    @Inject(at = @At("RETURN"), method = "createTitle", cancellable = true)
+    public void fluffy_fur$createTitle(CallbackInfoReturnable<String> cir) {
+        if(!BlatApi.CUSTOM_WINDOW_TITLE.equals("empty_title"))
+            cir.setReturnValue(BlatApi.CUSTOM_WINDOW_TITLE);
     }
 }

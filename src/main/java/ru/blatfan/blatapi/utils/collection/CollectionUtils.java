@@ -1,12 +1,14 @@
 package ru.blatfan.blatapi.utils.collection;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+@UtilityClass
 public class CollectionUtils {
-
     public static <T> List<T> list(){
         return new ArrayList<>();
     }

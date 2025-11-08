@@ -1,10 +1,12 @@
 package ru.blatfan.blatapi.utils;
 
+import lombok.experimental.UtilityClass;
 import org.joml.Vector3f;
 import java.awt.*;
 import java.util.ArrayList;
 
 @SuppressWarnings("unused")
+@UtilityClass
 public class ColorHelper {
 
     public static Color getColor(int decimal) {

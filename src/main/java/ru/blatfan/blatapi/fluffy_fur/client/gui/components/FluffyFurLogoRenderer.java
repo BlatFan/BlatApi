@@ -6,7 +6,7 @@ import net.minecraft.client.gui.components.LogoRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import ru.blatfan.blatapi.common.core.Vector3;
+import ru.blatfan.blatapi.utils.collection.Vector3;
 
 import static ru.blatfan.blatapi.utils.animation.AnimationCurve.*;
 

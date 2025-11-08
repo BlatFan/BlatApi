@@ -3,6 +3,7 @@ package ru.blatfan.blatapi.utils;
 import com.google.gson.JsonObject;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -10,9 +11,11 @@ import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 import ru.blatfan.blatapi.BlatApi;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass@SuppressWarnings("ALL")
 public final class ItemHelper {
     public static JsonObject serialize(Item item) {
         var json = new JsonObject();
@@ -88,5 +91,11 @@ public final class ItemHelper {
                 BlatApi.LOGGER.error("Failed to register compostable item: {}, chance {}", ForgeRegistries.ITEMS.getKey(item.asItem()), chance);
             }
         }
+    }
+    
+    public static List<ItemStack> copyWithNewCount(List<ItemStack> items, int count) {
+        List<ItemStack> newItems = new ArrayList<>();
+        items.forEach(i -> newItems.add(withSize(i.copy(), count, false)));
+        return newItems;
     }
 }

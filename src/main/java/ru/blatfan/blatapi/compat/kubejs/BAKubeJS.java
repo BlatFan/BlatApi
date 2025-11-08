@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.compat;
+package ru.blatfan.blatapi.compat.kubejs;
 
 import dev.latvian.mods.kubejs.KubeJSPlugin;
 import dev.latvian.mods.kubejs.recipe.RecipesEventJS;

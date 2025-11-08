@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -26,6 +27,7 @@ import ru.blatfan.blatapi.common.recipe.SimpleShapedRecipe;
 
 import java.util.Map;
 
+@UtilityClass@SuppressWarnings("ALL")
 public class RecipeUtil {
     public static ItemStack itemStackFromJson(JsonElement pStackElement) {
         return CraftingHelper.getItemStack(pStackElement.getAsJsonObject(), true, true);

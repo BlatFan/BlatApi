@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -11,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+@UtilityClass
 public class BiomeHelper {
     public static Set<Holder<Biome>> overworldPossibleBiomes = new HashSet<>();
     public static Set<Holder<Biome>> netherPossibleBiomes = new HashSet<>();

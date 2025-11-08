@@ -1,14 +1,20 @@
 package ru.blatfan.blatapi.fluffy_fur.client.event;
 
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
 import ru.blatfan.blatapi.fluffy_fur.client.bow.BowHandler;
+import ru.blatfan.blatapi.fluffy_fur.client.gui.components.SubCreativeTabButton;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurModsHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurPanorama;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.PlayerSkinMenuScreen;
 import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkinHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.screenshake.ScreenshakeHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.shader.postprocess.PostProcessHandler;
+import ru.blatfan.blatapi.fluffy_fur.common.creativetab.MultiCreativeTab;
+import ru.blatfan.blatapi.fluffy_fur.common.creativetab.SubCreativeTab;
 import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurKeyMappings;
 import net.minecraft.client.Camera;
@@ -26,7 +32,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.ArrayList;
+
 public class FluffyFurClientEvents {
+    public static ArrayList<SubCreativeTabButton> subCreativeTabButtons = new ArrayList<>();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onOpenScreen(ScreenEvent.Opening event) {
@@ -38,6 +47,27 @@ public class FluffyFurClientEvents {
     public void onOpenScreenFirst(ScreenEvent.Opening event) {
         resetPanoramaScreen(event.getCurrentScreen());
         resetPanoramaScreen(event.getNewScreen());
+    }
+    
+    @SubscribeEvent
+    public void onScreenInitPost(ScreenEvent.Init.Post event) {
+        Screen screen = event.getScreen();
+        if (screen instanceof CreativeModeInventoryScreen creativeScreen) {
+            subCreativeTabButtons.clear();
+            int i = creativeScreen.getGuiLeft();
+            int j = creativeScreen.getGuiTop();
+            for (CreativeModeTab tab : CreativeModeTabs.allTabs()) {
+                if (tab instanceof MultiCreativeTab multiCreativeTab) {
+                    int ii = 0;
+                    for (SubCreativeTab subTab : multiCreativeTab.getSortedSubTabs()) {
+                        SubCreativeTabButton button = new SubCreativeTabButton(creativeScreen, multiCreativeTab, subTab, i - 22, j + 3 + (ii * 22), j + 3);
+                        subCreativeTabButtons.add(button);
+                        event.addListener(button);
+                        ii++;
+                    }
+                }
+            }
+        }
     }
 
     public static void panoramaScreen(Screen screen) {
@@ -90,7 +120,7 @@ public class FluffyFurClientEvents {
         Player player = event.getPlayer();
         ItemStack itemStack = player.getUseItem();
         if (player.isUsingItem()) {
-            for (Item item : BowHandler.getBows()) {
+            for (Item item : BowHandler.bows) {
                 if (itemStack.is(item)) {
                     float f = event.getFovModifier();
                     if (f != event.getNewFovModifier()) f = event.getNewFovModifier();

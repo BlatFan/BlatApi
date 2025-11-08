@@ -1,7 +1,9 @@
 package ru.blatfan.blatapi.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.Minecraft;
 
+@UtilityClass
 public class ClientTicks {
     public static long ticks = 0;
     public static float partialTicks = 0;

@@ -1,8 +1,10 @@
 package ru.blatfan.blatapi.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 
+@UtilityClass@SuppressWarnings("ALL")
 public class MobUtil {
   public static void removeAttackTargets(LivingEntity attacker) {
     attacker.setLastHurtByMob(null);
