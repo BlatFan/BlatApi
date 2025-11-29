@@ -6,6 +6,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.fluffy_fur.common.network.FluffyFurPacketHandler;
@@ -153,6 +154,20 @@ public class PlayerStages implements ICapacity<PlayerStages> {
         });
     }
     
+    public static ItemStack getItemStack(Player player, String key){
+        PlayerStages stages = get(player);
+        if(stages.DATA.get(key) instanceof ItemStackValue val)
+            return val.getValue();
+        return ItemStack.EMPTY;
+    }
+    public static void setItemStack(Player player, String key, ItemStack value){
+        if(!allStages.contains(key)) allStages.add(key);
+        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
+            playerStages.DATA.put(key, sendSetEvent(player, key, new ItemStackValue(value)));
+            playerStages.sync(player);
+        });
+    }
+    
     public static CompoundTag getCompoundTag(Player player, String key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof CompoundTagValue val)
@@ -288,6 +303,30 @@ public class PlayerStages implements ICapacity<PlayerStages> {
         protected Value<Integer> fromValue(Object value) {
             if(value instanceof Integer v)
                 return new IntValue(v);
+            return null;
+        }
+    }
+    public static class ItemStackValue extends Value<ItemStack> {
+        public ItemStackValue(ItemStack value) {
+            super(BlatApi.loc("item_stack"), value, ItemStack.class);
+        }
+        
+        @Override
+        public CompoundTag serializeNBT() {
+            CompoundTag tag = new CompoundTag();
+            tag.put("value", getValue().serializeNBT());
+            return tag;
+        }
+        
+        @Override
+        protected Value<ItemStack> deserializeNBT(CompoundTag nbt) {
+            return new ItemStackValue(ItemStack.of(nbt.getCompound("value")));
+        }
+        
+        @Override
+        protected Value<ItemStack> fromValue(Object value) {
+            if(value instanceof ItemStack v)
+                return new ItemStackValue(v);
             return null;
         }
     }

@@ -27,6 +27,7 @@ import java.util.List;
 import static ru.blatfan.blatapi.utils.BlockUtil.getItemY;
 
 @UtilityClass
+@Deprecated(forRemoval = true, since = "0.3.1")
 public class BlockRendererUtil {
     /**
      * use {@link BlockUtil#dispatchTEToNearbyPlayers(BlockEntity)}

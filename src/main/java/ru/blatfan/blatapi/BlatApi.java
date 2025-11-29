@@ -16,13 +16,14 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.blatfan.blatapi.common.BARegistry;
-import ru.blatfan.blatapi.common.biome_replacer.BiomeRaplacerModule;
-import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
+import ru.blatfan.blatapi.common.BARegistry;
+import ru.blatfan.blatapi.common.GuideManager;
+import ru.blatfan.blatapi.common.biome_replacer.BiomeRaplacerModule;
 import ru.blatfan.blatapi.common.multiblock.MultiBlockData;
 import ru.blatfan.blatapi.common.player_stages.PlayerStagesEvents;
 import ru.blatfan.blatapi.common.recipe.IngredientWithCountSerializer;
+import ru.blatfan.blatapi.common.task.Task;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 import ru.blatfan.blatapi.utils.DisabledRecipes;
@@ -33,7 +34,7 @@ import ru.blatfan.blatapi.utils.RecipeHelper;
 public class BlatApi {
     public static final String MOD_ID = "blatapi";
     public static final String MOD_NAME = "BlatApi";
-    public static final String MOD_VERSION = "0.3.1";
+    public static final String MOD_VERSION = "0.3.2";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatAPI");
     public static String CUSTOM_WINDOW_TITLE = "";
     
@@ -64,6 +65,7 @@ public class BlatApi {
         MinecraftForge.EVENT_BUS.register(new DisabledRecipes());
         MinecraftForge.EVENT_BUS.register(new RecipeHelper());
         MinecraftForge.EVENT_BUS.addListener(InitialSpawnItems.INSTANCE::onPlayerLoggedIn);
+        Task.init();
         
         GuideManager.init();
         MultiBlockData.init();

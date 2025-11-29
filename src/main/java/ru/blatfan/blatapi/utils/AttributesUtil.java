@@ -1,11 +1,6 @@
 package ru.blatfan.blatapi.utils;
 
-import java.util.Collection;
-import java.util.Random;
-import java.util.UUID;
-
 import lombok.experimental.UtilityClass;
-import ru.blatfan.blatapi.BlatApi;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -13,6 +8,11 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.ForgeMod;
+import ru.blatfan.blatapi.BlatApi;
+
+import java.util.Collection;
+import java.util.Random;
+import java.util.UUID;
 
 @UtilityClass
 public class AttributesUtil {
@@ -90,11 +90,17 @@ public class AttributesUtil {
   }
 
   // ench
+  
+  /**
+   * vanilla is 5, so +11 it becomes 16
+   * @param id
+   * @param player
+   * @param reachBoost
+   */
   public static void setPlayerReach(UUID id, Player player, int reachBoost) {
     removePlayerReach(id, player);
     AttributeInstance attr = player.getAttribute(ForgeMod.BLOCK_REACH.get());
-    //vanilla is 5, so +11 it becomes 16
-    AttributeModifier enchantment = new AttributeModifier(id, "ReachFLIB", reachBoost, AttributeModifier.Operation.ADDITION);
+    AttributeModifier enchantment = new AttributeModifier(id, "ReachBLATAPI", reachBoost, AttributeModifier.Operation.ADDITION);
     attr.addPermanentModifier(enchantment);
   }
 

@@ -6,21 +6,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.MinecraftForge;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.api.event.GuideReload;
 import ru.blatfan.blatapi.api.multiblock.Multiblock;
-import ru.blatfan.blatapi.client.guide_book.recipe_renderers.*;
+import ru.blatfan.blatapi.client.guide_book.recipe_renderers.AnvilRecipeRenderer;
+import ru.blatfan.blatapi.client.guide_book.recipe_renderers.CraftingRecipeRenderer;
+import ru.blatfan.blatapi.client.guide_book.recipe_renderers.FurnaceRecipeRenderer;
 import ru.blatfan.blatapi.common.guide_book.*;
 import ru.blatfan.blatapi.common.guide_book.pages.*;
-import ru.blatfan.blatapi.api.event.GuideReload;
-import ru.blatfan.blatapi.common.multiblock.*;
+import ru.blatfan.blatapi.common.multiblock.AbstractMultiblock;
+import ru.blatfan.blatapi.common.multiblock.DenseMultiblock;
+import ru.blatfan.blatapi.common.multiblock.SparseMultiblock;
 import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
-import ru.blatfan.blatapi.common.recipe.IngredientWithCount;
-import ru.blatfan.blatapi.utils.RecipeHelper;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,6 +29,7 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     private static final Map<ResourceLocation, GuideBookData> books = new HashMap<>();
     private static final Map<ResourceLocation, GuideBookCategory> categories = new HashMap<>();
     private static final Map<ResourceLocation, GuideBookEntry> entries = new HashMap<>();
+    private static final Map<ResourceLocation, GuideBookPaper> papers = new HashMap<>();
     private static final Map<ResourceLocation, Multiblock> multiblocks = new HashMap<>();
     
     private static final Map<ResourceLocation, BookGuiExtension> bookExtensions = new HashMap<>();
@@ -63,6 +63,12 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
         if(event.isCanceled()) return;
         entries.put(id, event.getEntry());
     }
+    public static void register(ResourceLocation id, GuideBookPaper paper){
+        GuideReload.PaperReload event = new GuideReload.PaperReload(paper);
+        MinecraftForge.EVENT_BUS.post(event);
+        if(event.isCanceled()) return;
+        papers.put(id, event.getPaper());
+    }
     public static void register(Multiblock multiblock){
         GuideReload.MultiblockReload event = new GuideReload.MultiblockReload(multiblock);
         MinecraftForge.EVENT_BUS.post(event);
@@ -77,6 +83,9 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     }
     public static Map<ResourceLocation, GuideBookEntry> entries(){
         return Collections.unmodifiableMap(entries);
+    }
+    public static Map<ResourceLocation, GuideBookPaper> papers(){
+        return Collections.unmodifiableMap(papers);
     }
     public static Map<ResourceLocation, Multiblock> multiblocks(){
         return Collections.unmodifiableMap(multiblocks);
@@ -96,6 +105,11 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
             if(entry.getValue()==category) return entry.getKey();
         return BlatApi.loc("mising");
     }
+    public static ResourceLocation getId(GuideBookPaper paper){
+        for(Map.Entry<ResourceLocation, GuideBookPaper> entry : papers().entrySet())
+            if(entry.getValue()==paper) return entry.getKey();
+        return BlatApi.loc("mising");
+    }
     public static ResourceLocation getId(GuideBookEntry entryS){
         for(Map.Entry<ResourceLocation, GuideBookEntry> entry : entries().entrySet())
             if(entry.getValue()==entryS) return entry.getKey();
@@ -110,6 +124,9 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     }
     public static GuideBookEntry getEntry(ResourceLocation id){
         return entries.get(id);
+    }
+    public static GuideBookPaper getPaper(ResourceLocation id){
+        return papers().get(id);
     }
     public static Multiblock getMultiblock(ResourceLocation id){
         return multiblocks.get(id);
@@ -150,6 +167,7 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
         books.clear();
         categories.clear();
         entries.clear();
+        papers.clear();
         for(Map.Entry<ResourceLocation, JsonElement> entry : pObject.entrySet()){
             JsonElement element = entry.getValue();
             ResourceLocation rl = entry.getKey();
@@ -170,6 +188,10 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
             else if(contains(rl, "entries/")) {
                 id = remove(rl, "entries/");
                 register(id, GuideBookEntry.json(element));
+            }
+            else if(contains(rl, "papers/")) {
+                id = remove(rl, "papers/");
+                register(id, GuideBookPaper.json(element));
             }
             if(id==null) BlatApi.LOGGER.warn("Noncorrect file {}", rl);
             else BlatApi.LOGGER.info("Loading {} from json {}", id, rl);

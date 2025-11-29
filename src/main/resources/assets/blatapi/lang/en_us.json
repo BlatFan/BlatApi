@@ -97,7 +97,7 @@
   "creative_tab.debug": "Debug",
   
   "effect.blatapi.attack_speed": "Attack Speed",
-  "effect.blatapi.attack_slowness": "Attack Slowness",
+  "effect.blatapi.attack_slowdown": "Attack Slowness",
   "effect.blatapi.attack_knockback_strength": "Attack Knockback Strength",
   "effect.blatapi.attack_knockback_weakness": "Attack Knockback Weakness",
   "effect.blatapi.armor_strength": "Armor Strength",
@@ -114,7 +114,7 @@
   "effect.blatapi.swim_slowness": "Swim Slowness",
   
   "effect.blatapi.long_attack_speed": "Long Attack Speed",
-  "effect.blatapi.long_attack_slowness": "Long Attack Slowness",
+  "effect.blatapi.long_attack_slowdown": "Long Attack Slowness",
   "effect.blatapi.long_attack_knockback_strength": "Long Attack Knockback Strength",
   "effect.blatapi.long_attack_knockback_weakness": "Long Attack Knockback Weakness",
   "effect.blatapi.long_armor_strength": "Long Armor Strength",
@@ -130,8 +130,10 @@
   "effect.blatapi.long_swim_speed": "Long Swim Speed",
   "effect.blatapi.long_swim_slowness": "Long Swim Slowness",
   
+  "item.blatapi.guide_book_paper": "Guide Book Paper",
+  
   "item.minecraft.potion.effect.attack_speed": "Potion of Attack Speed",
-  "item.minecraft.potion.effect.attack_slowness": "Potion of Attack Slowness",
+  "item.minecraft.potion.effect.attack_slowdown": "Potion of Attack Slowness",
   "item.minecraft.potion.effect.attack_knockback_strength": "Potion of Attack Knockback Strength",
   "item.minecraft.potion.effect.attack_knockback_weakness": "Potion of Attack Knockback Weakness",
   "item.minecraft.potion.effect.armor_strength": "Potion of Armor Strength",
@@ -148,7 +150,7 @@
   "item.minecraft.potion.effect.swim_slowness": "Potion of Swim Slowness",
   
   "item.minecraft.potion.effect.long_attack_speed": "Long Potion of Attack Speed",
-  "item.minecraft.potion.effect.long_attack_slowness": "Long Potion of Attack Slowness",
+  "item.minecraft.potion.effect.long_attack_slowdown": "Long Potion of Attack Slowness",
   "item.minecraft.potion.effect.long_attack_knockback_strength": "Long Potion of Attack Knockback Strength",
   "item.minecraft.potion.effect.long_attack_knockback_weakness": "Long Potion of Attack Knockback Weakness",
   "item.minecraft.potion.effect.long_armor_strength": "Long Potion of Armor Strength",
@@ -165,7 +167,7 @@
   "item.minecraft.potion.effect.long_swim_slowness": "Long Potion of Swim Slowness",
   
   "item.minecraft.splash_potion.effect.attack_speed": "Splash Potion of Attack Speed",
-  "item.minecraft.splash_potion.effect.attack_slowness": "Splash Potion of Attack Slowness",
+  "item.minecraft.splash_potion.effect.attack_slowdown": "Splash Potion of Attack Slowness",
   "item.minecraft.splash_potion.effect.attack_knockback_strength": "Splash Potion of Attack Knockback Strength",
   "item.minecraft.splash_potion.effect.attack_knockback_weakness": "Splash Potion of Attack Knockback Weakness",
   "item.minecraft.splash_potion.effect.armor_strength": "Splash Potion of Armor Strength",
@@ -182,7 +184,7 @@
   "item.minecraft.splash_potion.effect.swim_slowness": "Splash Potion of Swim Slowness",
   
   "item.minecraft.splash_potion.effect.long_attack_speed": "Long Splash Potion of Attack Speed",
-  "item.minecraft.splash_potion.effect.long_attack_slowness": "Long Splash Potion of Attack Slowness",
+  "item.minecraft.splash_potion.effect.long_attack_slowdown": "Long Splash Potion of Attack Slowness",
   "item.minecraft.splash_potion.effect.long_attack_knockback_strength": "Long Splash Potion of Attack Knockback Strength",
   "item.minecraft.splash_potion.effect.long_attack_knockback_weakness": "Long Splash Potion of Attack Knockback Weakness",
   "item.minecraft.splash_potion.effect.long_armor_strength": "Long Splash Potion of Armor Strength",
@@ -199,7 +201,7 @@
   "item.minecraft.splash_potion.effect.long_swim_slowness": "Long Splash Potion of Swim Slowness",
   
   "item.minecraft.lingering_potion.effect.attack_speed": "Lingering Potion of Attack Speed",
-  "item.minecraft.lingering_potion.effect.attack_slowness": "Lingering Potion of Attack Slowness",
+  "item.minecraft.lingering_potion.effect.attack_slowdown": "Lingering Potion of Attack Slowness",
   "item.minecraft.lingering_potion.effect.attack_knockback_strength": "Lingering Potion of Attack Knockback Strength",
   "item.minecraft.lingering_potion.effect.attack_knockback_weakness": "Lingering Potion of Attack Knockback Weakness",
   "item.minecraft.lingering_potion.effect.armor_strength": "Lingering Potion of Armor Strength",
@@ -216,7 +218,7 @@
   "item.minecraft.lingering_potion.effect.swim_slowness": "Lingering Potion of Swim Slowness",
   
   "item.minecraft.lingering_potion.effect.long_attack_speed": "Long Lingering Potion of Attack Speed",
-  "item.minecraft.lingering_potion.effect.long_attack_slowness": "Long Lingering Potion of Attack Slowness",
+  "item.minecraft.lingering_potion.effect.long_attack_slowdown": "Long Lingering Potion of Attack Slowness",
   "item.minecraft.lingering_potion.effect.long_attack_knockback_strength": "Long Lingering Potion of Attack Knockback Strength",
   "item.minecraft.lingering_potion.effect.long_attack_knockback_weakness": "Long Lingering Potion of Attack Knockback Weakness",
   "item.minecraft.lingering_potion.effect.long_armor_strength": "Long Lingering Potion of Armor Strength",
@@ -233,7 +235,7 @@
   "item.minecraft.lingering_potion.effect.long_swim_slowness": "Long Lingering Potion of Swim Slowness",
   
   "item.minecraft.tipped_arrow.effect.attack_speed": "Splash Tipped Arrow Attack Speed",
-  "item.minecraft.tipped_arrow.effect.attack_slowness": "Splash Tipped Arrow Attack Slowness",
+  "item.minecraft.tipped_arrow.effect.attack_slowdown": "Splash Tipped Arrow Attack Slowness",
   "item.minecraft.tipped_arrow.effect.attack_knockback_strength": "Splash Tipped Arrow Attack Knockback Strength",
   "item.minecraft.tipped_arrow.effect.attack_knockback_weakness": "Splash Tipped Arrow Attack Knockback Weakness",
   "item.minecraft.tipped_arrow.effect.armor_strength": "Splash Tipped Arrow Armor Strength",
@@ -250,7 +252,7 @@
   "item.minecraft.tipped_arrow.effect.swim_slowness": "Splash Tipped Arrow Swim Slowness",
   
   "item.minecraft.tipped_arrow.effect.long_attack_speed": "Tipped Arrow of Long Attack Speed",
-  "item.minecraft.tipped_arrow.effect.long_attack_slowness": "Tipped Arrow of Long Attack Slowness",
+  "item.minecraft.tipped_arrow.effect.long_attack_slowdown": "Tipped Arrow of Long Attack Slowness",
   "item.minecraft.tipped_arrow.effect.long_attack_knockback_strength": "Tipped Arrow of Long Attack Knockback Strength",
   "item.minecraft.tipped_arrow.effect.long_attack_knockback_weakness": "Tipped Arrow of Long Attack Knockback Weakness",
   "item.minecraft.tipped_arrow.effect.long_armor_strength": "Tipped Arrow of Long Armor Strength",

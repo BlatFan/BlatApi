@@ -21,6 +21,7 @@ import ru.blatfan.blatapi.fluffy_fur.client.render.item.CustomItemRenderer;
  * use {@link GuiUtil}
  */
 @UtilityClass
+@Deprecated(forRemoval = true, since = "0.3.1")
 public class RenderUtil {
     /**
      * use {@link GuiUtil#blitOffset}

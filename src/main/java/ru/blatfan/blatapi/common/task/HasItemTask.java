@@ -10,46 +10,41 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.crafting.CraftingHelper;
-import net.minecraftforge.registries.ForgeRegistries;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.common.player_stages.PlayerStages;
 import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 
 @AllArgsConstructor
 @Getter
-public class EatTask extends Task {
+public class HasItemTask extends Task {
     private boolean visible;
-    private ItemStack food;
-    
-    public static String getStage(ItemLike item){
-        ResourceLocation id = ForgeRegistries.ITEMS.getKey(item.asItem());
-        if(id==null) return "EMPTY";
-        return "player_eat_"+id.getNamespace()+"_"+id.getPath();
-    }
+    private int amount;
+    private ItemStack item;
     
     @Override
     public boolean get(Player player) {
-        return PlayerStages.getBool(player, getStage(food.getItem()));
+        int pamount=0;
+        for(ItemStack itemStack : player.getInventory().items)
+            if(itemStack.is(item.getItem())) pamount+=itemStack.getCount();
+        return pamount>=amount;
     }
     
     @Override
     public ResourceLocation getType() {
-        return BlatApi.loc("eat");
+        return BlatApi.loc("has_item");
     }
     
     @Override
     public Component text(Player player) {
-        return Text.create("task.blatapi.eat").add(food.getHoverName()).withColor(Color.WHITE);
+        return Text.create(item.getHoverName()).add(" x"+amount).withColor(Color.WHITE);
     }
     
     @Override
     public void render(GuiGraphics gui, int x, int y, int mX, int mY, Player player) {
-        gui.renderItem(food, x, y);
-        gui.renderItemDecorations(Minecraft.getInstance().font, food, x, y);
+        gui.renderItem(item, x, y);
+        gui.renderItemDecorations(Minecraft.getInstance().font, item, x, y);
         super.render(gui, x+24, y, mX, mY, player);
     }
     
@@ -59,27 +54,29 @@ public class EatTask extends Task {
         @Override
         public Task fromJson(JsonObject json) {
             boolean b = !json.has("visible") || json.get("visible").getAsBoolean();
-            ItemStack item = CraftingHelper.getItemStack(json.get("food").getAsJsonObject(), true);
-            PlayerStages.allStages.add(getStage(item.getItem()));
-            return new EatTask(b, item);
+            int a = !json.has("amount") ? 1 : json.get("amount").getAsInt();
+            ItemStack item = CraftingHelper.getItemStack(json.get("item").getAsJsonObject(), true);
+            return new HasItemTask(b, a, item);
         }
         
         @Override
         public Task fromNBT(CompoundTag tag) {
             boolean b = !tag.contains("visible") || tag.getBoolean("visible");
-            ItemStack item = ItemStack.of(tag.getCompound("food"));
-            PlayerStages.allStages.add(getStage(item.getItem()));
-            return new EatTask(b, item);
+            int a = !tag.contains("amount") ? 1 : tag.getInt("amount");
+            CompoundTag itemTag = tag.getCompound("item");
+            ItemStack item = ItemStack.of(itemTag);
+            return new HasItemTask(b, a, item);
         }
         
         @Override
         public CompoundTag toNBT(Task task) {
             CompoundTag tag = new CompoundTag();
-            if(task instanceof EatTask task1){
+            if(task instanceof HasItemTask task1){
                 tag.putBoolean("visible", task1.visible);
-                tag.put("food", task1.food.serializeNBT());
+                tag.putInt("amount", task1.amount);
+                tag.put("item", task1.item.serializeNBT());
             }
-            return new CompoundTag();
+            return tag;
         }
     }
 }

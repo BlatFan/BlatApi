@@ -12,19 +12,16 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Text implements Component {
-    protected final List<String> components = new ArrayList<>();
-    protected final List<ChatFormatting> chatFormattings = new ArrayList<>();
-    protected Style style = Style.EMPTY;
+    protected final MutableComponent component = Component.empty();
     
     protected Text(MutableComponent component) {
         add(component);
     }
     protected Text(List<String> components) {
-        this.components.addAll(components);
+        components.forEach(component::append);
     }
     
     public static Text create(Component component){
@@ -39,35 +36,41 @@ public class Text implements Component {
     }
     
     public static Text create(ResourceLocation component){
-        return new Text(Component.translatable(component.toString()));
+        return create(component.toString());
+    }
+    public static Text create(int component){
+        return create(String.valueOf(component));
+    }
+    public static Text create(float component){
+        return create(String.valueOf(component));
+    }
+    public static Text create(long component){
+        return create(String.valueOf(component));
+    }
+    public static Text create(double component){
+        return create(String.valueOf(component));
     }
     
     public Text copyText(){
-        return new Text(components);
+        return new Text(component);
     }
     
     @Override
     public MutableComponent copy() {
-        return asComponent().copy();
+        return component.copy();
     }
     
     public MutableComponent asComponent(){
-        MutableComponent component = Component.empty();
-        components.forEach(c -> component.append(Component.translatable(c)));
-        if(style!=null) {
-            component.withStyle(style);
-            chatFormattings.forEach(component::withStyle);
-        }
         return component.copy();
     }
     
     public Text add(String c){
-        components.add(c);
+        component.append(c);
         return this;
     }
     
     public Text add(Component c){
-        components.add(c.getString());
+        component.append(c);
         return this;
     }
     
@@ -76,24 +79,24 @@ public class Text implements Component {
     }
     
     public Text withStyle(Style style){
-        this.style=style;
+        this.component.withStyle(style);
         return this;
     }
     
     public Text withStyle(ChatFormatting style){
-        chatFormattings.add(style);
+        this.component.withStyle(style);
         return this;
     }
     
     public Text withColor(Color color){
-        this.style.withColor(color.getRGB());
+        this.component.withStyle(style -> style.withColor(color.getRGB()));
         return this;
     }
     
     public Color getColor(){
-        if(asComponent().getStyle().getColor()==null)
+        if(component.getStyle().getColor()==null)
             return Color.WHITE;
-        return new Color(asComponent().getStyle().getColor().getValue());
+        return new Color(component.getStyle().getColor().getValue());
     }
     
     @OnlyIn(Dist.CLIENT)
@@ -103,26 +106,26 @@ public class Text implements Component {
     
     @Override
     public Style getStyle() {
-        return style;
+        return component.getStyle();
     }
     
     @Override
     public ComponentContents getContents() {
-        return asComponent().getContents();
+        return component.getContents();
     }
     
     @Override
     public List<Component> getSiblings() {
-        return asComponent().getSiblings();
+        return component.getSiblings();
     }
     
     @Override
     public FormattedCharSequence getVisualOrderText() {
-        return asComponent().getVisualOrderText();
+        return component.getVisualOrderText();
     }
     
     @Override
     public String getString() {
-        return asComponent().getString();
+        return component.getString();
     }
 }

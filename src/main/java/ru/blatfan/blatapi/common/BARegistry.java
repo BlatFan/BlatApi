@@ -15,6 +15,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.common.guide_book.GuideBookItem;
+import ru.blatfan.blatapi.common.guide_book.GuidePaperItem;
 import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
 import ru.blatfan.blatapi.common.recipe.AnvilRepairRecipe;
 import ru.blatfan.blatapi.common.recipe.IAnvilRecipe;
@@ -41,10 +42,11 @@ public class BARegistry {
     public static final RegistryObject<RecipeSerializer<IAnvilRepairRecipe>> ANVIL_REPAIR_S = REG.recipe_serializer(AnvilRepairRecipe.type.getPath(), AnvilRepairRecipe.Serializer::new);
     
     public static final RegistryObject<Item> GUIDE_BOOK = REG.item("guide_book", GuideBookItem::new);
+    public static final RegistryObject<Item> GUIDE_BOOK_PAPER = REG.item("guide_book_paper", GuidePaperItem::new);
     
     public static class MobEffects {
         public static final RegistryObject<MobEffect> ATTACK_SPEED = REG.mob_effect("attack_speed", AttackSpeedMobEffect::new);
-        public static final RegistryObject<MobEffect> ATTACK_SLOWNESS = REG.mob_effect("attack_slowness", AttackSlownessMobEffect::new);
+        public static final RegistryObject<MobEffect> ATTACK_SLOWDOWN = REG.mob_effect("attack_slowdown", AttackSlownessMobEffect::new);
         public static final RegistryObject<MobEffect> ATTACK_KNOCKBACK_STRENGTH = REG.mob_effect("attack_knockback_strength", AttackKnockbackStrengthMobEffect::new);
         public static final RegistryObject<MobEffect> ATTACK_KNOCKBACK_WEAKNESS = REG.mob_effect("attack_knockback_weakness", AttackKnockbackWeaknessMobEffect::new);
         public static final RegistryObject<MobEffect> ARMOR_STRENGTH = REG.mob_effect("armor_strength", ArmorStrengthMobEffect::new);
@@ -67,8 +69,8 @@ public class BARegistry {
         public static final RegistryObject<Potion> ATTACK_SPEED = REG.potion("attack_speed", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_SPEED.get(), 600, 0)));
         public static final RegistryObject<Potion> LONG_ATTACK_SPEED = REG.potion("long_attack_speed", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_SPEED.get(), 1200, 1)));
         
-        public static final RegistryObject<Potion> ATTACK_SLOWDOWN = REG.potion("attack_slowdown", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_SLOWNESS.get(), 600, 0)));
-        public static final RegistryObject<Potion> LONG_ATTACK_SLOWDOWN = REG.potion("long_attack_slowdown", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_SLOWNESS.get(), 1200, 1)));
+        public static final RegistryObject<Potion> ATTACK_SLOWDOWN = REG.potion("attack_slowdown", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_SLOWDOWN.get(), 600, 0)));
+        public static final RegistryObject<Potion> LONG_ATTACK_SLOWDOWN = REG.potion("long_attack_slowdown", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_SLOWDOWN.get(), 1200, 1)));
         
         public static final RegistryObject<Potion> ATTACK_KNOCKBACK_STRENGTH = REG.potion("attack_knockback_strength", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_KNOCKBACK_STRENGTH.get(), 600, 0)));
         public static final RegistryObject<Potion> LONG_ATTACK_KNOCKBACK_STRENGTH = REG.potion("long_attack_knockback_strength", ()-> new Potion(new MobEffectInstance(MobEffects.ATTACK_KNOCKBACK_STRENGTH.get(), 1200, 10)));

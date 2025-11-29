@@ -11,7 +11,6 @@ buildscript {
 plugins {
     id 'eclipse'
     id 'idea'
-    id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0.16,6.2)'
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
@@ -27,20 +26,6 @@ base {
 
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(17)
-    withSourcesJar()
-    withJavadocJar()
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId = archivesBaseName
-        }
-    }
-    repositories {
-        mavenLocal()
-    }
 }
 
 minecraft {
@@ -113,8 +98,6 @@ repositories {
             includeGroup "dev.architectury"
         }
     }
-    mavenLocal()
-    mavenCentral()
 }
 
 dependencies {
@@ -175,7 +158,6 @@ tasks.named('jar', Jar).configure {
     }
 
     finalizedBy 'reobfJar'
-    finalizedBy 'publishToMavenLocal'
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -8,6 +8,7 @@ import ru.blatfan.blatapi.api.multiblock.Multiblock;
 import ru.blatfan.blatapi.common.guide_book.GuideBookCategory;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
 import ru.blatfan.blatapi.common.guide_book.GuideBookEntry;
+import ru.blatfan.blatapi.common.guide_book.GuideBookPaper;
 
 @Cancelable
 public class GuideReload extends Event {
@@ -26,5 +27,9 @@ public class GuideReload extends Event {
     @Getter@AllArgsConstructor
     public static class EntryReload extends GuideReload {
         private final GuideBookEntry entry;
+    }
+    @Getter@AllArgsConstructor
+    public static class PaperReload extends GuideReload {
+        private final GuideBookPaper paper;
     }
 }

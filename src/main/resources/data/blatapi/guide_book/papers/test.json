@@ -1,0 +1,13 @@
+{
+  "item": "blatapi:guide_book_paper",
+  "entry": "blatapi:test",
+  "book": "blatapi:test",
+  "tasks": [
+    {
+      "type": "blatapi:eat",
+      "food": {
+        "item": "minecraft:cooked_beef"
+      }
+    }
+  ]
+}

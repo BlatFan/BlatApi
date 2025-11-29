@@ -93,8 +93,10 @@
   "creative_tab.books": "Книги",
   "creative_tab.debug": "Debug",
   
+  "item.blatapi.guide_book_paper": "Guide Book Paper",
+  
   "effect.blatapi.attack_speed": "Скорость атаки",
-  "effect.blatapi.attack_slowness": "Замедление атаки",
+  "effect.blatapi.attack_slowdown": "Замедление атаки",
   "effect.blatapi.attack_knockback_strength": "Сила отбрасывающей атаки",
   "effect.blatapi.attack_knockback_weakness": "Слабость отбрасывающей атаки",
   "effect.blatapi.armor_strength": "Сила брони",
@@ -111,7 +113,7 @@
   "effect.blatapi.swim_slowness": "Замедление плавания",
   
   "effect.blatapi.long_attack_speed": "Долгой скорости атаки",
-  "effect.blatapi.long_attack_slowness": "Долгого замедления атаки",
+  "effect.blatapi.long_attack_slowdown": "Долгого замедления атаки",
   "effect.blatapi.long_attack_knockback_strength": "Долгой силы отбрасывающей атаки",
   "effect.blatapi.long_attack_knockback_weakness": "Долгой слабости отбрасывающей атаки",
   "effect.blatapi.long_armor_strength": "Долгой силы брони",
@@ -128,7 +130,7 @@
   "effect.blatapi.long_swim_slowness": "Долгого замедления плавания",
   
   "item.minecraft.potion.effect.attack_speed": "Зелье: скорость атаки",
-  "item.minecraft.potion.effect.attack_slowness": "Зелье: замедление атаки",
+  "item.minecraft.potion.effect.attack_slowdown": "Зелье: замедление атаки",
   "item.minecraft.potion.effect.attack_knockback_strength": "Зелье: сила отбрасывающей атаки",
   "item.minecraft.potion.effect.attack_knockback_weakness": "Зелье: слабость отбрасывающей атаки",
   "item.minecraft.potion.effect.armor_strength": "Зелье: сила брони",
@@ -145,7 +147,7 @@
   "item.minecraft.potion.effect.swim_slowness": "Зелье: замедление плавания",
   
   "item.minecraft.potion.effect.long_attack_speed": "Зелье: долгой скорости атаки",
-  "item.minecraft.potion.effect.long_attack_slowness": "Зелье: долгого замедления атаки",
+  "item.minecraft.potion.effect.long_attack_slowdown": "Зелье: долгого замедления атаки",
   "item.minecraft.potion.effect.long_attack_knockback_strength": "Зелье: долгой силы отбрасывающей атаки",
   "item.minecraft.potion.effect.long_attack_knockback_weakness": "Зелье: долгой слабости отбрасывающей атаки",
   "item.minecraft.potion.effect.long_armor_strength": "Зелье: долгой силы брони",
@@ -162,7 +164,7 @@
   "item.minecraft.potion.effect.long_swim_slowness": "Зелье: долгого замедления плавания",
   
   "item.minecraft.splash_potion.effect.attack_speed": "Взрывное зелье: скорость атаки",
-  "item.minecraft.splash_potion.effect.attack_slowness": "Взрывное зелье: замедление атаки",
+  "item.minecraft.splash_potion.effect.attack_slowdown": "Взрывное зелье: замедление атаки",
   "item.minecraft.splash_potion.effect.attack_knockback_strength": "Взрывное зелье: сила отбрасывающей атаки",
   "item.minecraft.splash_potion.effect.attack_knockback_weakness": "Взрывное зелье: слабость отбрасывающей атаки",
   "item.minecraft.splash_potion.effect.armor_strength": "Взрывное зелье: сила брони",
@@ -179,7 +181,7 @@
   "item.minecraft.splash_potion.effect.swim_slowness": "Взрывное зелье: замедление плавания",
   
   "item.minecraft.splash_potion.effect.long_attack_speed": "Взрывное зелье: долгой скорости атаки",
-  "item.minecraft.splash_potion.effect.long_attack_slowness": "Взрывное зелье: долгого замедления атаки",
+  "item.minecraft.splash_potion.effect.long_attack_slowdown": "Взрывное зелье: долгого замедления атаки",
   "item.minecraft.splash_potion.effect.long_attack_knockback_strength": "Взрывное зелье: долгой силы отбрасывающей атаки",
   "item.minecraft.splash_potion.effect.long_attack_knockback_weakness": "Взрывное зелье: долгой слабости отбрасывающей атаки",
   "item.minecraft.splash_potion.effect.long_armor_strength": "Взрывное зелье: долгой силы брони",
@@ -196,7 +198,7 @@
   "item.minecraft.splash_potion.effect.long_swim_slowness": "Взрывное зелье: долгого замедления плавания",
   
   "item.minecraft.lingering_potion.effect.attack_speed": "Туманное зелье: скорость атаки",
-  "item.minecraft.lingering_potion.effect.attack_slowness": "Туманное зелье: замедление атаки",
+  "item.minecraft.lingering_potion.effect.attack_slowdown": "Туманное зелье: замедление атаки",
   "item.minecraft.lingering_potion.effect.attack_knockback_strength": "Туманное зелье: сила отбрасывающей атаки",
   "item.minecraft.lingering_potion.effect.attack_knockback_weakness": "Туманное зелье: слабость отбрасывающей атаки",
   "item.minecraft.lingering_potion.effect.armor_strength": "Туманное зелье: сила брони",
@@ -213,7 +215,7 @@
   "item.minecraft.lingering_potion.effect.swim_slowness": "Туманное зелье: замедление плавания",
   
   "item.minecraft.lingering_potion.effect.long_attack_speed": "Туманное зелье: долгой скорости атаки",
-  "item.minecraft.lingering_potion.effect.long_attack_slowness": "Туманное зелье: долгого замедления атаки",
+  "item.minecraft.lingering_potion.effect.long_attack_slowdown": "Туманное зелье: долгого замедления атаки",
   "item.minecraft.lingering_potion.effect.long_attack_knockback_strength": "Туманное зелье: долгой силы отбрасывающей атаки",
   "item.minecraft.lingering_potion.effect.long_attack_knockback_weakness": "Туманное зелье: долгой слабости отбрасывающей атаки",
   "item.minecraft.lingering_potion.effect.long_armor_strength": "Туманное зелье: долгой силы брони",
@@ -230,7 +232,7 @@
   "item.minecraft.lingering_potion.effect.long_swim_slowness": "Туманное зелье: долгого замедления плавания",
   
   "item.minecraft.tipped_arrow.effect.attack_speed": "Стрела: скорость атаки",
-  "item.minecraft.tipped_arrow.effect.attack_slowness": "Стрела: замедление атаки",
+  "item.minecraft.tipped_arrow.effect.attack_slowdown": "Стрела: замедление атаки",
   "item.minecraft.tipped_arrow.effect.attack_knockback_strength": "Стрела: сила отбрасывающей атаки",
   "item.minecraft.tipped_arrow.effect.attack_knockback_weakness": "Стрела: слабость отбрасывающей атаки",
   "item.minecraft.tipped_arrow.effect.armor_strength": "Стрела: сила брони",
@@ -247,7 +249,7 @@
   "item.minecraft.tipped_arrow.effect.swim_slowness": "Стрела: замедление плавания",
   
   "item.minecraft.tipped_arrow.effect.long_attack_speed": "Стрела: долгой скорости атаки",
-  "item.minecraft.tipped_arrow.effect.long_attack_slowness": "Стрела: долгого замедления атаки",
+  "item.minecraft.tipped_arrow.effect.long_attack_slowdown": "Стрела: долгого замедления атаки",
   "item.minecraft.tipped_arrow.effect.long_attack_knockback_strength": "Стрела: долгой силы отбрасывающей атаки",
   "item.minecraft.tipped_arrow.effect.long_attack_knockback_weakness": "Стрела: долгой слабости отбрасывающей атаки",
   "item.minecraft.tipped_arrow.effect.long_armor_strength": "Стрела: долгой силы брони",

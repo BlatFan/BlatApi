@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.player_stages.PlayerStages;
 import ru.blatfan.blatapi.utils.ClientTicks;
@@ -41,15 +43,13 @@ public class KillTask extends Task {
         return PlayerStages.getBool(player, getStage(entity));
     }
     
-    public EntityType<?> getEntity(){
-        return BuiltInRegistries.ENTITY_TYPE.get(entity);
+    @Override
+    public ResourceLocation getType() {
+        return BlatApi.loc("kill");
     }
     
-    public static KillTask fromJson(JsonObject json){
-        boolean b = !json.has("visible") || json.get("visible").getAsBoolean();
-        ResourceLocation entity = ResourceLocation.tryParse(json.get("entity").getAsString());
-        PlayerStages.allStages.add(getStage(entity));
-        return new KillTask(b, entity);
+    public EntityType<?> getEntity(){
+        return BuiltInRegistries.ENTITY_TYPE.get(entity);
     }
     
     @Override
@@ -67,5 +67,35 @@ public class KillTask extends Task {
         gui.enableScissor(x, y, x+16, y+16);
         GuiUtil.renderEntityQuaternionf(gui, x+8, y+16, 8, Axis.YP.rotationDegrees(ClientTicks.ticks), (Axis.XP.rotationDegrees(180)), living);
         gui.disableScissor();
+    }
+    
+    public static class Serializer implements ITaskSerializer {
+        public static final Serializer INSTANCE = new Serializer();
+        protected Serializer(){}
+        @Override
+        public Task fromJson(JsonObject json) {
+            boolean b = !json.has("visible") || json.get("visible").getAsBoolean();
+            ResourceLocation entity = ResourceLocation.tryParse(json.get("entity").getAsString());
+            PlayerStages.allStages.add(getStage(entity));
+            return new KillTask(b, entity);
+        }
+        
+        @Override
+        public Task fromNBT(CompoundTag tag) {
+            boolean b = !tag.contains("visible") || tag.getBoolean("visible");
+            ResourceLocation entity = ResourceLocation.tryParse(tag.getString("entity"));
+            PlayerStages.allStages.add(getStage(entity));
+            return new KillTask(b, entity);
+        }
+        
+        @Override
+        public CompoundTag toNBT(Task task) {
+            CompoundTag tag = new CompoundTag();
+            if(task instanceof KillTask task1){
+                tag.putBoolean("visible", task1.visible);
+                tag.putString("entity", task1.entity.toString());
+            }
+            return new CompoundTag();
+        }
     }
 }
