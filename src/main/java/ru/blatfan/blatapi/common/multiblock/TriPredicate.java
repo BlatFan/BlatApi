@@ -3,7 +3,7 @@
  *
  * SPDX-License-Identifier: MIT
  */
-package ru.blatfan.blatapi.api.multiblock;
+package ru.blatfan.blatapi.common.multiblock;
 
 @FunctionalInterface
 public interface TriPredicate<A, B, C> {

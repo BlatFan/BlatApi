@@ -1,14 +1,14 @@
-package ru.blatfan.blatapi.api.event;
+package ru.blatfan.blatapi.common.events;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
-import ru.blatfan.blatapi.api.multiblock.Multiblock;
 import ru.blatfan.blatapi.common.guide_book.GuideBookCategory;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
 import ru.blatfan.blatapi.common.guide_book.GuideBookEntry;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPaper;
+import ru.blatfan.blatapi.common.multiblock.Multiblock;
 
 @Cancelable
 public class GuideReload extends Event {

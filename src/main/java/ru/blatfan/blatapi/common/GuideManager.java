@@ -9,15 +9,15 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.MinecraftForge;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.api.event.GuideReload;
-import ru.blatfan.blatapi.api.multiblock.Multiblock;
 import ru.blatfan.blatapi.client.guide_book.recipe_renderers.AnvilRecipeRenderer;
 import ru.blatfan.blatapi.client.guide_book.recipe_renderers.CraftingRecipeRenderer;
 import ru.blatfan.blatapi.client.guide_book.recipe_renderers.FurnaceRecipeRenderer;
+import ru.blatfan.blatapi.common.events.GuideReload;
 import ru.blatfan.blatapi.common.guide_book.*;
 import ru.blatfan.blatapi.common.guide_book.pages.*;
 import ru.blatfan.blatapi.common.multiblock.AbstractMultiblock;
 import ru.blatfan.blatapi.common.multiblock.DenseMultiblock;
+import ru.blatfan.blatapi.common.multiblock.Multiblock;
 import ru.blatfan.blatapi.common.multiblock.SparseMultiblock;
 import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
 

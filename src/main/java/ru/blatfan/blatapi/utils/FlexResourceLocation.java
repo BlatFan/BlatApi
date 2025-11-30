@@ -1,6 +1,5 @@
 package ru.blatfan.blatapi.utils;
 
-import lombok.experimental.UtilityClass;
 import net.minecraft.resources.ResourceLocation;
 import oshi.util.tuples.Pair;
 

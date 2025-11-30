@@ -489,8 +489,6 @@ public class GuiUtil {
     }
     
     private static CustomItemRenderer customItemRenderer;
-    public static float blitOffset = 0;
-    
     public static int FULL_BRIGHT = 15728880;
     
     public static Function<Float, Float> FULL_WIDTH_FUNCTION = (f) -> 1f;
@@ -522,13 +520,16 @@ public class GuiUtil {
     }
     
     public static void renderItemModelInGui(ItemStack stack, float x, float y, float xSize, float ySize, float zSize, float xRot, float yRot, float zRot, int packedLight) {
+        renderItemModelInGui(stack, x, y, 100, xSize, ySize, zSize, xRot, yRot, zRot, packedLight);
+    }
+    public static void renderItemModelInGui(ItemStack stack, float x, float y, float z, float xSize, float ySize, float zSize, float xRot, float yRot, float zRot, int packedLight) {
         Minecraft minecraft = Minecraft.getInstance();
         BakedModel bakedmodel = Minecraft.getInstance().getItemRenderer().getModel(stack, minecraft.level, minecraft.player, 0);
         CustomItemRenderer customItemRenderer = getCustomItemRenderer();
         
         PoseStack poseStack = RenderSystem.getModelViewStack();
         poseStack.pushPose();
-        poseStack.translate(x, y, 100.0F + blitOffset);
+        poseStack.translate(x, y, z);
         poseStack.translate((double) xSize / 2, (double) ySize / 2, 0.0D);
         poseStack.scale(1.0F, -1.0F, 1.0F);
         poseStack.scale(xSize, ySize, zSize);
@@ -552,17 +553,18 @@ public class GuiUtil {
     }
     
     public static void renderFloatingItemModelIntoGUI(GuiGraphics gui, ItemStack stack, float x, float y, int packedLight, float ticks, float ticksUp) {
+        renderFloatingItemModelIntoGUI(gui, stack, x, y, 150, packedLight, ticks, ticksUp);
+    }
+    public static void renderFloatingItemModelIntoGUI(GuiGraphics gui, ItemStack stack, float x, float y, float z, int packedLight, float ticks, float ticksUp) {
         Minecraft minecraft = Minecraft.getInstance();
         BakedModel bakedmodel = Minecraft.getInstance().getItemRenderer().getModel(stack, minecraft.level, minecraft.player, 0);
         CustomItemRenderer customItemRenderer = getCustomItemRenderer();
         
         float old = bakedmodel.getTransforms().gui.rotation.y;
-        blitOffset += 50.0F;
-        
         PoseStack pose = gui.pose();
         
         pose.pushPose();
-        pose.translate(x + 8, y + 8, 100 + blitOffset);
+        pose.translate(x + 8, y + 8, z);
         pose.mulPoseMatrix((new Matrix4f()).scaling(1.0F, -1.0F, 1.0F));
         pose.scale(16.0F, 16.0F, 16.0F);
         pose.translate(0.0D, Math.sin(Math.toRadians(ticksUp)) * 0.03125F, 0.0D);
@@ -584,11 +586,14 @@ public class GuiUtil {
         RenderSystem.applyModelViewMatrix();
         
         bakedmodel.getTransforms().gui.rotation.y = old;
-        blitOffset -= 50.0F;
     }
     
     public static void renderArmorInGui(GuiGraphics gui, ItemStack stack, int x, int y, int z, float sizeX, float sizeY, float sizeZ,
                                         float xRot, float yRot, float zRot, int packedLight) {
+        renderArmorInGui(gui, stack, x, y, z, sizeX, sizeY, sizeZ, xRot, yRot, zRot, packedLight, 1, 1, 1, 1);
+    }
+    public static void renderArmorInGui(GuiGraphics gui, ItemStack stack, int x, int y, int z, float sizeX, float sizeY, float sizeZ,
+                                        float xRot, float yRot, float zRot, int packedLight, float red, float blue, float green, float alpha) {
         if(!(stack.getItem() instanceof ArmorItem armorItem)) return;
         Minecraft mc = Minecraft.getInstance();
         EquipmentSlot slot = LivingEntity.getEquipmentSlotForItem(stack);
@@ -620,7 +625,7 @@ public class GuiUtil {
         
         PoseStack pose = gui.pose();
         pose.pushPose();
-        pose.translate(x+(sizeX/2), y-yOffset, z+blitOffset);
+        pose.translate(x+(sizeX/2), y-yOffset, z);
         pose.scale(sizeX, sizeY, sizeZ);
         pose.mulPose(Axis.XP.rotationDegrees(xRot));
         pose.mulPose(Axis.YP.rotationDegrees(yRot));
@@ -636,17 +641,17 @@ public class GuiUtil {
             renderModel(pose, bufferSource, packedLight, model,
                 color.getRed() / 255f, color.getGreen() / 255f, color.getBlue() / 255f, 1f,
                 RenderType.armorCutoutNoCull(getArmorResource(mc.player, stack, slot, null)));
-            renderModel(pose, bufferSource, packedLight, model, 1f, 1f, 1f, 1f,
+            renderModel(pose, bufferSource, packedLight, model, red, green, blue, alpha,
                 RenderType.armorCutoutNoCull(getArmorResource(mc.player, stack, slot, "overlay")));
         } else {
-            renderModel(pose, bufferSource, packedLight, model, 1f, 1f, 1f, 1f,
+            renderModel(pose, bufferSource, packedLight, model, red, green, blue, alpha,
                 RenderType.armorCutoutNoCull(getArmorResource(mc.player, stack, slot, null)));
         }
         
         ArmorTrim.getTrim(mc.player.level().registryAccess(), stack).ifPresent((trim) ->
             renderTrim(armorItem.getMaterial(), pose, bufferSource, packedLight, trim, model));
         if(stack.hasFoil())
-            renderGlint(pose, bufferSource, RenderType.armorEntityGlint(), packedLight, model, 1, 1, 1, 1);
+            renderGlint(pose, bufferSource, RenderType.armorEntityGlint(), packedLight, model, red, green, blue, alpha);
         
         bufferSource.endBatch();
         Lighting.setupFor3DItems();
@@ -664,7 +669,7 @@ public class GuiUtil {
         model.renderToBuffer(poseStack, buffer.getBuffer(renderType), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
     }
     
-    public static ResourceLocation getArmorResource(Entity entity, ItemStack stack, EquipmentSlot slot, @javax.annotation.Nullable String type) {
+    public static ResourceLocation getArmorResource(Entity entity, ItemStack stack, EquipmentSlot slot, String type) {
         String s1 = getDefaultArmorPath(stack, slot, type);
         s1 = ForgeHooksClient.getArmorTexture(entity, stack, s1, slot, type);
         ResourceLocation resourcelocation = HumanoidArmorLayer.ARMOR_LOCATION_CACHE.get(s1);
@@ -687,10 +692,14 @@ public class GuiUtil {
     }
     
     public static void renderTrim(ArmorMaterial armorMaterial, PoseStack poseStack, MultiBufferSource buffer, int packedLight, ArmorTrim trim, Model model) {
+        renderTrim(armorMaterial, poseStack, buffer, packedLight, trim, model, 1, 1, 1, 1);
+    }
+    public static void renderTrim(ArmorMaterial armorMaterial, PoseStack poseStack, MultiBufferSource buffer, int packedLight, ArmorTrim trim, Model model,
+                                   float red, float green, float blue, float alpha) {
         TextureAtlas armorTrimAtlas = Minecraft.getInstance().getModelManager().getAtlas(Sheets.ARMOR_TRIMS_SHEET);
         TextureAtlasSprite textureatlassprite = armorTrimAtlas.getSprite(trim.outerTexture(armorMaterial));
         VertexConsumer vertexconsumer = textureatlassprite.wrap(buffer.getBuffer(Sheets.armorTrimsSheet()));
-        model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
+        model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
     }
     
     public static void renderCustomModel(ModelResourceLocation model, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {

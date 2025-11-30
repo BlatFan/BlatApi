@@ -23,10 +23,6 @@ import ru.blatfan.blatapi.fluffy_fur.client.render.item.CustomItemRenderer;
 @UtilityClass
 @Deprecated(forRemoval = true, since = "0.3.1")
 public class RenderUtil {
-    /**
-     * use {@link GuiUtil#blitOffset}
-     */
-    @Deprecated(forRemoval = true, since = "0.3.1")
     public static float blitOffset = 0;
     
     /**
@@ -54,7 +50,7 @@ public class RenderUtil {
     }
     
     /**
-     * use {@link GuiUtil#renderItemModelInGui(ItemStack, float, float, float, float, float, float, float, float, int)}
+     * use {@link GuiUtil#renderItemModelInGui(ItemStack, float, float, float, float, float, float, float, float, float, int)}
      */
     @Deprecated(forRemoval = true, since = "0.3.1")
     public static void renderItemModelInGui(ItemStack stack, float x, float y, float xSize, float ySize, float zSize, float xRot, float yRot, float zRot, int packedLight) {
@@ -88,7 +84,7 @@ public class RenderUtil {
     }
     
     /**
-     * use {@link GuiUtil#renderFloatingItemModelIntoGUI(GuiGraphics, ItemStack, float, float, int, float, float)}
+     * use {@link GuiUtil#renderFloatingItemModelIntoGUI(GuiGraphics, ItemStack, float, float, float, int, float, float)}
      */
     @Deprecated(forRemoval = true, since = "0.3.1")
     public static void renderFloatingItemModelIntoGUI(GuiGraphics gui, ItemStack stack, float x, float y, int packedLight, float ticks, float ticksUp) {

@@ -8,9 +8,6 @@ package ru.blatfan.blatapi.common.multiblock.matcher;
 
 import com.google.common.base.Suppliers;
 import com.google.gson.JsonObject;
-import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.api.multiblock.StateMatcher;
-import ru.blatfan.blatapi.api.multiblock.TriPredicate;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -24,6 +21,9 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.common.multiblock.StateMatcher;
+import ru.blatfan.blatapi.common.multiblock.TriPredicate;
 
 import java.util.Map;
 import java.util.Objects;

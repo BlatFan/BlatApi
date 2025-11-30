@@ -41,8 +41,7 @@ public class GuideClient {
     }
     
     public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event) {
-        event.registerBelow(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(), "multiblock_hud", (gui, guiGraphics, partialTick, screenWidth, screenHeight) -> {
-            MultiblockPreviewRenderer.onRenderHUD(guiGraphics, partialTick);
-        });
+        event.registerBelow(VanillaGuiOverlay.BOSS_EVENT_PROGRESS.id(), "multiblock_hud", (gui, guiGraphics, partialTick, screenWidth, screenHeight) ->
+            MultiblockPreviewRenderer.onRenderHUD(guiGraphics, partialTick));
     }
 }

@@ -65,7 +65,7 @@ public class Text implements Component {
     }
     
     public Text add(String c){
-        component.append(c);
+        component.append(Component.translatable(c));
         return this;
     }
     
@@ -127,5 +127,10 @@ public class Text implements Component {
     @Override
     public String getString() {
         return component.getString();
+    }
+    
+    @Override
+    public String toString() {
+        return getString();
     }
 }

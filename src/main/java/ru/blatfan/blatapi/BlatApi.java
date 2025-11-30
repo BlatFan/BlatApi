@@ -34,9 +34,10 @@ import ru.blatfan.blatapi.utils.RecipeHelper;
 public class BlatApi {
     public static final String MOD_ID = "blatapi";
     public static final String MOD_NAME = "BlatApi";
-    public static final String MOD_VERSION = "0.3.2";
+    public static final String MOD_VERSION = "0.3.3";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatAPI");
     public static String CUSTOM_WINDOW_TITLE = "";
+    public static final boolean DEV = false;
     
     public BlatApi() {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -51,7 +52,8 @@ public class BlatApi {
         MinecraftForge.EVENT_BUS.register(PlayerStagesEvents.class);
         bus.addListener(this::setup);
         bus.addListener(this::configLoad);
-        DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ()-> TestHooks::setup);
+        if(DEV)
+            DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ()-> TestHooks::setup);
         DistExecutor.unsafeCallWhenOn(Dist.CLIENT, () -> () -> {
             MinecraftForge.EVENT_BUS.register(new GuideClient());
             return new Object();

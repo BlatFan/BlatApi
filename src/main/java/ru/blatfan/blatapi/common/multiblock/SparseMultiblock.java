@@ -12,9 +12,6 @@ import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.api.multiblock.StateMatcher;
-import ru.blatfan.blatapi.common.multiblock.matcher.Matchers;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -25,8 +22,13 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.common.multiblock.matcher.Matchers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 public class SparseMultiblock extends AbstractMultiblock {

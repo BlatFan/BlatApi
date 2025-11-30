@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.api.event;
+package ru.blatfan.blatapi.common.events;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

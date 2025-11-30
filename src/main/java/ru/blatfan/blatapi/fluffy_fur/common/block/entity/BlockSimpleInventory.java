@@ -51,7 +51,7 @@ public abstract class BlockSimpleInventory extends BlockEntityBase {
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return BlockUtil.getLazyItems(this).cast();
+            return BlockUtil.getLazyItems(itemHandler).cast();
         return super.getCapability(cap, side);
     }
 

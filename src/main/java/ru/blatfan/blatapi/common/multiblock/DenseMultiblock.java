@@ -22,10 +22,12 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.api.multiblock.*;
 import ru.blatfan.blatapi.common.multiblock.matcher.Matchers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 public class DenseMultiblock extends AbstractMultiblock {
 

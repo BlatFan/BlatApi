@@ -3,23 +3,24 @@ package ru.blatfan.blatapi.utils;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import lombok.experimental.UtilityClass;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.event.ClientTickHandler;
 import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
 import ru.blatfan.blatapi.fluffy_fur.common.block.entity.BlockSimpleInventory;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.awt.*;
 import java.util.List;
@@ -83,13 +84,19 @@ public class BlockUtil {
     }
     
     public static BaseItemStackHandler getItemHandler(BlockSimpleInventory blockSimpleInventory){
-        BaseItemStackHandler itemStackHandler = new BaseItemStackHandler(blockSimpleInventory.getItemHandler().getContainerSize(), () -> {});
-        for(int i=0; i<blockSimpleInventory.getItemHandler().getContainerSize(); i++)
-            itemStackHandler.setStackInSlot(i, blockSimpleInventory.getItemHandler().getItem(i));
+        return getItemHandler(blockSimpleInventory.getItemHandler());
+    }
+    public static BaseItemStackHandler getItemHandler(Container container){
+        BaseItemStackHandler itemStackHandler = new BaseItemStackHandler(container.getContainerSize(), () -> {});
+        for(int i=0; i<container.getContainerSize(); i++)
+            itemStackHandler.setStackInSlot(i, container.getItem(i));
         return itemStackHandler;
     }
     public static LazyOptional<BaseItemStackHandler> getLazyItems(BlockSimpleInventory blockSimpleInventory){
         return LazyOptional.of(() -> getItemHandler(blockSimpleInventory));
+    }
+    public static LazyOptional<BaseItemStackHandler> getLazyItems(Container container){
+        return LazyOptional.of(() -> getItemHandler(container));
     }
     public static LazyOptional<IItemHandler> getLazyItems(BlockEntity blockEntity){
         return LazyOptional.of(() -> blockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER).orElse(new BaseItemStackHandler(0, blockEntity::setChanged)));

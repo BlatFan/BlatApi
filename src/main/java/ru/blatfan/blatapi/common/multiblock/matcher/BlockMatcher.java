@@ -19,8 +19,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.api.multiblock.StateMatcher;
-import ru.blatfan.blatapi.api.multiblock.TriPredicate;
+import ru.blatfan.blatapi.common.multiblock.StateMatcher;
+import ru.blatfan.blatapi.common.multiblock.TriPredicate;
 
 import java.util.Objects;
 

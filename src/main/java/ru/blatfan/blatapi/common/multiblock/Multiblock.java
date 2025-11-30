@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: MIT
  */
 
-package ru.blatfan.blatapi.api.multiblock;
+package ru.blatfan.blatapi.common.multiblock;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.BlockPos;

@@ -5,8 +5,6 @@
  */
 package ru.blatfan.blatapi.common.multiblock;
 
-import ru.blatfan.blatapi.api.multiblock.Multiblock;
-import ru.blatfan.blatapi.api.multiblock.StateMatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Rotation;
