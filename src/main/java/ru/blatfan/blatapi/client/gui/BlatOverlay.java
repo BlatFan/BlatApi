@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraftforge.client.gui.overlay.ForgeGui;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
+@SuppressWarnings("unused")
 public abstract class BlatOverlay implements IGuiOverlay {
     private static final int HOTBAR_HEIGHT = 32;
     private static final int SCREEN_BORDER_MARGIN = 20;

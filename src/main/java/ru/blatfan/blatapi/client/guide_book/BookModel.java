@@ -23,14 +23,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ru.blatfan.blatapi.common.BARegistry;
-import ru.blatfan.blatapi.common.guide_book.GuideBookItem;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
+import ru.blatfan.blatapi.common.guide_book.GuideBookItem;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+// TODO
 public class BookModel implements BakedModel {
     private final BakedModel original;
     private final ItemOverrides itemHandler;

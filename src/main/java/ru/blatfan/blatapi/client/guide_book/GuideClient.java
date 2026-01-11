@@ -10,6 +10,7 @@ import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.client.guide_book.screen.ResearchScreen;
 import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
 

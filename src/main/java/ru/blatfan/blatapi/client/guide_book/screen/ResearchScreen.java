@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.client.guide_book;
+package ru.blatfan.blatapi.client.guide_book.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.common.events.EntryClickedEvent;
 import ru.blatfan.blatapi.common.guide_book.GuideBookCategory;
@@ -30,7 +31,7 @@ public class ResearchScreen extends Screen {
     private GuideBookCategory category = null;
     private final int bgSize = 1024;
     
-    private GuideBookGui guideBookGui = null;
+    private GuideBookGui guideBookGui = new GuideBookGui();
     private final GuideBookData data;
     public ResearchScreen(GuideBookData data) {
         super(Component.empty());
@@ -73,12 +74,12 @@ public class ResearchScreen extends Screen {
         pose.popPose();
         renderTooltips(gui, mX, mY);
         
-        if(guideBookGui!=null){
+        if(guideBookGui.getEntry()!=null){
             pose.pushPose();
             pose.translate(0, 0, 250);
             guideBookGui.render(gui, mX, mY, partialTick);
             pose.popPose();
-            if(guideBookGui.isClose()) guideBookGui=null;
+            if(guideBookGui.isClose()) guideBookGui.setEntry(null);
         }
         
         pose.pushPose();
@@ -242,7 +243,7 @@ public class ResearchScreen extends Screen {
                     mouseY>= y && mouseY<= y+size) {
                     EntryClickedEvent event = new EntryClickedEvent(data, category, node);
                     if(!MinecraftForge.EVENT_BUS.post(event))
-                        guideBookGui = new GuideBookGui(node);
+                        guideBookGui.setEntry(node);
                 }
             }
         } else if(mouseX>width-36 && mouseX<width &&

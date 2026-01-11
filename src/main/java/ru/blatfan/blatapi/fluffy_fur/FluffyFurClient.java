@@ -1,30 +1,30 @@
 package ru.blatfan.blatapi.fluffy_fur;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
-import ru.blatfan.blatapi.common.BARegistry;
-import ru.blatfan.blatapi.fluffy_fur.client.event.FluffyFurClientEvents;
-import ru.blatfan.blatapi.fluffy_fur.client.render.LevelRenderHandler;
-import ru.blatfan.blatapi.fluffy_fur.client.shader.postprocess.PostProcessHandler;
-import ru.blatfan.blatapi.fluffy_fur.client.splash.SplashHandler;
-import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurMod;
-import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurModsHandler;
-import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurPanorama;
-import ru.blatfan.blatapi.fluffy_fur.integration.client.ShadersIntegration;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
+import ru.blatfan.blatapi.common.BARegistry;
+import ru.blatfan.blatapi.fluffy_fur.client.event.FluffyFurClientEvents;
+import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurMod;
+import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurModsHandler;
+import ru.blatfan.blatapi.fluffy_fur.client.gui.screen.FluffyFurPanorama;
+import ru.blatfan.blatapi.fluffy_fur.client.render.LevelRenderHandler;
+import ru.blatfan.blatapi.fluffy_fur.client.shader.postprocess.PostProcessHandler;
+import ru.blatfan.blatapi.fluffy_fur.client.splash.SplashHandler;
+import ru.blatfan.blatapi.fluffy_fur.integration.client.ShadersIntegration;
 import ru.blatfan.blatapi.utils.ClientTicks;
 import ru.blatfan.blatapi.utils.collection.Text;
 
@@ -105,10 +105,7 @@ public class FluffyFurClient {
                 .setNameColor(new Color(142, 95, 239))
                 .setVersionColor(new Color(65, 36, 138))
                 .setDescription(Component.translatable("mod_description.blatapi"))
-                .addGithubLink("https://github.com/BlatFan/BlatApi")
-                .addCurseForgeLink("https://www.curseforge.com/minecraft/mc-mods/blatapi")
-                .addModrinthLink("https://modrinth.com/mod/blatapi")
-                .addDiscordLink("https://discord.gg/eHJChH9mqH")
+            .addBFLinks("BlatApi")
         ;
         VANILLA_PANORAMA = new FluffyFurPanorama("minecraft:vanilla", Text.create("panorama.minecraft.vanilla").withColor(Color.GREEN))
             .setItem(new ItemStack(Items.GRASS_BLOCK));

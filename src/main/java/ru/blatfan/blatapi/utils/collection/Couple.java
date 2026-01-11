@@ -24,8 +24,7 @@ public class Couple<K, V> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o instanceof Couple) {
-            Couple pair = (Couple) o;
+        if (o instanceof Couple pair) {
             if (!Objects.equals(key, pair.key)) return false;
             return Objects.equals(value, pair.value);
         }

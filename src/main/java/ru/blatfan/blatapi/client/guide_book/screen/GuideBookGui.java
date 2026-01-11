@@ -1,9 +1,10 @@
-package ru.blatfan.blatapi.client.guide_book;
+package ru.blatfan.blatapi.client.guide_book.screen;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.common.guide_book.BookGuiExtension;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
@@ -12,10 +13,9 @@ import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 
 import java.awt.*;
 
-@RequiredArgsConstructor
 public class GuideBookGui {
-    @Getter
-    private final GuideBookEntry entry;
+    @Getter@Setter
+    private GuideBookEntry entry;
     
     private int guiLeft, guiTop;
     private int widthT, heightT;
@@ -26,6 +26,7 @@ public class GuideBookGui {
     private boolean close;
     
     public void render(GuiGraphics gui, int mX, int mY, float partialTick) {
+        if(entry==null) return;
         widthT = 272;
         heightT = 181;
         guiLeft = (gui.guiWidth()-widthT)/2;
@@ -81,6 +82,7 @@ public class GuideBookGui {
     }
     
     public void renderBackground(GuiGraphics gui) {
+        if(entry==null) return;
         GuideBookData data = GuideClient.guideBookData;
         gui.fillGradient(0, 0, gui.guiWidth(), gui.guiHeight(), -1072689136, -804253680);
         gui.blitNineSlicedSized(data.getTexture(), guiLeft, guiTop, widthT, heightT, 16, 48, 48, 0, 0, 256, 256);
@@ -98,6 +100,7 @@ public class GuideBookGui {
     }
     
     public boolean mouseClicked(double mX, double mY, int button) {
+        if(entry==null) return false;
         int x = guiLeft+11;
         int y = guiTop+175;
         if(hasPrevious(page) && mX>=x && mX<=x+18 && mY>=y && mY<=y+10 && button==0){
@@ -134,6 +137,7 @@ public class GuideBookGui {
     }
     
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if(entry==null) return false;
         page = page+(delta<0?2:-2);
         return true;
     }

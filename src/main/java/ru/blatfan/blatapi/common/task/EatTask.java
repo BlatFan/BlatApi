@@ -79,7 +79,7 @@ public class EatTask extends Task {
                 tag.putBoolean("visible", task1.visible);
                 tag.put("food", task1.food.serializeNBT());
             }
-            return new CompoundTag();
+            return tag;
         }
     }
 }

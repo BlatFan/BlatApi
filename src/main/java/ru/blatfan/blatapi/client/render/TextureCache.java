@@ -8,6 +8,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Mod;
+import ru.blatfan.blatapi.BlatApi;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
@@ -15,41 +16,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(modid = "moracraft", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = BlatApi.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class TextureCache {
     private static final Map<FluidTextureKey, WeakReference<TextureAtlasSprite>> CACHE = new ConcurrentHashMap<>();
-    
-    public static class FluidTextureKey {
-        private final String fluidName;
-        private final FluidRenderMap.FluidFlow type;
-        private final int hashCode;
-        
-        private FluidTextureKey(String fluidName, FluidRenderMap.FluidFlow type) {
-            this.fluidName = fluidName;
-            this.type = type;
-            this.hashCode = calculateHashCode();
-        }
-        
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) return true;
-            if (obj == null || getClass() != obj.getClass()) return false;
-            
-            FluidTextureKey other = (FluidTextureKey) obj;
-            return fluidName.equals(other.fluidName) && type == other.type;
-        }
-        
-        @Override
-        public int hashCode() {
-            return hashCode;
-        }
-        
-        private int calculateHashCode() {
-            int result = fluidName.hashCode();
-            result = 31 * result + type.hashCode();
-            return result;
-        }
-    }
     
     @Nullable
     public static TextureAtlasSprite get(FluidTextureKey key) {
@@ -84,5 +53,37 @@ public class TextureCache {
     public static FluidTextureKey createKey(FluidStack fluidStack, FluidRenderMap.FluidFlow type) {
         String fluidName = BuiltInRegistries.FLUID.getKey(fluidStack.getFluid()).toString();
         return new FluidTextureKey(fluidName, type);
+    }
+    
+    public static class FluidTextureKey {
+        private final String fluidName;
+        private final FluidRenderMap.FluidFlow type;
+        private final int hashCode;
+        
+        private FluidTextureKey(String fluidName, FluidRenderMap.FluidFlow type) {
+            this.fluidName = fluidName;
+            this.type = type;
+            this.hashCode = calculateHashCode();
+        }
+        
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            
+            FluidTextureKey other = (FluidTextureKey) obj;
+            return fluidName.equals(other.fluidName) && type == other.type;
+        }
+        
+        @Override
+        public int hashCode() {
+            return hashCode;
+        }
+        
+        private int calculateHashCode() {
+            int result = fluidName.hashCode();
+            result = 31 * result + type.hashCode();
+            return result;
+        }
     }
 }

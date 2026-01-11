@@ -1,8 +1,22 @@
 package ru.blatfan.blatapi.fluffy_fur.client.event;
 
+import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
 import ru.blatfan.blatapi.fluffy_fur.client.bow.BowHandler;
@@ -17,20 +31,6 @@ import ru.blatfan.blatapi.fluffy_fur.common.creativetab.MultiCreativeTab;
 import ru.blatfan.blatapi.fluffy_fur.common.creativetab.SubCreativeTab;
 import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurKeyMappings;
-import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.TitleScreen;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.client.event.ComputeFovModifierEvent;
-import net.minecraftforge.client.event.InputEvent;
-import net.minecraftforge.client.event.ScreenEvent;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 
@@ -142,11 +142,7 @@ public class FluffyFurClientEvents {
 
     @SubscribeEvent
     public void onInput(InputEvent event) {
-        if (FluffyFurKeyMappings.SKIN_MENU.isDown()) {
-            String name = FluffyFur.proxy.getPlayer().getGameProfile().getName();
-            if (name.equals("Dev") || name.equals("BlatFan") || FluffyFur.proxy.getPlayer().hasPermissions(4)) {
-                Minecraft.getInstance().setScreen(new PlayerSkinMenuScreen());
-            }
-        }
+        if (FluffyFurKeyMappings.SKIN_MENU.isDown() && FluffyFur.proxy.getPlayer().hasPermissions(4))
+            Minecraft.getInstance().setScreen(new PlayerSkinMenuScreen());
     }
 }

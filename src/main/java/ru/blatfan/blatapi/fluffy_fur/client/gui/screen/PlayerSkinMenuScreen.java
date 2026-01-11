@@ -1,18 +1,17 @@
 package ru.blatfan.blatapi.fluffy_fur.client.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkin;
 import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkinCape;
 import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkinEffect;
 import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkinHandler;
 import ru.blatfan.blatapi.fluffy_fur.common.network.FluffyFurPacketHandler;
 import ru.blatfan.blatapi.fluffy_fur.common.network.playerskin.PlayerSkinChangePacket;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
-import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurPlayerSkins;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +29,13 @@ public class PlayerSkinMenuScreen extends Screen {
 
     public void initSkins() {
         skins.add(new SkinEntry(null, Component.translatable("gui.blatapi.skin_menu.standard")));
-        skins.add(new SkinEntry(FluffyFurPlayerSkins.BLATFAN_SKIN, Component.literal("BlatFan")));
+        PlayerSkinHandler.skins.forEach((id, skin) -> skins.add(new SkinEntry(skin, Component.literal(id))));
         
         skinCapes.add(new SkinCapeEntry(null, Component.translatable("gui.blatapi.skin_menu.standard")));
-        skinCapes.add(new SkinCapeEntry(FluffyFurPlayerSkins.BLATFAN_CAPE, Component.translatable("gui.blatapi.skin_menu.cape.blatfan")));
+        PlayerSkinHandler.skinCapes.forEach((id, skin) -> skinCapes.add(new SkinCapeEntry(skin, Component.literal(id))));
         
         skinEffects.add(new SkinEffectEntry(null, Component.translatable("gui.blatapi.skin_menu.empty")));
-        skinEffects.add(new SkinEffectEntry(FluffyFurPlayerSkins.EMERALD_EFFECT, Component.translatable("gui.blatapi.skin_menu.effect.emerald")));
+        PlayerSkinHandler.skinEffects.forEach((id, skin) -> skinEffects.add(new SkinEffectEntry(skin, Component.literal(id))));
     }
 
     @Override

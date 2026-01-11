@@ -12,7 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import ru.blatfan.blatapi.client.guide_book.GuideBookPaperScreen;
+import ru.blatfan.blatapi.client.guide_book.screen.GuideBookPaperScreen;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.common.task.Task;
 import ru.blatfan.blatapi.utils.NBTHelper;

@@ -1,10 +1,6 @@
 package ru.blatfan.blatapi.fluffy_fur.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
-import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
-import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
-import ru.blatfan.blatapi.fluffy_fur.client.gui.components.FluffyFurLogoRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -23,8 +19,14 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.gametest.ForgeGameTestHooks;
+import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
+import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
+import ru.blatfan.blatapi.fluffy_fur.client.gui.components.FluffyFurLogoRenderer;
+import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 import ru.blatfan.blatapi.utils.ColorHelper;
 import ru.blatfan.blatapi.utils.GuiUtil;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -140,17 +142,16 @@ public class FluffyFurMenuScreen extends Screen {
         List<Component> lines = getDescription(mod);
         int links = mod.getLinks().size();
         int l = lines.size() - links;
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 9; i++) {
             int index = descriptionScroll + i;
             if (index < 0) break;
             if (index > lines.size() - 1) break;
-            MutableComponent line = Component.empty().append(lines.get(index));
-            if (index >= l) {
-                if (mouseX >= x + 5 && mouseY >= y + 5 + (i * (font.lineHeight + 1)) && mouseX <= x + 5 + font.width(line) && mouseY < y + 5 + (i * (font.lineHeight + 1) + font.lineHeight)) {
+            Text line = Text.create(lines.get(index));
+            if (index >= l &&
+                mouseX >= x + 5 && mouseY >= y + 5 + (i * (font.lineHeight + 1))
+                && mouseX <= x + 5 + font.width(line) && mouseY < y + 5 + (i * (font.lineHeight + 1) + font.lineHeight))
                     line.withStyle(ChatFormatting.UNDERLINE);
-                }
-            }
-            GuiUtil.drawScaledString(gui, line, x + 5, (int) (y + 5 + (i * (font.lineHeight + 1)*0.7f)), new Color(16777215), 0.7f);
+            gui.drawString(font, line, x + 5, y + 5 + (i * (font.lineHeight + 1)), 16777215);
         }
 
         int s = lines.size() - 9;
@@ -206,7 +207,7 @@ public class FluffyFurMenuScreen extends Screen {
     
     private static boolean blatfan(String devs){
         for(String s : devs.split(" "))
-            if(s.equals("BlatFan"))
+            if(s.equals("BlatFan") || (s.equals("Dev") && ForgeGameTestHooks.isGametestEnabled()))
                 return true;
         return false;
     }
@@ -295,10 +296,9 @@ public class FluffyFurMenuScreen extends Screen {
 
     public static List<Component> getDescription(FluffyFurMod mod) {
         String text = mod.getDescription().getString();
-        int w = 145;
+        int w = 140;
         List<Component> lines = new ArrayList<>();
-        for (String s : GuiUtil.splitText(text, w, 0.7f))
-            lines.add(Component.literal(s));
+        GuiUtil.splitText(text, w).forEach(s -> lines.add(Text.create(s)));
         if (!mod.getLinks().isEmpty()) {
             lines.add(Component.empty());
             lines.add(Component.translatable("gui.blatapi.menu.links").withStyle(ChatFormatting.GRAY));
@@ -395,7 +395,7 @@ public class FluffyFurMenuScreen extends Screen {
             if (descriptionScroll - add < 0) {
                 return false;
             }
-            if (descriptionScroll - add > lines.size() - 13) {
+            if (descriptionScroll - add > lines.size() - 9) {
                 return false;
             }
             descriptionScroll = descriptionScroll - add;

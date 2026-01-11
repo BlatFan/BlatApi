@@ -55,7 +55,7 @@ public class NotTask extends Task {
                 tag.putBoolean("visible", task1.visible);
                 tag.put("task", Task.toNBT(task1.task));
             }
-            return new CompoundTag();
+            return tag;
         }
     }
 }

@@ -4,6 +4,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import com.mojang.brigadier.Message;
 import com.mojang.math.Axis;
 import lombok.experimental.UtilityClass;
 import net.minecraft.ChatFormatting;
@@ -36,17 +37,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.armortrim.ArmorTrim;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
+import ru.blatfan.blatapi.client.render.FluidRenderMap;
 import ru.blatfan.blatapi.fluffy_fur.client.render.FluffyFurRenderType;
 import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
 import ru.blatfan.blatapi.fluffy_fur.client.render.item.CustomItemRenderer;
@@ -55,8 +56,10 @@ import ru.blatfan.blatapi.utils.collection.SplitText;
 
 import java.awt.*;
 import java.lang.Math;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -231,58 +234,94 @@ public class GuiUtil {
         List<Component> components = new ArrayList<>(Screen.getTooltipFromItem(Minecraft.getInstance(), stacks[index]));
         if(ingredient.values[0] instanceof Ingredient.TagValue tagValue && Minecraft.getInstance().options.advancedItemTooltips)
             components.add(1, Component.literal("Tag: #"+ tagValue.tag.location()).withStyle(ChatFormatting.DARK_GRAY));
-        renderScaledTooltip(gui, components, x, y, scale);
+        renderScaledTooltip(gui, stacks[index], components, x, y, scale);
     }
     public static void renderTooltip(GuiGraphics gui, int x, int y, Ingredient ingredient){
         renderTooltip(gui, x,y, ingredient, 1);
     }
     
-    public static void drawScaledString(GuiGraphics gui, String text, int x, int y, Color color, float size){
-        gui.pose().pushPose();
-        gui.pose().scale(size, size, 1);
-        gui.drawString(Minecraft.getInstance().font, text, x / size, y / size, ColorHelper.getColor(color), true);
-        gui.pose().popPose();
-    }
-    public static void drawScaledString(GuiGraphics gui, Component text, int x, int y, Color color, float size){
-        drawScaledString(gui, text.getString(), x, y, color, size);
+    public static Font getFont(){
+        return Minecraft.getInstance().font;
     }
     
-    public static void drawScaledCentreString(GuiGraphics gui, String text, int x, int y, Color color, float size){
-        drawScaledString(gui, text, x-Minecraft.getInstance().font.width(text)/2, y, color, size);
+    public static void drawScaledString(GuiGraphics gui, Font font, Component text, float x, float y, Color color, float size){
+        PoseStack pose = gui.pose();
+        pose.pushPose();
+        pose.scale(size, size, 1);
+        gui.drawString(font, text.getVisualOrderText(), x / size, y / size, color.getRGB(), true);
+        pose.popPose();
     }
-    public static void drawScaledCentreString(GuiGraphics gui, Component text, int x, int y, Color color, float size){
-        drawScaledCentreString(gui, text.getString(), x, y, color, size);
+    public static void drawScaledString(GuiGraphics gui, String text, float x, float y, Color color, float size){
+        drawScaledString(gui, getFont(), Component.literal(text), x, y, color, size);
+    }
+    public static void drawScaledString(GuiGraphics gui, Font font, String text, float x, float y, Color color, float size){
+        drawScaledString(gui, font, Component.literal(text), x, y, color, size);
+    }
+    public static void drawScaledString(GuiGraphics gui, Component text, float x, float y, Color color, float size){
+        drawScaledString(gui, getFont(), text, x, y, color, size);
+    }
+    
+    public static void drawScaledCentreString(GuiGraphics gui, String text, float x, float y, Color color, float size){
+        drawScaledCentreString(gui, getFont(), text, x, y, color, size);
+    }
+    public static void drawScaledCentreString(GuiGraphics gui, Font font, String text, float x, float y, Color color, float size){
+        drawScaledCentreString(gui, font, Component.literal(text), x, y, color, size);
+    }
+    public static void drawScaledCentreString(GuiGraphics gui, Component text, float x, float y, Color color, float size){
+        drawScaledCentreString(gui, getFont(), text, x, y, color, size);
+    }
+    public static void drawScaledCentreString(GuiGraphics gui, Font font, Component text, float x, float y, Color color, float size){
+        drawScaledString(gui, font, text, x-font.width(text)*size/2, y, color, size);
     }
     
     public static void drawScaledTooltips(GuiGraphics gui, Component text, int x, int y, float size){
-        gui.pose().pushPose();
-        gui.pose().scale(size, size, 1);
-        gui.renderTooltip(Minecraft.getInstance().font, text, (int) (x / size), (int) (y / size));
-        gui.pose().popPose();
+        drawScaledTooltips(gui, getFont(), text, x, y, size);
     }
-    public static void drawScaledTooltips(GuiGraphics gui, List<Component> text, int x, int y, float size){
-        gui.pose().pushPose();
-        gui.pose().scale(size, size, 1);
-        gui.renderComponentTooltip(Minecraft.getInstance().font, text, (int) (x / size), (int) (y / size));
-        gui.pose().popPose();
+    public static void drawScaledTooltips(GuiGraphics gui, Font font, Component text, int x, int y, float size){
+        PoseStack pose = gui.pose();
+        pose.pushPose();
+        pose.scale(size, size, 1);
+        gui.renderTooltip(font, text, (int) (x / size), (int) (y / size));
+        pose.popPose();
     }
     
-    public static void renderScaledTooltip(GuiGraphics gui, List<Component> list, int x, int y, float size) {
-        gui.pose().pushPose();
-        gui.pose().scale(size, size, 1);
-        gui.renderComponentTooltip(Minecraft.getInstance().font, list, (int) (x/size), (int) (y/size));
-        gui.pose().popPose();
+    public static void drawScaledTooltips(GuiGraphics gui, List<Component> text, int x, int y, float size){
+        drawScaledTooltips(gui, getFont(), text, x, y, size);
     }
+    public static void drawScaledTooltips(GuiGraphics gui, Font font, List<Component> text, int x, int y, float size){
+        PoseStack pose = gui.pose();
+        pose.pushPose();
+        pose.scale(size, size, 1);
+        gui.renderComponentTooltip(font, text, (int) (x / size), (int) (y / size));
+        pose.popPose();
+    }
+    
+    public static void renderScaledTooltip(GuiGraphics gui, ItemStack stack, List<Component> list, int x, int y, float size) {
+        renderScaledTooltip(gui, getFont(), stack, list, x, y, size);
+    }
+    public static void renderScaledTooltip(GuiGraphics gui, Font font, ItemStack stack, List<Component> list, int x, int y, float size) {
+        PoseStack pose = gui.pose();
+        pose.pushPose();
+        pose.scale(size, size, 1);
+        gui.renderComponentTooltip(font, list, (int) (x/size), (int) (y/size), stack);
+        pose.popPose();
+    }
+    
+    public static void renderScaledTooltip(GuiGraphics gui, ItemStack stack, int x, int y, float size) {
+        renderScaledTooltip(gui, getFont(), stack, x, y, size);
+    }
+    public static void renderScaledTooltip(GuiGraphics gui, Font font, ItemStack stack, int x, int y, float size) {
+        PoseStack pose = gui.pose();
+        pose.pushPose();
+        pose.scale(size, size, 1);
+        gui.renderTooltip(font, stack, (int) (x/size), (int) (y/size));
+        pose.popPose();
+    }
+    
     public static void renderScaledItem(GuiGraphics gui, ItemStack pStack, int x, int y, float size) {
         gui.pose().pushPose();
         gui.pose().scale(size, size, 1);
         gui.renderItem(pStack, (int) (x/size), (int) (y/size));
-        gui.pose().popPose();
-    }
-    public static void renderScaledItemTooltip(GuiGraphics gui, ItemStack pStack, int x, int y, float size) {
-        gui.pose().pushPose();
-        gui.pose().scale(size, size, 1);
-        gui.renderTooltip(Minecraft.getInstance().font, pStack, (int) (x/size), (int) (y/size));
         gui.pose().popPose();
     }
     public static void renderScaledFakeItem(GuiGraphics gui, ItemStack pStack, int x, int y, float size) {
@@ -344,6 +383,22 @@ public class GuiUtil {
         pose.scale(scale, scale, 1);
         gui.blit(pAtlasLocation, (int) (x/scale), (int) (y/scale), pUOffset, pVOffset, pWidth, pHeight, pTextureWidth, pTextureHeight);
         pose.popPose();
+    }
+    
+    public static void blit(GuiGraphics gui, ResourceLocation pAtlasLocation, float x, float y, float pUOffset, float pVOffset, int pWidth, int pHeight, int pTextureWidth, int pTextureHeight, float red, float green, float blue, float alpha) {
+        blit(gui, pAtlasLocation, x, y, x+pWidth, y+pHeight, pUOffset/pTextureWidth, (pUOffset+pWidth)/pTextureWidth, pVOffset/pTextureHeight, (pVOffset+pWidth)/pTextureHeight, red, green, blue, alpha);
+    }
+    public static void blit(GuiGraphics gui, ResourceLocation pAtlasLocation, float x0, float y0, float x1, float y1, float u0, float u1, float v0, float v1, float red, float green, float blue, float alpha) {
+        RenderSystem.setShaderTexture(0, pAtlasLocation);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        Matrix4f matrix4f = gui.pose().last().pose();
+        BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
+        bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        bufferbuilder.vertex(matrix4f, x0, y0, 0).uv(u0, v0).color(red, green, blue, alpha).endVertex();
+        bufferbuilder.vertex(matrix4f, x0, y1, 0).uv(u0, v1).color(red, green, blue, alpha).endVertex();
+        bufferbuilder.vertex(matrix4f, x1, y0, 0).uv(u1, v0).color(red, green, blue, alpha).endVertex();
+        bufferbuilder.vertex(matrix4f, x1, y1, 0).uv(u1, v1).color(red, green, blue, alpha).endVertex();
+        BufferUploader.drawWithShader(bufferbuilder.end());
     }
     
     public static void blitNineSlicedSized(GuiGraphics gui, float scale, ResourceLocation texture, int x, int y, int width, int height, int sliceSize, int uWidth, int vHeight, int uOffset, int vOffset,
@@ -615,7 +670,9 @@ public class GuiUtil {
             humanoidModel.young=false;
         }
         
-        int yOffset = (int) (-sizeY+(sizeY/16)*switch(slot){
+        int yOffset = Integer.MAX_VALUE;
+        if(BAGeckoHelper.isGeckoArmor(stack)) yOffset= BAGeckoHelper.getGeckoArmorOffset(sizeY, slot);
+        if(yOffset==Integer.MAX_VALUE) yOffset = (int) (-sizeY+(sizeY/16)*switch(slot){
             case HEAD -> 4;
             case CHEST -> 14;
             case LEGS -> 24;
@@ -670,25 +727,9 @@ public class GuiUtil {
     }
     
     public static ResourceLocation getArmorResource(Entity entity, ItemStack stack, EquipmentSlot slot, String type) {
-        String s1 = getDefaultArmorPath(stack, slot, type);
-        s1 = ForgeHooksClient.getArmorTexture(entity, stack, s1, slot, type);
-        ResourceLocation resourcelocation = HumanoidArmorLayer.ARMOR_LOCATION_CACHE.get(s1);
-        if (resourcelocation == null) resourcelocation = new ResourceLocation(s1);
-        return resourcelocation;
-    }
-    
-    public static String getDefaultArmorPath(ItemStack stack, EquipmentSlot slot, String type) {
-        ArmorItem item = (ArmorItem) stack.getItem();
-        String texture = item.getMaterial().getName();
-        String namespace = "minecraft";
-        int idx = texture.indexOf(':');
-        if (idx != -1) {
-            namespace = texture.substring(0, idx);
-            texture = texture.substring(idx + 1);
-        }
-        int layer = slot.isArmor() && slot.equals(EquipmentSlot.LEGS) ? 2 : 1;
-        return String.format(Locale.ROOT, "%s:textures/models/armor/%s_layer_%d%s.png",
-            namespace, texture, layer, type == null ? "" : String.format(Locale.ROOT, "_%s", type));
+        Minecraft mc = Minecraft.getInstance();
+        HumanoidArmorLayer layer = new HumanoidArmorLayer(null, null, null, mc.getModelManager());
+        return layer.getArmorResource(mc.player, stack, slot, type);
     }
     
     public static void renderTrim(ArmorMaterial armorMaterial, PoseStack poseStack, MultiBufferSource buffer, int packedLight, ArmorTrim trim, Model model) {
@@ -713,7 +754,19 @@ public class GuiUtil {
     }
     
     public static TextureAtlasSprite getSprite(ResourceLocation resourceLocation) {
-        return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(resourceLocation);
+        try {
+            return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(resourceLocation);
+        } catch (Exception e) {
+            return getMissingTexture();
+        }
+    }
+    public static TextureAtlasSprite getMissingTexture() {
+        try {
+            return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
+                .apply(new ResourceLocation("minecraft:missingno"));
+        } catch (Exception e) {
+            return null;
+        }
     }
     
     public static TextureAtlasSprite getSprite(String modId, String sprite) {
@@ -789,16 +842,13 @@ public class GuiUtil {
     public static RenderBuilder getFluidRenderBuilder(FluidStack fluidStack, float texWidth, float texHeight, float texLength, boolean flowing, int light) {
         RenderBuilder builder = RenderBuilder.create().setRenderType(FluffyFurRenderTypes.TRANSLUCENT_TEXTURE);
         if (!fluidStack.isEmpty()) {
-            FluidType type = fluidStack.getFluid().getFluidType();
-            IClientFluidTypeExtensions clientType = IClientFluidTypeExtensions.of(type);
-            TextureAtlasSprite sprite = getSprite(clientType.getStillTexture(fluidStack));
-            if (flowing) sprite = getSprite(clientType.getFlowingTexture(fluidStack));
+            TextureAtlasSprite sprite = FluidRenderMap.getFluidTexture(fluidStack, flowing ? FluidRenderMap.FluidFlow.FLOWING : FluidRenderMap.FluidFlow.STILL);
             
             builder.setFirstUV(sprite.getU0(), sprite.getV0(), sprite.getU0() + ((sprite.getU1() - sprite.getU0()) * texLength), sprite.getV0() + ((sprite.getV1() - sprite.getV0()) * texWidth))
                 .setSecondUV(sprite.getU0(), sprite.getV0(), sprite.getU0() + ((sprite.getU1() - sprite.getU0()) * texWidth), sprite.getV0() + ((sprite.getV1() - sprite.getV0()) * texHeight))
                 .setThirdUV(sprite.getU0(), sprite.getV0(), sprite.getU0() + ((sprite.getU1() - sprite.getU0()) * texLength), sprite.getV0() + ((sprite.getV1() - sprite.getV0()) * texHeight))
-                .setColor(ColorHelper.getColor(clientType.getTintColor(fluidStack)))
-                .setLight(Math.max(type.getLightLevel(fluidStack) << 4, light));
+                .setColor(FluidRenderMap.getTintColor(fluidStack))
+                .setLight(Math.max(FluidRenderMap.getLightLevel(fluidStack) << 4, light));
         }
         return builder;
     }
@@ -970,14 +1020,78 @@ public class GuiUtil {
         
         return result;
     }
+    public static <T extends Message> SplitText splitText(List<T> text, int max, float scale) {
+        return splitText(toString(text), max, scale);
+    }
     public static SplitText splitText(String text, int max) {
         return splitText(text, max, 1);
     }
+    public static <T extends Message> SplitText splitText(List<T> text, int max) {
+        return splitText(text, max, 1);
+    }
     
-    public static String toString(List<Component> components){
+    public static <T extends Message> String toString(List<T> components){
         StringBuilder builder = new StringBuilder();
-        for(Component component : components)
-            builder.append(component.getString()).append(" \n ");
+        for(T component : components) {
+            builder.append(component.getString());
+            if(components.size()>1 && components.size()-1>components.indexOf(component)) builder.append(" \n ");
+        }
         return builder.toString();
+    }
+    public static String listToString(List<String> strings){
+        List<Message> list = new ArrayList<>(strings.size());
+        strings.forEach(s -> list.add(()->s));
+        return toString(list);
+    }
+    
+    public static <T extends Message> float findScale(List<T> text, int width, int height) {
+        return findScale(toString(text), width, height);
+    }
+    public static float findOptimalScaleForSList(List<String> text, int width, int height) {
+        return findScale(listToString(text), width, height);
+    }
+    public static float findScale(String textString, int width, int height) {
+        return findScale(splitText(textString, width), height);
+    }
+    public static float findScale(SplitText lines, int height) {
+        float low = 0.01f;
+        float high = 1;
+        float bestScale = high;
+        
+        for (int i = 0; i < 20; i++) {
+            float mid = (low + high) / 2.0f;
+            float textHeight = lines.size() * 9 * mid;
+            
+            if (textHeight <= height) {
+                bestScale = mid;
+                low = mid;
+            } else high = mid;
+            if (high - low < 0.01f) break;
+        }
+        
+        return bestScale;
+    }
+    
+    public static <T extends Message> float findWidthScale(T text, int width){
+        return findWidthScale(text.getString(), width);
+    }
+    public static float findWidthScale(String text, int width){
+        float low = 0.01f;
+        float high = 1;
+        float bestScale = high;
+        Font font = Minecraft.getInstance().font;
+        if(font==null) return 1;
+        
+        for(int i = 0; i < 20; ++i) {
+            float mid = (low + high) / 2f;
+            float textW = font.width(text) * mid;
+            if (textW <= width) {
+                bestScale = mid;
+                low = mid;
+            } else high = mid;
+            if (high - low < 0.01f) break;
+        }
+        
+        return bestScale;
     }
 }
