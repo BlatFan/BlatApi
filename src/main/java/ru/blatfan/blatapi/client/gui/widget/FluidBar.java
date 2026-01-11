@@ -1,8 +1,5 @@
 package ru.blatfan.blatapi.client.gui.widget;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -10,12 +7,14 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.render.FluidRenderMap;
-import ru.blatfan.blatapi.utils.GuiUtil;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FluidBar extends AbstractWidget {
   public final ResourceLocation FLUID_WIDGET;
@@ -62,7 +61,7 @@ public class FluidBar extends AbstractWidget {
       int fluidHeight = Math.round(height * fillRatio);
       
       TextureAtlasSprite sprite = FluidRenderMap.getCachedFluidTexture(fluidStack, FluidRenderMap.FluidFlow.STILL);
-      int fluidColor = IClientFluidTypeExtensions.of(fluidStack.getFluid()).getTintColor(fluidStack);
+      Color fluidColor = FluidRenderMap.getTintColor(fluidStack);
 
       int xPosition = Math.round(getX() + scale);
       int yPosition = Math.round(getY() + scale);
@@ -71,11 +70,6 @@ public class FluidBar extends AbstractWidget {
       int renderHeight = Math.round(fluidHeight - 2 * scale);
       
       if (renderHeight > 0) {
-        float r = ((fluidColor >> 16) & 0xFF) / 255.0f;
-        float g = ((fluidColor >> 8) & 0xFF) / 255.0f;
-        float b = (fluidColor & 0xFF) / 255.0f;
-        float a = ((fluidColor >> 24) & 0xFF) / 255.0f;
-        
         int tileSize = (int) (16*scale);
         int yOffset = 0;
         int remainingHeight = renderHeight;
@@ -84,7 +78,8 @@ public class FluidBar extends AbstractWidget {
           int currentTileHeight = Math.min(tileSize, remainingHeight);
           int renderY = yPosition + maxHeight - yOffset - currentTileHeight;
           
-          gui.blit(xPosition, renderY, 0, renderWidth, currentTileHeight, sprite, r, g, b, a);
+          gui.blit(xPosition, renderY, 0, renderWidth, currentTileHeight, sprite,
+              fluidColor.getRed()/255f, fluidColor.getGreen()/255f, fluidColor.getBlue()/255f, fluidColor.getAlpha()/255f);
           
           yOffset += currentTileHeight;
           remainingHeight -= currentTileHeight;

@@ -1,9 +1,10 @@
-package ru.blatfan.blatapi.client.guide_book;
+package ru.blatfan.blatapi.client.guide_book.screen;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
 import ru.blatfan.blatapi.common.guide_book.GuideBookEntry;
@@ -29,7 +30,7 @@ public class GuideBookPaperScreen extends Screen {
             e.title(), e.description(), e.icon(), e.category(), e.x(), e.y(), e.pages(),
             new ArrayList<>(), new ArrayList<>(), e.advance()
         );
-        bookGui = new GuideBookGui(bookEntry){
+        bookGui = new GuideBookGui(){
             @Override
             public void renderBackground(GuiGraphics gui) {
                 int guiLeft = (gui.guiWidth() - 272) / 2;
@@ -42,6 +43,7 @@ public class GuideBookPaperScreen extends Screen {
                     gui.drawString(font, "TO CLOSE", 0, 0, Color.WHITE.getRGB());
             }
         };
+        bookGui.setEntry(bookEntry);
     }
     
     @Override

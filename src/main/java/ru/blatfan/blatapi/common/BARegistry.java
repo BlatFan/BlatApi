@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.common;
 
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -14,6 +15,7 @@ import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.client.FontHandler;
 import ru.blatfan.blatapi.common.guide_book.GuideBookItem;
 import ru.blatfan.blatapi.common.guide_book.GuidePaperItem;
 import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
@@ -117,6 +119,13 @@ public class BARegistry {
         public static void init(){}
     }
     
+    public static class Fonts {
+        public static ResourceLocation ICONS_LOCATION = BlatApi.loc("icons");
+        public static Font ICONS = FontHandler.createFont(ICONS_LOCATION);
+        
+        public static void init(){}
+    }
+    
     public static class CreativeTabs {
         private static final Text TITLE = Text.create(BlatApi.MOD_NAME);
         
@@ -198,6 +207,7 @@ public class BARegistry {
         MobEffects.init();
         Potions.init();
         CreativeTabs.init();
+        Fonts.init();
         REG.register(event);
     }
 }

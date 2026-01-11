@@ -6,13 +6,14 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.utils.ColorHelper;
 import ru.blatfan.blatapi.utils.GuiUtil;
-import ru.blatfan.blatapi.utils.collection.Text;
 import ru.blatfan.blatapi.utils.collection.SplitText;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -44,28 +45,14 @@ public class TextPage extends GuideBookPage {
     }
     
     public static SplitText splitText(List<Component> text, int width, int height){
-        return GuiUtil.splitText(GuiUtil.toString(text), width, TextPage.findOptimalScale(text, width, height));
+        return GuiUtil.splitText(text, width, GuiUtil.findScale(text, width, height));
     }
     
+    // TODO in 0.3.5
+    @Deprecated
+    @ApiStatus.ScheduledForRemoval(inVersion = ">0.3.4")
     public static float findOptimalScale(List<Component> text, int width, int height) {
-        float low = 0.01f;
-        float high = 1;
-        float bestScale = high;
-        String textString = GuiUtil.toString(text);
-        
-        for (int i = 0; i < 20; i++) {
-            float mid = (low + high) / 2.0f;
-            List<String> lines = GuiUtil.splitText(textString, width, mid);
-            float textHeight = lines.size() * 9 * mid;
-            
-            if (textHeight <= height) {
-                bestScale = mid;
-                low = mid;
-            } else high = mid;
-            if (high - low < 0.01f) break;
-        }
-        
-        return bestScale;
+        return GuiUtil.findScale(text, width, height);
     }
     
     @Override

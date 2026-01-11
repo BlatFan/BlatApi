@@ -2,10 +2,12 @@ package ru.blatfan.blatapi.common;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.MinecraftForge;
 import ru.blatfan.blatapi.BlatApi;
@@ -21,6 +23,7 @@ import ru.blatfan.blatapi.common.multiblock.Multiblock;
 import ru.blatfan.blatapi.common.multiblock.SparseMultiblock;
 import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
 
+import java.awt.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +36,13 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     private static final Map<ResourceLocation, Multiblock> multiblocks = new HashMap<>();
     
     private static final Map<ResourceLocation, BookGuiExtension> bookExtensions = new HashMap<>();
+    
+    public static final GuideBookData ERROR_BOOK = new GuideBookData(
+        BlatApi.loc("textures/gui/book/book.png"),
+        Component.literal("Unknown Book"), Component.literal("Unknown Author"),
+        new Color(222, 57, 232), ItemStack.EMPTY, Component.literal("Unknown"),
+        BlatApi.loc("guide_book"), false
+    );
     
     public static Map<ResourceLocation, BookGuiExtension> getBookExtensions() {
         return Collections.unmodifiableMap(bookExtensions);
@@ -117,7 +127,7 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     }
     
     public static GuideBookData getBook(ResourceLocation id){
-        return books.get(id);
+        return books.getOrDefault(id, ERROR_BOOK);
     }
     public static GuideBookCategory getCategory(ResourceLocation id){
         return categories.get(id);

@@ -13,15 +13,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.awt.*;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 public class Text implements Component {
-    protected final MutableComponent component = Component.empty();
+    protected final MutableComponent component;
     
     protected Text(MutableComponent component) {
-        add(component);
-    }
-    protected Text(List<String> components) {
-        components.forEach(component::append);
+        this.component=component;
     }
     
     public static Text create(Component component){
@@ -30,9 +28,11 @@ public class Text implements Component {
     public static Text create(String component, Object... args){
         return new Text(Component.translatable(component, args));
     }
-    
     public static Text create(String component){
         return new Text(Component.translatable(component));
+    }
+    public static Text create(){
+        return new Text(Component.empty());
     }
     
     public static Text create(ResourceLocation component){
@@ -64,11 +64,24 @@ public class Text implements Component {
         return component.copy();
     }
     
-    public Text add(String c){
-        component.append(Component.translatable(c));
-        return this;
+    public Text add(int c){
+        return add(String.valueOf(c));
     }
-    
+    public Text add(float c){
+        return add(String.valueOf(c));
+    }
+    public Text add(long c){
+        return add(String.valueOf(c));
+    }
+    public Text add(double c){
+        return add(String.valueOf(c));
+    }
+    public Text add(ResourceLocation c){
+        return add(c.toString());
+    }
+    public Text add(String c){
+        return add(Component.translatable(c));
+    }
     public Text add(Component c){
         component.append(c);
         return this;
@@ -78,16 +91,22 @@ public class Text implements Component {
         return add(" ");
     }
     
+    public Text setStyle(Style style) {
+        this.component.setStyle(style);
+        return this;
+    }
     public Text withStyle(Style style){
         this.component.withStyle(style);
         return this;
     }
-    
     public Text withStyle(ChatFormatting style){
         this.component.withStyle(style);
         return this;
     }
-    
+    public Text withStyle(UnaryOperator<Style> style){
+        this.component.withStyle(style);
+        return this;
+    }
     public Text withColor(Color color){
         this.component.withStyle(style -> style.withColor(color.getRGB()));
         return this;

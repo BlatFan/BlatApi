@@ -95,7 +95,7 @@ public class KillTask extends Task {
                 tag.putBoolean("visible", task1.visible);
                 tag.putString("entity", task1.entity.toString());
             }
-            return new CompoundTag();
+            return tag;
         }
     }
 }

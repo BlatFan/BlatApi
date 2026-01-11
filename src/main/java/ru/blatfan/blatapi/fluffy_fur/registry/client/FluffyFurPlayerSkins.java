@@ -11,8 +11,11 @@ public class FluffyFurPlayerSkins {
     public static PlayerSkin BLATFAN_SKIN = new PlayerSkin(FluffyFur.MOD_ID + ":blatfan")
         .setSkinTexture(PlayerSkin.getSkinLocation(FluffyFur.MOD_ID, "blatfan"));
     public static PlayerSkinEffect EMERALD_EFFECT = new BlatFanSkinEffect(FluffyFur.MOD_ID + ":blatfan");
+    public static PlayerSkinEffect BROKENBLOCK_EFFECT = new BrokenBlockSkinEffect(FluffyFur.MOD_ID + ":brokenblock");
     public static PlayerSkinCape BLATFAN_CAPE = new PlayerSkinCape(FluffyFur.MOD_ID + ":blatfan")
         .setTexture(PlayerSkinCape.getCapeLocation(FluffyFur.MOD_ID, "blatfan"));
+    public static PlayerSkinCape BROKENBLOCK_CAPE = new PlayerSkinCape(FluffyFur.MOD_ID + ":brokenblock")
+        .setTexture(PlayerSkinCape.getCapeLocation(FluffyFur.MOD_ID, "brokenblock"));
 
     @Mod.EventBusSubscriber(modid = FluffyFur.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientRegistryEvents {
@@ -20,7 +23,9 @@ public class FluffyFurPlayerSkins {
         public static void registerPlayerSkins(FMLClientSetupEvent event) {
             PlayerSkinHandler.register(BLATFAN_SKIN);
             PlayerSkinHandler.register(EMERALD_EFFECT);
+            PlayerSkinHandler.register(BROKENBLOCK_EFFECT);
             PlayerSkinHandler.register(BLATFAN_CAPE);
+            PlayerSkinHandler.register(BROKENBLOCK_CAPE);
         }
     }
 }

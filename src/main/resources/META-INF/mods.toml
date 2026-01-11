@@ -25,3 +25,9 @@ license = "${mod_license}"
     versionRange = "${minecraft_version_range}"
     ordering = "NONE"
     side = "BOTH"
+[[dependencies."${mod_id}"]]
+    modId = "geckolib"
+    mandatory = false
+    versionRange = "[4.4.7, )"
+    ordering = "AFTER"
+    side = "CLIENT"

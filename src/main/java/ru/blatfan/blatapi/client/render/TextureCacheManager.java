@@ -5,9 +5,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import ru.blatfan.blatapi.BlatApi;
 
 @OnlyIn(Dist.CLIENT)
-@Mod.EventBusSubscriber(modid = "moracraft", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = BlatApi.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class TextureCacheManager {
     private static int tickCounter = 0;
     

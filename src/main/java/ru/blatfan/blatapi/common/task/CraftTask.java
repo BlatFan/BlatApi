@@ -79,7 +79,7 @@ public class CraftTask extends Task {
                 tag.putBoolean("visible", task1.visible);
                 tag.put("item", task1.item.serializeNBT());
             }
-            return new CompoundTag();
+            return tag;
         }
     }
 }
