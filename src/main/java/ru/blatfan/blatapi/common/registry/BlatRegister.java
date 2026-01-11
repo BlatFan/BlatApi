@@ -48,6 +48,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
+// TODO через RegisterEvent
 public class BlatRegister {
     public final String modid;
     public final DeferredRegister<Block> BLOCKS;
