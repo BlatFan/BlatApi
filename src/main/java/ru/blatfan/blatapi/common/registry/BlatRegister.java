@@ -19,6 +19,7 @@ import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.entity.schedule.Schedule;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -48,7 +49,6 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Supplier;
 
-// TODO через RegisterEvent
 public class BlatRegister {
     public final String modid;
     public final DeferredRegister<Block> BLOCKS;
@@ -208,15 +208,34 @@ public class BlatRegister {
     public <T extends EntityType<?>> RegistryObject<T> entity_type(String id, Supplier<T> supplier){
         return ENTITY_TYPES.register(id, supplier);
     }
+    public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String id, EntityType.Builder<T> builder){
+        return ENTITY_TYPES.register(id, ()->builder.build(modid+":"+id));
+    }
     public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory, float width, float height, int trackingRange, EntityType.EntityFactory<T> factory) {
         return entity_type(name, mobCategory, width, height, trackingRange, 1, factory);
     }
     public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory, float width, float height, int trackingRange, int updateInterval, EntityType.EntityFactory<T> factory) {
-        return entity_type(name, ()->EntityType.Builder.of(factory, mobCategory)
+        return entity_type(name, mobCategory, false, false, false, true, width, height, 5, trackingRange, updateInterval, factory);
+    }
+    public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory, float width, float height, int clientTrackingRange, int trackingRange, int updateInterval, EntityType.EntityFactory<T> factory) {
+        return entity_type(name, mobCategory, false, false, false, true, width, height, clientTrackingRange, trackingRange, updateInterval, factory);
+    }
+    public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory,
+        boolean noSave, boolean noSummon, boolean fireImmune, boolean canSpawnFarFromPlayer,
+        float width, float height, int clientTrackingRange, int trackingRange, int updateInterval, EntityType.EntityFactory<T> factory, FeatureFlag... requiredFeatures) {
+        EntityType.Builder<T> builder = EntityType.Builder.of(factory, mobCategory)
+            .clientTrackingRange(clientTrackingRange)
             .setTrackingRange(trackingRange)
             .setUpdateInterval(updateInterval)
-            .sized(width, height)
-            .build(modid + ":" + name));
+            .sized(width, height);
+        
+        if(noSave) builder.noSave();
+        if(noSummon) builder.noSummon();
+        if(fireImmune) builder.fireImmune();
+        if(canSpawnFarFromPlayer) builder.canSpawnFarFromPlayer();
+        if(requiredFeatures!=null) builder.requiredFeatures(requiredFeatures);
+        
+        return entity_type(name, builder);
     }
     
     public <T extends BlockEntityType<?>> RegistryObject<T> block_entity_type(String id, Supplier<T> supplier){
