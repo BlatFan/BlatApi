@@ -19,7 +19,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraftforge.gametest.ForgeGameTestHooks;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
 import ru.blatfan.blatapi.fluffy_fur.client.gui.components.FluffyFurLogoRenderer;
@@ -207,7 +206,7 @@ public class FluffyFurMenuScreen extends Screen {
     
     private static boolean blatfan(String devs){
         for(String s : devs.split(" "))
-            if(s.equals("BlatFan") || (s.equals("Dev") && ForgeGameTestHooks.isGametestEnabled()))
+            if(s.equals("BlatFan"))
                 return true;
         return false;
     }

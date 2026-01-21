@@ -82,6 +82,7 @@
       "separator": true,
       "image": "blatapi:textures/gui/book/test_image1.png",
       "image_width": 185,
+      "color": "6c4198",
       "text": [
         "Test text Test text Test text Test text Test text Test text Test text Test text Test text ",
         "Test text Test text Test text Test text Test text Test text Test text Test text Test text ",

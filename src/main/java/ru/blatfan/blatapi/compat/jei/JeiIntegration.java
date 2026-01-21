@@ -1,18 +1,14 @@
 package ru.blatfan.blatapi.compat.jei;
 
-import mezz.jei.api.recipe.IFocus;
-import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.runtime.IJeiRuntime;
-import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
-import ru.blatfan.blatapi.compat.jei.category.AnvilRecipeCategory;
-import ru.blatfan.blatapi.mixins.common.AccessorJEIRecipeManager;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.vanilla.IJeiAnvilRecipe;
 import mezz.jei.api.registration.*;
+import mezz.jei.api.runtime.IJeiRuntime;
 import mezz.jei.library.plugins.vanilla.anvil.AnvilRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
@@ -23,7 +19,11 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.block.Blocks;
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.common.BARegistry;
+import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
+import ru.blatfan.blatapi.compat.jei.category.AnvilRecipeCategory;
+import ru.blatfan.blatapi.mixins.common.AccessorJEIRecipeManager;
 import ru.blatfan.blatapi.utils.DisabledRecipes;
 import ru.blatfan.blatapi.utils.RecipeHelper;
 
@@ -61,7 +61,7 @@ public final class JeiIntegration implements IModPlugin {
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         
-        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, BARegistry.GUIDE_BOOK.get(), (stack, context) -> {
+        registration.registerSubtypeInterpreter(VanillaTypes.ITEM_STACK, BARegistry.Items.GUIDE_BOOK.get(), (stack, context) -> {
             if (!stack.hasTag() || !stack.getTag().contains("guide_book_id")) {
                 return "";
             }

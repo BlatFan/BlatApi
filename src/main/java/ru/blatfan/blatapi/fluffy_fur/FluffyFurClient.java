@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.client.event.ModelEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.client.guide_book.BookModel;
 import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.fluffy_fur.client.event.FluffyFurClientEvents;
@@ -46,6 +48,10 @@ public class FluffyFurClient {
             
             eventBus.addListener(BARegistry.CreativeTabs::addCreativeTabContent);
         }
+    }
+    
+    public static void onModifyBakingResult(ModelEvent.ModifyBakingResult event) {
+        BookModel.replace(event.getModels(), event.getModelBakery());
     }
 
     public static void clientSetup(final FMLClientSetupEvent event) {

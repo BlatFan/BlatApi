@@ -48,9 +48,9 @@ public class TextPage extends GuideBookPage {
         return GuiUtil.splitText(text, width, GuiUtil.findScale(text, width, height));
     }
     
-    // TODO in 0.3.5
-    @Deprecated
-    @ApiStatus.ScheduledForRemoval(inVersion = ">0.3.4")
+    // TODO
+    @Deprecated(forRemoval = true, since = "0.3.4")
+    @ApiStatus.ScheduledForRemoval(inVersion = "0.4")
     public static float findOptimalScale(List<Component> text, int width, int height) {
         return GuiUtil.findScale(text, width, height);
     }
@@ -64,7 +64,7 @@ public class TextPage extends GuideBookPage {
     public void render(GuiGraphics gui, int x, int y, int mX, int mY, float partialTick) {
         Font font = GuideClient.font;
         for(int i=0; i<texts.size(); i++){
-            String t = texts.get(i);
+            Text t = texts.get(i);
             int ty = y+(int)(font.lineHeight*i*texts.scale());
             GuiUtil.drawScaledString(gui, t, x+8, ty, color, texts.scale());
         }

@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import com.mojang.brigadier.Message;
 import com.mojang.math.Axis;
 import lombok.experimental.UtilityClass;
 import net.minecraft.ChatFormatting;
@@ -53,6 +52,7 @@ import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
 import ru.blatfan.blatapi.fluffy_fur.client.render.item.CustomItemRenderer;
 import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
 import ru.blatfan.blatapi.utils.collection.SplitText;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.lang.Math;
@@ -333,7 +333,7 @@ public class GuiUtil {
     public static void renderScaledItemDecorations(GuiGraphics gui, ItemStack pStack, int x, int y, float size) {
         gui.pose().pushPose();
         gui.pose().scale(size, size, 1);
-        gui.renderItemDecorations(Minecraft.getInstance().font, pStack, (int) (x/size), (int) (y/size));
+        gui.renderItemDecorations(getFont(), pStack, (int) (x/size), (int) (y/size));
         gui.pose().popPose();
     }
     
@@ -389,6 +389,7 @@ public class GuiUtil {
         blit(gui, pAtlasLocation, x, y, x+pWidth, y+pHeight, pUOffset/pTextureWidth, (pUOffset+pWidth)/pTextureWidth, pVOffset/pTextureHeight, (pVOffset+pWidth)/pTextureHeight, red, green, blue, alpha);
     }
     public static void blit(GuiGraphics gui, ResourceLocation pAtlasLocation, float x0, float y0, float x1, float y1, float u0, float u1, float v0, float v1, float red, float green, float blue, float alpha) {
+        testColorValues(red, green, blue, alpha);
         RenderSystem.setShaderTexture(0, pAtlasLocation);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         Matrix4f matrix4f = gui.pose().last().pose();
@@ -719,10 +720,7 @@ public class GuiUtil {
     
     public static void renderGlint(PoseStack poseStack, MultiBufferSource buffer, RenderType renderType, int packedLight, Model model,
                                    float red, float green, float blue, float alpha) {
-        if(red<0 || red>1) throw new IllegalArgumentException("0<=red<=1, red="+red);
-        if(green<0 || green>1) throw new IllegalArgumentException("0<=green<=1, green="+green);
-        if(blue<0 || blue>1) throw new IllegalArgumentException("0<=blue<=1, blue="+blue);
-        if(alpha<0 || alpha>1) throw new IllegalArgumentException("0<=alpha<=1, alpha="+alpha);
+        testColorValues(red, green, blue, alpha);
         model.renderToBuffer(poseStack, buffer.getBuffer(renderType), packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
     }
     
@@ -991,46 +989,53 @@ public class GuiUtil {
     
     public static void renderModel(PoseStack poseStack, MultiBufferSource buffer, int packedLight, Model model, float red, float green, float blue, float alpha, RenderType renderType) {
         VertexConsumer vertexconsumer = buffer.getBuffer(renderType);
+        testColorValues(red, green, blue, alpha);
+        model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
+    }
+    
+    private void testColorValues(float red, float green, float blue, float alpha){
         if(red<0 || red>1) throw new IllegalArgumentException("0<=red<=1, red="+ red);
         if(green<0 || green>1) throw new IllegalArgumentException("0<=green<=1, green="+green);
         if(blue<0 || blue>1) throw new IllegalArgumentException("0<=blue<=1, blue="+blue);
         if(alpha<0 || alpha>1) throw new IllegalArgumentException("0<=alpha<=1, alpha="+alpha);
-        model.renderToBuffer(poseStack, vertexconsumer, packedLight, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
+    }
+    
+    public static <T extends Component> SplitText splitText(List<T> rawText, int max, float scale) {
+        return splitText(toString(rawText), max, scale);
     }
     
     public static SplitText splitText(String text, int max, float scale) {
         SplitText result = new SplitText(scale);
         StringBuilder currentLine = new StringBuilder();
-        int currentWidth = 0;
-        Font font = Minecraft.getInstance().font;
-        
+        float currentWidth = 0;
+        Font font = getFont();
         String[] words = text.split(" ");
-        for (String word : words) {
-            int wordWidth = (int) (font.width(word + " ")*scale);
-            if(word.equals("\n") || currentWidth+wordWidth>max){
-                result.add(currentLine.toString());
-                currentWidth=word.equals("\n") ? 0 : wordWidth;
-                currentLine=new StringBuilder();
-                if(!word.equals("\n")) currentLine.append(word).append(" ");
-            } else {
+        
+        for(String word : words) {
+            float wordWidth = (font.width(word + " ") * scale);
+            if (!word.equals("\n") && currentWidth + wordWidth <= max) {
                 currentWidth += wordWidth;
                 currentLine.append(word).append(" ");
+            } else {
+                result.add(currentLine.toString());
+                currentWidth = word.equals("\n") ? 0 : wordWidth;
+                currentLine = new StringBuilder();
+                if (!word.equals("\n"))
+                    currentLine.append(word).append(" ");
             }
         }
         
         return result;
     }
-    public static <T extends Message> SplitText splitText(List<T> text, int max, float scale) {
-        return splitText(toString(text), max, scale);
-    }
+    
     public static SplitText splitText(String text, int max) {
         return splitText(text, max, 1);
     }
-    public static <T extends Message> SplitText splitText(List<T> text, int max) {
+    public static <T extends Component> SplitText splitText(List<T> text, int max) {
         return splitText(text, max, 1);
     }
     
-    public static <T extends Message> String toString(List<T> components){
+    public static <T extends Component> String toString(List<T> components){
         StringBuilder builder = new StringBuilder();
         for(T component : components) {
             builder.append(component.getString());
@@ -1039,47 +1044,49 @@ public class GuiUtil {
         return builder.toString();
     }
     public static String listToString(List<String> strings){
-        List<Message> list = new ArrayList<>(strings.size());
-        strings.forEach(s -> list.add(()->s));
+        List<Component> list = new ArrayList<>(strings.size());
+        strings.forEach(s -> list.add(Text.create(s)));
         return toString(list);
     }
     
-    public static <T extends Message> float findScale(List<T> text, int width, int height) {
+    public static <T extends Component> float findScale(List<T> text, int width, int height) {
         return findScale(toString(text), width, height);
     }
     public static float findOptimalScaleForSList(List<String> text, int width, int height) {
         return findScale(listToString(text), width, height);
     }
     public static float findScale(String textString, int width, int height) {
-        return findScale(splitText(textString, width), height);
-    }
-    public static float findScale(SplitText lines, int height) {
+        Font font = getFont();
         float low = 0.01f;
-        float high = 1;
+        float high = 1f;
         float bestScale = high;
         
         for (int i = 0; i < 20; i++) {
             float mid = (low + high) / 2.0f;
-            float textHeight = lines.size() * 9 * mid;
+            
+            SplitText lines = splitText(textString, width, mid);
+            float textHeight = lines.size() * font.lineHeight * mid;
             
             if (textHeight <= height) {
                 bestScale = mid;
                 low = mid;
-            } else high = mid;
+            } else {
+                high = mid;
+            }
             if (high - low < 0.01f) break;
         }
         
         return bestScale;
     }
     
-    public static <T extends Message> float findWidthScale(T text, int width){
+    public static <T extends Component> float findWidthScale(T text, int width){
         return findWidthScale(text.getString(), width);
     }
     public static float findWidthScale(String text, int width){
         float low = 0.01f;
         float high = 1;
         float bestScale = high;
-        Font font = Minecraft.getInstance().font;
+        Font font = getFont();
         if(font==null) return 1;
         
         for(int i = 0; i < 20; ++i) {

@@ -65,7 +65,7 @@ public class ImagePage extends GuideBookPage {
         float sc = (float) (GuideClient.pageWidth-8) /imageWidth;
         GuiUtil.blit(gui, sc, image, x+10, y+1, 0, 0, imageWidth, imageHeight, 256, 256);
         for(int i=0; i<texts.size(); i++){
-            String c = texts.get(i);
+            Text c = texts.get(i);
             int ty = (int) ((imageHeight*sc)+y+2+(font.lineHeight*i));
             GuiUtil.drawScaledString(gui, c, x+4, ty, color, texts.scale());
         }

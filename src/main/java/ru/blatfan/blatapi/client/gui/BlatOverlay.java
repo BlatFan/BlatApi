@@ -8,7 +8,7 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 public abstract class BlatOverlay implements IGuiOverlay {
     private static final int HOTBAR_HEIGHT = 32;
     private static final int SCREEN_BORDER_MARGIN = 20;
-    private final int DEFAULT_IMAGE_WIDTH, IMAGE_HEIGHT;
+    protected int DEFAULT_IMAGE_WIDTH, IMAGE_HEIGHT;
     
     protected BlatOverlay(int defaultImageWidth, int imageHeight) {
         DEFAULT_IMAGE_WIDTH = defaultImageWidth;

@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,6 +29,23 @@ public class GuideBookItem extends Item {
         this(new Properties());
     }
     
+    public static class Transfer extends Item {
+        private final ResourceLocation bookId;
+        public Transfer(ResourceLocation bookId) {
+            super(new Properties().stacksTo(1));
+            this.bookId = bookId;
+        }
+        
+        @Override
+        public void inventoryTick(ItemStack pStack, Level pLevel, Entity pEntity, int pSlotId, boolean pIsSelected) {
+            super.inventoryTick(pStack, pLevel, pEntity, pSlotId, pIsSelected);
+            if(pEntity instanceof Player player){
+                pStack.setCount(0);
+                player.getInventory().setItem(pSlotId, getBook(bookId));
+            }
+        }
+    }
+    
     public static GuideBookData getBook(ItemStack stack) {
         ResourceLocation res = getBookId(stack);
         if (res == null) return null;
@@ -35,7 +53,7 @@ public class GuideBookItem extends Item {
     }
     
     public static ItemStack getBook(ResourceLocation bookId){
-        ItemStack stack = new ItemStack(BARegistry.GUIDE_BOOK.get(),1);
+        ItemStack stack = new ItemStack(BARegistry.Items.GUIDE_BOOK.get(),1);
         NBTHelper.setString(stack, TAG, bookId.toString());
         return stack;
     }

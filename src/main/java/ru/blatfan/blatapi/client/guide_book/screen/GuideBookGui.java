@@ -1,7 +1,6 @@
 package ru.blatfan.blatapi.client.guide_book.screen;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
@@ -10,39 +9,45 @@ import ru.blatfan.blatapi.common.guide_book.BookGuiExtension;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
 import ru.blatfan.blatapi.common.guide_book.GuideBookEntry;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
+import ru.blatfan.blatapi.common.guide_book.pages.EmptyPage;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuideBookGui {
-    @Getter@Setter
-    private GuideBookEntry entry;
+    @Getter
+    private final GuideBookEntry entry;
     
     private int guiLeft, guiTop;
     private int widthT, heightT;
     private int page = 0;
-    private int pages = 0;
+    private List<GuideBookPage> pages = new ArrayList<>();
     
     @Getter
     private boolean close;
     
+    public GuideBookGui(GuideBookEntry entry) {
+        this.entry = entry;
+    }
+    
     public void render(GuiGraphics gui, int mX, int mY, float partialTick) {
-        if(entry==null) return;
         widthT = 272;
         heightT = 181;
         guiLeft = (gui.guiWidth()-widthT)/2;
         guiTop = (gui.guiHeight()-heightT)/2;
-        pages=entry.pages().size()-1;
+        pages=entry.pages();
+        if(pages.size()%2==1) pages.add(new EmptyPage());
         Font font = GuideClient.font;
         GuideBookData data = GuideClient.guideBookData;
-        page = Math.max(0, Math.min(pages-1, page));
+        page = Math.max(0, Math.min(pages.size()-1, page));
         renderBackground(gui);
         
-        GuideBookPage page1 = entry.pages().get(page);
+        GuideBookPage page1 = pages.get(page);
+        GuideBookPage page2 = new EmptyPage();
+        if(page+1<pages.size()) page2 = pages.get(page+1);
         page1.renderPage(gui, guiLeft+6, guiTop+6, mX, mY, partialTick);
-        if(page+1<=pages){
-            GuideBookPage page2 = entry.pages().get(page+1);
-            page2.renderPage(gui, guiLeft+131, guiTop+6, mX, mY, partialTick);
-        }
+        page2.renderPage(gui, guiLeft+131, guiTop+6, mX, mY, partialTick);
         gui.drawString(font, String.valueOf(page+1), guiLeft+11, guiTop+161, Color.WHITE.getRGB());
         if(hasNext(page)) gui.drawString(font, String.valueOf(page+2), guiLeft+251, guiTop+161, Color.WHITE.getRGB());
         
@@ -75,14 +80,13 @@ public class GuideBookGui {
     }
     
     private boolean hasNext(int p){
-        return p+1<=pages;
+        return p+1<pages.size();
     }
     private boolean hasPrevious(int p){
         return p-1>=0;
     }
     
     public void renderBackground(GuiGraphics gui) {
-        if(entry==null) return;
         GuideBookData data = GuideClient.guideBookData;
         gui.fillGradient(0, 0, gui.guiWidth(), gui.guiHeight(), -1072689136, -804253680);
         gui.blitNineSlicedSized(data.getTexture(), guiLeft, guiTop, widthT, heightT, 16, 48, 48, 0, 0, 256, 256);
@@ -128,7 +132,7 @@ public class GuideBookGui {
             close = true;
             return true;
         }
-        if(page+1<=pages){
+        if(hasNext(page)){
             GuideBookPage page2 = entry.pages().get(page+1);
             return page2.mouseClicked(mX, mY, button);
         }

@@ -4,7 +4,7 @@
   "author": "BlatFan",
   "title_color": "#DE39E8",
   "tooltip": "Test Guide Book tooltip",
-  "model": "minecraft:book",
+  "model": "blatapi:purple_book",
   "pedestal": {
     "item": "minecraft:bedrock"
   }

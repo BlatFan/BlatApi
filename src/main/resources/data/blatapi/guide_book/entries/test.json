@@ -44,19 +44,6 @@
       "separator": true,
       "multiblock": "blatapi:test",
       "buttonY": 80
-    },
-    {
-      "type": "blatapi:multiblock",
-      "title": "Test scaled multiblock",
-      "title_color": "6c4198",
-      "separator": true,
-      "multiblock": "blatapi:test",
-      "buttonY": 40,
-      "scale": 0.5,
-      "color": "6c4198",
-      "text": [
-        "Test text \n Test text \n Test text \n Test text Test text Test text Test text Test text Test text "
-      ]
     }
   ]
 }

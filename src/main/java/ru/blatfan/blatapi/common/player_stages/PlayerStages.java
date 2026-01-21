@@ -13,12 +13,13 @@ import ru.blatfan.blatapi.fluffy_fur.common.network.FluffyFurPacketHandler;
 import ru.blatfan.blatapi.utils.ICapacity;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class PlayerStages implements ICapacity<PlayerStages> {
     public static final List<String> allStages = new ArrayList<>();
-    private final Map<String, Value<?>> DATA = new HashMap<>();
+    private final Map<String, Value<?>> DATA = new ConcurrentHashMap<>();
     
     private static <T> Value<T> sendSetEvent(Player player, String key, Value<T> value){
         PlayerStageEvent.Set<T> event = new PlayerStageEvent.Set<>(player, key, value);
@@ -210,7 +211,8 @@ public class PlayerStages implements ICapacity<PlayerStages> {
         for(String key : nbt.getAllKeys()){
             CompoundTag nbtM = nbt.getCompound(key);
             ResourceLocation type = ResourceLocation.tryParse(nbtM.getString("type"));
-            DATA.put(key, Value.deserialize(type, nbtM));
+            Value<?> value = Value.deserialize(type, nbtM);
+            if(value != null) DATA.put(key, value);
         }
     }
     

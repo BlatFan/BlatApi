@@ -16,11 +16,10 @@ import java.util.UUID;
 
 @UtilityClass
 public class AttributesUtil {
-
   static final Random RAND = new Random();
-  public static final UUID DEFAULT_ID = UUID.fromString("06d30aa2-eff2-4a81-b92b-a1cb95f115c6");
-  public static final UUID MULT_ID = UUID.fromString("c6d30aa2-eff2-4a81-b92b-a1cb95f115cd");
-  public static final UUID ID_STEP_HEIGHT = UUID.fromString("66d30aa2-eaa2-4a81-b92b-a1cb95f115ca");
+  public static final UUID DEFAULT_ID = UUID.fromString("9d4de1b0-8aad-4fe4-8c1d-70ad8dca88fa");
+  public static final UUID MULT_ID = UUID.fromString("52910bd7-250a-438b-8441-0ff42d72b8f9");
+  public static final UUID ID_STEP_HEIGHT = UUID.fromString("3ffcfb9a-413c-4dfb-b697-132006c9f346");
   static final float VANILLA = 0.6F;
 
   public static void disableStepHeight(Player player) {
@@ -105,30 +104,25 @@ public class AttributesUtil {
   }
 
   public static void updateAttrModifierBy(Attribute attr, UUID id, Player playerIn, int value) {
-    AttributeInstance healthAttribute = playerIn.getAttribute(attr);
-    AttributeModifier oldHealthModifier = healthAttribute.getModifier(id);
-    //what is our value
-    double old = oldHealthModifier == null ? 0 : oldHealthModifier.getAmount();
+    AttributeInstance attribute = playerIn.getAttribute(attr);
+    AttributeModifier olModifier = attribute.getModifier(id);
+    double old = olModifier == null ? 0 : olModifier.getAmount();
     double newVal = value + old;
-    healthAttribute.removeModifier(id);
-    AttributeModifier healthModifier = new AttributeModifier(id, "Bonus", newVal, AttributeModifier.Operation.ADDITION);
-    healthAttribute.addPermanentModifier(healthModifier);
-    if (attr == Attributes.MAX_HEALTH
-        && playerIn.getHealth() > healthAttribute.getValue()) {
-      playerIn.setHealth((float) healthAttribute.getValue());
-    }
+    attribute.removeModifier(id);
+    AttributeModifier modifier = new AttributeModifier(id, "Bonus", newVal, AttributeModifier.Operation.ADDITION);
+    attribute.addPermanentModifier(modifier);
+    if (attr == Attributes.MAX_HEALTH && playerIn.getHealth() > attribute.getValue())
+      playerIn.setHealth((float) attribute.getValue());
   }
 
   public static void multiplyAttrModifierBy(Attribute attr, Player playerIn, double value) {
-    AttributeInstance healthAttribute = playerIn.getAttribute(attr);
+    AttributeInstance attribute = playerIn.getAttribute(attr);
     //what is our value 
-    healthAttribute.removeModifier(MULT_ID);
-    AttributeModifier healthModifier = new AttributeModifier(MULT_ID, "Bonus from Cyclic", value, AttributeModifier.Operation.MULTIPLY_BASE);
-    healthAttribute.addPermanentModifier(healthModifier);
-    if (attr == Attributes.MAX_HEALTH
-        && playerIn.getHealth() > healthAttribute.getValue()) {
-      playerIn.setHealth((float) healthAttribute.getValue());
-    }
+    attribute.removeModifier(MULT_ID);
+    AttributeModifier modifier = new AttributeModifier(MULT_ID, "Bonus", value, AttributeModifier.Operation.MULTIPLY_BASE);
+    attribute.addPermanentModifier(modifier);
+    if (attr == Attributes.MAX_HEALTH && playerIn.getHealth() > attribute.getValue())
+      playerIn.setHealth((float) attribute.getValue());
   }
 
   public static int setHearts(Collection<ServerPlayer> players, int finalHearts) {
@@ -142,7 +136,6 @@ public class AttributesUtil {
     int modifiedHearts = finalHearts - 10;
     AttributeInstance healthAttribute = playerIn.getAttribute(Attributes.MAX_HEALTH);
     healthAttribute.removeModifier(DEFAULT_ID);
-    //just remove and replace the modifier
     AttributeModifier healthModifier = new AttributeModifier(DEFAULT_ID, "HP Bonus", (modifiedHearts * 2), AttributeModifier.Operation.ADDITION);
     healthAttribute.addPermanentModifier(healthModifier);
     if (playerIn.getHealth() > healthAttribute.getValue()) {

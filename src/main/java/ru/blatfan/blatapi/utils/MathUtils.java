@@ -5,7 +5,7 @@ import lombok.experimental.UtilityClass;
 @UtilityClass@SuppressWarnings("ALL")
 public class MathUtils {
     public static float PI = 3.14159265358979323846f;
-    public static float PI_HALF = 3.14159265358979323846f/2f;
+    public static float PI_HALF = PI/2f;
     public static float PI2 = PI*2;
 
     public static float abs(float value){ return Math.abs(value);}
@@ -94,4 +94,3 @@ public class MathUtils {
         return newValue;
     }
 }
-

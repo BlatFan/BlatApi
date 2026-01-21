@@ -26,6 +26,7 @@ import ru.blatfan.blatapi.common.player_stages.PlayerStagesEvents;
 import ru.blatfan.blatapi.common.recipe.IngredientWithCountSerializer;
 import ru.blatfan.blatapi.common.task.Task;
 import ru.blatfan.blatapi.fluffy_fur.FluffyFur;
+import ru.blatfan.blatapi.fluffy_fur.FluffyFurClient;
 import ru.blatfan.blatapi.fluffy_fur.config.FluffyFurClientConfig;
 import ru.blatfan.blatapi.utils.DisabledRecipes;
 import ru.blatfan.blatapi.utils.InitialSpawnItems;
@@ -51,6 +52,7 @@ public class BlatApi {
         new BiomeRaplacerModule(bus);
         
         MinecraftForge.EVENT_BUS.register(PlayerStagesEvents.class);
+        bus.addListener(FluffyFurClient::onModifyBakingResult);
         bus.addListener(this::setup);
         bus.addListener(this::configLoad);
         if(DEV) DistExecutor.unsafeRunWhenOn(Dist.CLIENT, ()-> TestHooks::setup);

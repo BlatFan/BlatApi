@@ -1,6 +1,5 @@
 package ru.blatfan.blatapi.common.guide_book.pages;
 
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.math.Axis;
 import net.minecraft.client.gui.Font;
@@ -13,7 +12,9 @@ import net.minecraft.world.entity.LivingEntity;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
-import ru.blatfan.blatapi.utils.*;
+import ru.blatfan.blatapi.utils.ClientTicks;
+import ru.blatfan.blatapi.utils.ColorHelper;
+import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.SplitText;
 import ru.blatfan.blatapi.utils.collection.Text;
 
@@ -30,7 +31,7 @@ public class EntityPage extends GuideBookPage {
     private final Color color;
     private final SplitText texts;
     
-    public EntityPage(Component title, Color titleColor, boolean separator, ResourceLocation entity, int scale, int offsetX, int offsetY, Color color, java.util.List<net.minecraft.network.chat.Component> text) {
+    public EntityPage(Component title, Color titleColor, boolean separator, ResourceLocation entity, int scale, int offsetX, int offsetY, Color color, List<Text> text) {
         super(title, titleColor, separator);
         this.entity=entity;
         this.scale = scale;
@@ -38,15 +39,11 @@ public class EntityPage extends GuideBookPage {
         this.offsetY = offsetY;
         this.color = color;
         
-        if(!text.isEmpty()) this.texts = TextPage.splitText(text, GuideClient.pageWidth-4,GuideClient.pageHeight - 100);
+        if(!text.isEmpty()) this.texts = TextPage.splitText(Text.toComponentList(text), GuideClient.pageWidth-4,GuideClient.pageHeight - offsetY);
         else this.texts=new SplitText(1);
     }
     
     public static GuideBookPage json(JsonObject jsonObject) {
-        List<Component> text = new ArrayList<>();
-        if(jsonObject.has("text"))
-            for(JsonElement element : jsonObject.getAsJsonArray("text"))
-                text.add(Text.create(element.getAsString()));
         return new EntityPage(
             Text.create(jsonObject.get("title").getAsString()),
             jsonObject.has("title_color") ? ColorHelper.getColor(jsonObject.get("title_color").getAsString()) : Color.WHITE,
@@ -55,7 +52,8 @@ public class EntityPage extends GuideBookPage {
             jsonObject.get("scale").getAsInt(),
             jsonObject.has("offsetX") ? jsonObject.get("offsetX").getAsInt() : 0,
             jsonObject.has("offsetY") ? jsonObject.get("offsetY").getAsInt() : 0,
-            jsonObject.has("color") ? ColorHelper.getColor(jsonObject.get("color").getAsString()) : Color.WHITE, text
+            jsonObject.has("color") ? ColorHelper.getColor(jsonObject.get("color").getAsString()) : Color.WHITE,
+            !jsonObject.has("text") ? new ArrayList<>() : Text.createFromJsonList(jsonObject.getAsJsonArray("text"))
         );
     }
     
@@ -75,7 +73,7 @@ public class EntityPage extends GuideBookPage {
             (Axis.XP.rotationDegrees(180)), living);
         gui.fill(x+4, y, x+4, y+10, 0xffffff);
         for(int i=0; i<texts.size(); i++){
-            String c = texts.get(i);
+            Text c = texts.get(i);
             int ty = offsetY+y+2+(font.lineHeight*i);
             GuiUtil.drawScaledString(gui, c, x+4, ty, color, texts.scale());
         }

@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.model.data.ModelData;
-import org.joml.Matrix4f;
 import org.joml.Vector4f;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
@@ -47,20 +46,18 @@ import java.util.List;
 public class MultiblockPage extends GuideBookPage {
     public static final ResourceLocation TYPE = BlatApi.loc("multiblock");
     private final ResourceLocation multiblock;
-    private final float scale;
     private final int buttonY;
     private final Color color;
     private final SplitText texts;
     
-    public MultiblockPage(Component title, Color titleColor, boolean separator, ResourceLocation multiblock, float scale, int buttonY, Color color, List<Component> text) {
+    public MultiblockPage(Component title, Color titleColor, boolean separator, ResourceLocation multiblock, int buttonY, Color color, List<Component> text) {
         super(title, titleColor, separator);
         this.multiblock = multiblock;
-        this.scale = scale;
         this.buttonY = buttonY;
         this.color = color;
         
         if(!text.isEmpty())
-            this.texts = TextPage.splitText(text, GuideClient.pageWidth-4,GuideClient.pageHeight - 100);
+            this.texts = TextPage.splitText(text, GuideClient.pageWidth-4,GuideClient.pageHeight - 20);
         else this.texts=new SplitText(1);
     }
     
@@ -74,7 +71,6 @@ public class MultiblockPage extends GuideBookPage {
             jsonObject.has("title_color") ? ColorHelper.getColor(jsonObject.get("title_color").getAsString()) : Color.WHITE,
             jsonObject.has("separator") && jsonObject.get("separator").getAsBoolean(),
             ResourceLocation.tryParse(jsonObject.get("multiblock").getAsString()),
-            jsonObject.has("scale") ? jsonObject.get("scale").getAsFloat() : 1f,
             jsonObject.get("buttonY").getAsInt(),
             jsonObject.has("color") ? ColorHelper.getColor(jsonObject.get("color").getAsString()) : Color.WHITE, text
         );
@@ -98,7 +94,6 @@ public class MultiblockPage extends GuideBookPage {
         PoseStack pose = gui.pose();
         pose.pushPose();
         pose.translate(x, y, 0);
-        pose.scale(scale, scale, scale);
         this.renderMultiblock(gui);
         pose.popPose();
         
@@ -111,8 +106,8 @@ public class MultiblockPage extends GuideBookPage {
             gui.blit(GuideClient.guideBookData.getTexture(), _buttonX, _buttonY, 22, 77, 11, 7);
         
         for(int i=0; i<texts.size(); i++) {
-            String c = texts.get(i);
-            int ty = _buttonY + 7 + (GuideClient.font.lineHeight * i);
+            Text c = texts.get(i);
+            int ty = (int) (_buttonY + 7 + (GuideClient.font.lineHeight * i)*texts.scale());
             GuiUtil.drawScaledString(gui, c, x + 4, ty, color, texts.scale());
         }
     }
@@ -142,13 +137,11 @@ public class MultiblockPage extends GuideBookPage {
     private void renderMultiblock(GuiGraphics gui) {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel level = mc.level;
-        float time = ClientTicks.ticks;
         
         BlockPos pos = BlockPos.ZERO;
         Rotation facingRotation = Rotation.NONE;
         
         getMultiblock().setLevel(level);
-        
         Vec3i size = getMultiblock().getSize();
         int sizeX = size.getX();
         int sizeY = size.getY();
@@ -163,41 +156,27 @@ public class MultiblockPage extends GuideBookPage {
         PoseStack pose = gui.pose();
         pose.pushPose();
         
-        pose.translate(maxX, maxY/2, 100);
-        pose.scale(scale, scale, scale);
+        pose.translate(maxX/2, maxY/2, 100);
         pose.translate(-(float) sizeX / 2, -(float) sizeY / 2, 0);
+        pose.scale(scale, scale, scale);
         
-        
-        // Initial eye pos somewhere off in the distance in the -Z direction
         Vector4f eye = new Vector4f(0, 0, -100, 1);
-        Matrix4f rotMat = new Matrix4f();
-        rotMat.identity();
         
-        // For each GL rotation done, track the opposite to keep the eye pos accurate
         pose.mulPose(Axis.XP.rotationDegrees(-30F));
-        rotMat.rotate(Axis.XP.rotationDegrees(30));
         
         float offX = (float) -sizeX / 2;
         float offZ = (float) -sizeZ / 2 + 1;
         
         pose.translate(-offX, 0, -offZ);
-        pose.mulPose(Axis.YP.rotationDegrees(time));
-        rotMat.rotate(Axis.YP.rotationDegrees(-time));
         pose.mulPose(Axis.YP.rotationDegrees(45));
-        rotMat.rotate(Axis.YP.rotationDegrees(-45));
         pose.translate(offX, 0, offZ);
         
-        // Finally apply the rotations
-        rotMat.transform(eye);
         eye.div(eye.w);
         
-        
         var buffers = mc.renderBuffers().bufferSource();
-        
         BlockPos checkPos = null;
-        if (mc.hitResult instanceof BlockHitResult blockRes) {
+        if (mc.hitResult instanceof BlockHitResult blockRes)
             checkPos = blockRes.getBlockPos().relative(blockRes.getDirection());
-        }
         
         pose.pushPose();
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -206,20 +185,18 @@ public class MultiblockPage extends GuideBookPage {
         if(multiblockSimulation==null)multiblockSimulation = getMultiblock().simulate(level, pos, facingRotation, false, false);
         for (Multiblock.SimulateResult r : multiblockSimulation.getSecond()) {
             float alpha = 0.3F;
-            if (r.getWorldPosition().equals(checkPos)) {
+            BlockPos renderPos = r.getWorldPosition().offset(-sizeX/2, -sizeY/2, -sizeZ/2);
+            
+            if (renderPos.equals(checkPos))
                 alpha = 0.6F + (float) (Math.sin(ClientTicks.total * 0.3F) + 1F) * 0.1F;
-            }
             
             BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicks.ticks).rotate(facingRotation);
-            
-            this.renderBlock(buffers, level, renderState, r.getWorldPosition(), alpha, pose);
+            this.renderBlock(buffers, level, renderState, renderPos, alpha, pose);
             
             if (renderState.getBlock() instanceof EntityBlock eb) {
-                var be = this.blockEntityCache.computeIfAbsent(r.getWorldPosition().immutable(), p -> eb.newBlockEntity(p, renderState));
+                var be = this.blockEntityCache.computeIfAbsent(renderPos.immutable(), p -> eb.newBlockEntity(p, renderState));
                 if (be != null && !this.erroredBlockEntities.contains(be)) {
                     be.setLevel(level);
-                    
-                    // fake cached state in case the renderer checks it as we don't want to query the actual world
                     be.setBlockState(renderState);
                     
                     pose.pushPose();
@@ -228,9 +205,8 @@ public class MultiblockPage extends GuideBookPage {
                     
                     try {
                         BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
-                        if (renderer != null) {
+                        if (renderer != null)
                             renderer.render(be, ClientTicks.partialTicks, pose, buffers, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
-                        }
                     } catch (Exception e) {
                         this.erroredBlockEntities.add(be);
                         BlatApi.LOGGER.error("Error rendering block entity", e);

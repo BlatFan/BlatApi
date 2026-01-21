@@ -1,5 +1,18 @@
 package ru.blatfan.blatapi.fluffy_fur;
 
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.fluffy_fur.common.capability.IPlayerSkin;
 import ru.blatfan.blatapi.fluffy_fur.common.event.FluffyFurEvents;
 import ru.blatfan.blatapi.fluffy_fur.common.itemskin.ItemSkin;
@@ -15,19 +28,6 @@ import ru.blatfan.blatapi.fluffy_fur.registry.common.FluffyFurLootModifier;
 import ru.blatfan.blatapi.fluffy_fur.registry.common.block.FluffyFurBlockEntities;
 import ru.blatfan.blatapi.fluffy_fur.registry.common.block.FluffyFurBlocks;
 import ru.blatfan.blatapi.fluffy_fur.registry.common.item.FluffyFurItems;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import ru.blatfan.blatapi.BlatApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;

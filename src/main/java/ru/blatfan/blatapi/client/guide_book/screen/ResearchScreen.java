@@ -31,7 +31,7 @@ public class ResearchScreen extends Screen {
     private GuideBookCategory category = null;
     private final int bgSize = 1024;
     
-    private GuideBookGui guideBookGui = new GuideBookGui();
+    private GuideBookGui guideBookGui;
     private final GuideBookData data;
     public ResearchScreen(GuideBookData data) {
         super(Component.empty());
@@ -74,12 +74,12 @@ public class ResearchScreen extends Screen {
         pose.popPose();
         renderTooltips(gui, mX, mY);
         
-        if(guideBookGui.getEntry()!=null){
+        if(guideBookGui!=null){
             pose.pushPose();
             pose.translate(0, 0, 250);
             guideBookGui.render(gui, mX, mY, partialTick);
             pose.popPose();
-            if(guideBookGui.isClose()) guideBookGui.setEntry(null);
+            if(guideBookGui.isClose()) guideBookGui = null;
         }
         
         pose.pushPose();
@@ -243,7 +243,7 @@ public class ResearchScreen extends Screen {
                     mouseY>= y && mouseY<= y+size) {
                     EntryClickedEvent event = new EntryClickedEvent(data, category, node);
                     if(!MinecraftForge.EVENT_BUS.post(event))
-                        guideBookGui.setEntry(node);
+                        guideBookGui = new GuideBookGui(node);
                 }
             }
         } else if(mouseX>width-36 && mouseX<width &&
@@ -301,7 +301,7 @@ public class ResearchScreen extends Screen {
     
     @Override
     public void onClose() {
-        if(guideBookGui!=null) guideBookGui=null;
+        if(guideBookGui!=null && guideBookGui.isClose()) guideBookGui = null;
         else super.onClose();
     }
     

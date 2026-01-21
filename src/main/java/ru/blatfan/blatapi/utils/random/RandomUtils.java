@@ -52,10 +52,7 @@ public class RandomUtils {
 
     public static boolean doWithChance(Random random,float chance) {
         double num = random.nextDouble() * 100;
-        if (num <= chance) {
-            return true;
-        }
-        return false;
+        return num <= chance;
     }
 
     public static int randomInt(Random random,int border) {

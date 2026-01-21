@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.utils.collection;
 
+import com.google.gson.JsonArray;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -10,11 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
+// List<Component> to List<Text>
 public class Text implements Component {
     protected final MutableComponent component;
     
@@ -25,16 +29,39 @@ public class Text implements Component {
     public static Text create(Component component){
         return new Text(component.copy());
     }
-    public static Text create(String component, Object... args){
+    public static Text create(Component component, ResourceLocation font){
+        return new Text(component.copy().withStyle(style -> style.withFont(font)));
+    }
+    public static Text create(String component, Object... args) {
         return new Text(Component.translatable(component, args));
+    }
+    public static Text create(String component, ResourceLocation font, Object... args) {
+        return new Text(Component.translatable(component, args).withStyle(style -> style.withFont(font)));
     }
     public static Text create(String component){
         return new Text(Component.translatable(component));
     }
+    public static Text create(String component, ResourceLocation font){
+        return new Text(Component.translatable(component).withStyle(style -> style.withFont(font)));
+    }
     public static Text create(){
         return new Text(Component.empty());
     }
-    
+    public static List<Text> createFromComponentList(List<Component> componentList){
+        List<Text> list = new ArrayList<>();
+        componentList.forEach(c -> list.add(Text.create(c)));
+        return list;
+    }
+    public static List<Text> createFromStringList(List<String> stringList){
+        List<Text> list = new ArrayList<>();
+        stringList.forEach(c -> list.add(Text.create(c)));
+        return list;
+    }
+    public static List<Text> createFromJsonList(JsonArray array){
+        List<Text> list = new ArrayList<>();
+        array.forEach(c -> list.add(Text.create(c.getAsString())));
+        return list;
+    }
     public static Text create(ResourceLocation component){
         return create(component.toString());
     }
@@ -50,18 +77,25 @@ public class Text implements Component {
     public static Text create(double component){
         return create(String.valueOf(component));
     }
+    public static Text create(Object component){
+        return create(String.valueOf(component));
+    }
+    
+    public static List<Component> toComponentList(List<Text> textList){
+        List<Component> list = new ArrayList<>();
+        textList.forEach(c -> list.add(c.asComponent()));
+        return list;
+    }
     
     public Text copyText(){
-        return new Text(component);
+        return new Text(copy());
     }
-    
     @Override
-    public MutableComponent copy() {
+    public @NotNull MutableComponent copy() {
         return component.copy();
     }
-    
     public MutableComponent asComponent(){
-        return component.copy();
+        return copy();
     }
     
     public Text add(int c){
@@ -80,10 +114,22 @@ public class Text implements Component {
         return add(c.toString());
     }
     public Text add(String c){
-        return add(Component.translatable(c));
+        return add(create(c));
+    }
+    public Text add(Object c){
+        component.append(c.toString());
+        return this;
+    }
+    public Text add(Object c, ResourceLocation font){
+        component.append(Text.create(c.toString()).withStyle(style -> style.withFont(font)));
+        return this;
     }
     public Text add(Component c){
-        component.append(c);
+        component.append(c.copy());
+        return this;
+    }
+    public Text add(Component c, ResourceLocation font){
+        component.append(c.copy().withStyle(style -> style.withFont(font)));
         return this;
     }
     
@@ -108,14 +154,12 @@ public class Text implements Component {
         return this;
     }
     public Text withColor(Color color){
-        this.component.withStyle(style -> style.withColor(color.getRGB()));
-        return this;
+        return withStyle(style -> style.withColor(color.getRGB()));
     }
     
     public Color getColor(){
-        if(component.getStyle().getColor()==null)
-            return Color.WHITE;
-        return new Color(component.getStyle().getColor().getValue());
+        if(getStyle().getColor()==null) return Color.WHITE;
+        return new Color(getStyle().getColor().getValue());
     }
     
     @OnlyIn(Dist.CLIENT)
@@ -138,6 +182,13 @@ public class Text implements Component {
         return component.getSiblings();
     }
     
+    public List<Text> getTextSiblings() {
+        List<Text> list = new ArrayList<>();
+        for (Component sibling : getSiblings())
+            list.add(create(sibling));
+        return list;
+    }
+    
     @Override
     public FormattedCharSequence getVisualOrderText() {
         return component.getVisualOrderText();
@@ -150,6 +201,6 @@ public class Text implements Component {
     
     @Override
     public String toString() {
-        return getString();
+        return component.toString();
     }
 }

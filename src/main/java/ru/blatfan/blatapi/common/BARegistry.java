@@ -1,11 +1,13 @@
 package ru.blatfan.blatapi.common;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -42,9 +44,6 @@ public class BARegistry {
     
     public static final RegistryObject<RecipeSerializer<IAnvilRecipe>> ANVIL_S = REG.recipe_serializer(AnvilRecipe.type.getPath(), AnvilRecipe.Serializer::new);
     public static final RegistryObject<RecipeSerializer<IAnvilRepairRecipe>> ANVIL_REPAIR_S = REG.recipe_serializer(AnvilRepairRecipe.type.getPath(), AnvilRepairRecipe.Serializer::new);
-    
-    public static final RegistryObject<Item> GUIDE_BOOK = REG.item("guide_book", GuideBookItem::new);
-    public static final RegistryObject<Item> GUIDE_BOOK_PAPER = REG.item("guide_book_paper", GuidePaperItem::new);
     
     public static class MobEffects {
         public static final RegistryObject<MobEffect> ATTACK_SPEED = REG.mob_effect("attack_speed", AttackSpeedMobEffect::new);
@@ -126,33 +125,48 @@ public class BARegistry {
         public static void init(){}
     }
     
+    public static class Items {
+        public static final RegistryObject<Item> GUIDE_BOOK = REG.item("guide_book", GuideBookItem::new);
+        public static final RegistryObject<Item> RED_BOOK = REG.singleItem("red_book");
+        public static final RegistryObject<Item> BLUE_BOOK = REG.singleItem("blue_book");
+        public static final RegistryObject<Item> GREEN_BOOK = REG.singleItem("green_book");
+        public static final RegistryObject<Item> YELLOW_BOOK = REG.singleItem("yellow_book");
+        public static final RegistryObject<Item> PINK_BOOK = REG.singleItem("pink_book");
+        public static final RegistryObject<Item> PURPLE_BOOK = REG.singleItem("purple_book");
+        public static final RegistryObject<Item> ORANGE_BOOK = REG.singleItem("orange_book");
+        public static final RegistryObject<Item> ERROR_BOOK = REG.item("error_book", () -> new GuideBookItem.Transfer(BlatApi.loc("error")));
+        public static final RegistryObject<Item> GUIDE_BOOK_PAPER = REG.item("guide_book_paper", GuidePaperItem::new);
+        
+        public static void init(){}
+    }
+    
     public static class CreativeTabs {
         private static final Text TITLE = Text.create(BlatApi.MOD_NAME);
         
         public static RegistryObject<CreativeModeTab> TAB = REG.creative_mode_tab("main", ()-> MultiCreativeTab.builder()
-            .icon(()->new ItemStack(Items.AMETHYST_SHARD)).title(TITLE).multiBuild());
+            .icon(()->new ItemStack(net.minecraft.world.item.Items.AMETHYST_SHARD)).title(TITLE.copyText()).multiBuild());
         
         public static final SubCreativeTabStack ALL =
-            SubCreativeTabStack.create().subTitle(TITLE);
+            SubCreativeTabStack.create().subTitle(TITLE.copyText());
         
         public static final SubCreativeTab POTIONS =
             SubCreativeTab.create().subIcon(() -> {
-                    ItemStack stack = new ItemStack(Items.POTION);
+                    ItemStack stack = new ItemStack(net.minecraft.world.item.Items.POTION);
                     NBTHelper.setInt(stack, PotionUtils.TAG_CUSTOM_POTION_COLOR, POTION_RAINBOW_COLOR);
                     return stack;
                 })
                 .title(TITLE.copyText().add(": ").add("creative_tab.potions"))
-                .subTitle(Component.translatable("creative_tab.potions"));
+                .subTitle(Text.create("creative_tab.potions"));
         
         public static final SubCreativeTab BOOKS =
-            SubCreativeTab.create().subIcon(() -> new ItemStack(Items.BOOK))
+            SubCreativeTab.create().subIcon(() -> new ItemStack(net.minecraft.world.item.Items.BOOK))
                 .title(TITLE.copyText().add(": ").add("creative_tab.books"))
-                .subTitle(Component.translatable("creative_tab.books"));
+                .subTitle(Text.create("creative_tab.books"));
         
         public static final SubCreativeTab DEBUG =
-            SubCreativeTab.create().subIcon(() -> new ItemStack(Items.COMMAND_BLOCK))
+            SubCreativeTab.create().subIcon(() -> new ItemStack(net.minecraft.world.item.Items.COMMAND_BLOCK))
                 .title(TITLE.copyText().add(": ").add("creative_tab.debug"))
-                .subTitle(Component.translatable("creative_tab.debug"));
+                .subTitle(Text.create("creative_tab.debug"));
         
         public static void addSubTabs(){
             if(TAB.get() instanceof MultiCreativeTab multiCreativeTab){
@@ -173,10 +187,10 @@ public class BARegistry {
                     addInSub(event, DEBUG, FluffyFurItems.TEST_STICK);
                 }
                 for(RegistryObject<Potion> potion : REG.POTIONS.getEntries()) {
-                    addInSub(event, POTIONS, PotionUtils.setPotion(Items.POTION.getDefaultInstance(), potion.get()));
-                    addInSub(event, POTIONS, PotionUtils.setPotion(Items.SPLASH_POTION.getDefaultInstance(), potion.get()));
-                    addInSub(event, POTIONS, PotionUtils.setPotion(Items.LINGERING_POTION.getDefaultInstance(), potion.get()));
-                    addInSub(event, POTIONS, PotionUtils.setPotion(Items.TIPPED_ARROW.getDefaultInstance(), potion.get()));
+                    addInSub(event, POTIONS, PotionUtils.setPotion(net.minecraft.world.item.Items.POTION.getDefaultInstance(), potion.get()));
+                    addInSub(event, POTIONS, PotionUtils.setPotion(net.minecraft.world.item.Items.SPLASH_POTION.getDefaultInstance(), potion.get()));
+                    addInSub(event, POTIONS, PotionUtils.setPotion(net.minecraft.world.item.Items.LINGERING_POTION.getDefaultInstance(), potion.get()));
+                    addInSub(event, POTIONS, PotionUtils.setPotion(net.minecraft.world.item.Items.TIPPED_ARROW.getDefaultInstance(), potion.get()));
                 }
             }
             if (event.getTabKey() == CreativeModeTabs.OP_BLOCKS && event.hasPermissions()) {
@@ -204,6 +218,7 @@ public class BARegistry {
     public static final int POTION_RAINBOW_COLOR = -676767;
     
     public static void register(IEventBus event){
+        Items.init();
         MobEffects.init();
         Potions.init();
         CreativeTabs.init();

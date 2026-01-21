@@ -1,11 +1,15 @@
 package ru.blatfan.blatapi.common.registry;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.syncher.EntityDataSerializer;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.stats.StatType;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -28,6 +32,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -47,6 +52,9 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class BlatRegister {
@@ -61,6 +69,7 @@ public class BlatRegister {
     public final DeferredRegister<Potion> POTIONS;
     public final DeferredRegister<Enchantment> ENCHANTMENTS;
     public final DeferredRegister<EntityType<?>> ENTITY_TYPES;
+    public final DeferredRegister<EntityDataSerializer<?>> ENTITY_DATA_SERIALIZERS;
     public final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES;
     public final DeferredRegister<ParticleType<?>> PARTICLE_TYPES;
     public final DeferredRegister<MenuType<?>> MENU_TYPES;
@@ -98,6 +107,7 @@ public class BlatRegister {
         POTIONS = DeferredRegister.create(ForgeRegistries.POTIONS, modid);
         ENCHANTMENTS = DeferredRegister.create(ForgeRegistries.ENCHANTMENTS, modid);
         ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, modid);
+        ENTITY_DATA_SERIALIZERS = DeferredRegister.create(ForgeRegistries.Keys.ENTITY_DATA_SERIALIZERS, modid);
         BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, modid);
         PARTICLE_TYPES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, modid);
         MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, modid);
@@ -134,6 +144,7 @@ public class BlatRegister {
         POTIONS.register(eventBus);
         ENCHANTMENTS.register(eventBus);
         ENTITY_TYPES.register(eventBus);
+        ENTITY_DATA_SERIALIZERS.register(eventBus);
         BLOCK_ENTITY_TYPES.register(eventBus);
         PARTICLE_TYPES.register(eventBus);
         MENU_TYPES.register(eventBus);
@@ -181,6 +192,9 @@ public class BlatRegister {
     public RegistryObject<Item> item(String id){
         return item(id, ()-> new Item(new Item.Properties()));
     }
+    public RegistryObject<Item> singleItem(String id){
+        return item(id, ()-> new Item(new Item.Properties().stacksTo(1)));
+    }
     
     public RegistryObject<CreativeModeTab> creative_mode_tab(String id, Supplier<CreativeModeTab> supplier){
         return CREATIVE_MODE_TAB.register(id, supplier);
@@ -205,7 +219,7 @@ public class BlatRegister {
         return ENCHANTMENTS.register(id, supplier);
     }
     
-    public <T extends EntityType<?>> RegistryObject<T> entity_type(String id, Supplier<T> supplier){
+    public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String id, Supplier<? extends EntityType<T>> supplier){
         return ENTITY_TYPES.register(id, supplier);
     }
     public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String id, EntityType.Builder<T> builder){
@@ -238,11 +252,22 @@ public class BlatRegister {
         return entity_type(name, builder);
     }
     
-    public <T extends BlockEntityType<?>> RegistryObject<T> block_entity_type(String id, Supplier<T> supplier){
+    public <V, T extends EntityDataSerializer<V>> RegistryObject<T> entity_data_serializer(String id, Supplier<? extends T> supplier){
+        return ENTITY_DATA_SERIALIZERS.register(id, supplier);
+    }
+    
+    public <T extends BlockEntity> RegistryObject<BlockEntityType<T>> block_entity_type(String id, Supplier<? extends BlockEntityType<T>> supplier){
         return BLOCK_ENTITY_TYPES.register(id, supplier);
     }
     
-    public <T extends BlockEntity> RegistryObject<BlockEntityType<?>> block_entity_type(String id, BlockEntityType.BlockEntitySupplier<T> pFactory, Block... pValidBlocks){
+    public <T extends BlockEntity> RegistryObject<BlockEntityType<T>> block_entity_type(String id, BlockEntityType.BlockEntitySupplier<T> pFactory, Set<Block> pValidBlocks){
+        return block_entity_type(id, () -> new BlockEntityType<>(pFactory, pValidBlocks, null));
+    }
+    public <T extends BlockEntity> RegistryObject<BlockEntityType<T>> block_entity_type(String id, BlockEntityType.BlockEntitySupplier<T> pFactory, List<Block> pValidBlocks){
+        return block_entity_type(id, () -> new BlockEntityType<>(pFactory, Set.copyOf(pValidBlocks), null));
+    }
+    
+    public <T extends BlockEntity> RegistryObject<BlockEntityType<T>> block_entity_type(String id, BlockEntityType.BlockEntitySupplier<T> pFactory, Block... pValidBlocks){
         return block_entity_type(id, () -> BlockEntityType.Builder.of(pFactory, pValidBlocks).build(null));
     }
     
@@ -269,20 +294,20 @@ public class BlatRegister {
         return RECIPE_SERIALIZERS.register(id, supplier);
     }
     
-    public RegistryObject<Attribute> attribute(String id, Supplier<Attribute> supplier){
+    public <T extends Attribute> RegistryObject<T> attribute(String id, Supplier<T> supplier){
         return ATTRIBUTES.register(id, supplier);
     }
-    public RegistryObject<Attribute> attribute(String id, double defValue, double minValue, double maxValue){
+    public RegistryObject<RangedAttribute> attribute(String id, double defValue, double minValue, double maxValue){
         return attribute(id, ()-> new RangedAttribute(id, defValue, minValue, maxValue));
     }
-    public RegistryObject<Attribute> attribute(String id, double defValue, double minValue){
+    public RegistryObject<RangedAttribute> attribute(String id, double defValue, double minValue){
         return attribute(id, defValue, minValue, Integer.MAX_VALUE);
     }
-    public RegistryObject<Attribute> attribute(String id, double defValue){
+    public RegistryObject<RangedAttribute> attribute(String id, double defValue){
         return attribute(id, defValue, 0, Integer.MAX_VALUE);
     }
     
-    public RegistryObject<StatType<?>> stat_type(String id, Supplier<StatType<?>> supplier){
+    public <T> RegistryObject<StatType<T>> stat_type(String id, Supplier<StatType<T>> supplier){
         return STAT_TYPES.register(id, supplier);
     }
     
@@ -301,17 +326,34 @@ public class BlatRegister {
     public RegistryObject<MemoryModuleType<?>> memory_module_type(String id, Supplier<MemoryModuleType<?>> supplier){
         return MEMORY_MODULE_TYPES.register(id, supplier);
     }
+    public <T> RegistryObject<MemoryModuleType<?>> memory_module_type(String id, Codec<T> supplier){
+        return MEMORY_MODULE_TYPES.register(id, () -> new MemoryModuleType<>(Optional.of(supplier)));
+    }
+    public RegistryObject<MemoryModuleType<?>> memory_module_type(String id){
+        return MEMORY_MODULE_TYPES.register(id, () -> new MemoryModuleType<>(Optional.empty()));
+    }
     
     public RegistryObject<SensorType<?>> sensor_type(String id, Supplier<SensorType<?>> supplier){
         return SENSOR_TYPES.register(id, supplier);
+    }
+    
+    public ResourceKey<DamageType> damage_type(String id){
+        return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(modid, id));
+    }
+    
+    public <T extends GameRules.Value<T>> GameRules.Key<T> gamerule(String id, GameRules.Category category, GameRules.Type<T> type){
+        return GameRules.register(id, category, type);
     }
     
     public RegistryObject<Schedule> schedule(String id, Supplier<Schedule> supplier){
         return SCHEDULES.register(id, supplier);
     }
     
-    public RegistryObject<Activity> activitie(String id, Supplier<Activity> supplier){
+    public RegistryObject<Activity> activity(String id, Supplier<Activity> supplier){
         return ACTIVITIES.register(id, supplier);
+    }
+    public RegistryObject<Activity> activity(String id){
+        return ACTIVITIES.register(id, () -> new Activity(id));
     }
     
     public RegistryObject<WorldCarver<?>> world_carver(String id, Supplier<WorldCarver<?>> supplier){
@@ -322,7 +364,7 @@ public class BlatRegister {
         return FEATURES.register(id, supplier);
     }
     
-    public RegistryObject<ChunkStatus> chunk_statu(String id, Supplier<ChunkStatus> supplier){
+    public RegistryObject<ChunkStatus> chunk_status(String id, Supplier<ChunkStatus> supplier){
         return CHUNK_STATUS.register(id, supplier);
     }
     

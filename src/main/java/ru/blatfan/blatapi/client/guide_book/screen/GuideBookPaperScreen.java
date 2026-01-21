@@ -30,7 +30,7 @@ public class GuideBookPaperScreen extends Screen {
             e.title(), e.description(), e.icon(), e.category(), e.x(), e.y(), e.pages(),
             new ArrayList<>(), new ArrayList<>(), e.advance()
         );
-        bookGui = new GuideBookGui(){
+        bookGui = new GuideBookGui(bookEntry){
             @Override
             public void renderBackground(GuiGraphics gui) {
                 int guiLeft = (gui.guiWidth() - 272) / 2;
@@ -43,7 +43,6 @@ public class GuideBookPaperScreen extends Screen {
                     gui.drawString(font, "TO CLOSE", 0, 0, Color.WHITE.getRGB());
             }
         };
-        bookGui.setEntry(bookEntry);
     }
     
     @Override

@@ -40,8 +40,8 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     public static final GuideBookData ERROR_BOOK = new GuideBookData(
         BlatApi.loc("textures/gui/book/book.png"),
         Component.literal("Unknown Book"), Component.literal("Unknown Author"),
-        new Color(222, 57, 232), ItemStack.EMPTY, Component.literal("Unknown"),
-        BlatApi.loc("guide_book"), false
+        new Color(192, 0, 0), ItemStack.EMPTY, Component.literal("Unknown lang"),
+        BlatApi.loc("error_book"), false
     );
     
     public static Map<ResourceLocation, BookGuiExtension> getBookExtensions() {
@@ -59,31 +59,52 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
         GuideReload.BookReload event = new GuideReload.BookReload(bookData);
         MinecraftForge.EVENT_BUS.post(event);
         if(event.isCanceled()) return;
+        if(books.containsKey(id)){
+            BlatApi.LOGGER.error("Book Data id {} duplicate", id);
+            return;
+        }
         books.put(id, event.getBookData());
     }
     public static void register(ResourceLocation id, GuideBookCategory category){
         GuideReload.CategoryReload event = new GuideReload.CategoryReload(category);
         MinecraftForge.EVENT_BUS.post(event);
         if(event.isCanceled()) return;
+        if(categories.containsKey(id)){
+            BlatApi.LOGGER.error("Book Category id {} duplicate", id);
+            return;
+        }
         categories.put(id, event.getCategory());
     }
     public static void register(ResourceLocation id, GuideBookEntry entry){
         GuideReload.EntryReload event = new GuideReload.EntryReload(entry);
         MinecraftForge.EVENT_BUS.post(event);
         if(event.isCanceled()) return;
+        if(entries.containsKey(id)){
+            BlatApi.LOGGER.error("Book Entry id {} duplicate", id);
+            return;
+        }
         entries.put(id, event.getEntry());
     }
     public static void register(ResourceLocation id, GuideBookPaper paper){
         GuideReload.PaperReload event = new GuideReload.PaperReload(paper);
         MinecraftForge.EVENT_BUS.post(event);
         if(event.isCanceled()) return;
+        if(papers.containsKey(id)){
+            BlatApi.LOGGER.error("Book Paper id {} duplicate", id);
+            return;
+        }
         papers.put(id, event.getPaper());
     }
     public static void register(Multiblock multiblock){
         GuideReload.MultiblockReload event = new GuideReload.MultiblockReload(multiblock);
         MinecraftForge.EVENT_BUS.post(event);
         if(event.isCanceled()) return;
-        multiblocks.put(event.getMultiblock().getId(), event.getMultiblock());
+        ResourceLocation id = event.getMultiblock().getId();
+        if(multiblocks.containsKey(event.getMultiblock().getId())){
+            BlatApi.LOGGER.error("Multiblock id {} duplicate", id);
+            return;
+        }
+        multiblocks.put(id, event.getMultiblock());
     }
     public static Map<ResourceLocation, GuideBookData> books(){
         return Collections.unmodifiableMap(books);
@@ -100,6 +121,7 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     public static Map<ResourceLocation, Multiblock> multiblocks(){
         return Collections.unmodifiableMap(multiblocks);
     }
+    
     public static ResourceLocation getId(GuideBookData bookData){
         for(Map.Entry<ResourceLocation, GuideBookData> entry : books.entrySet())
             if(entry.getValue()==bookData) return entry.getKey();
@@ -155,7 +177,6 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
         
         RecipePage.addRecipeType(get(RecipeType.CRAFTING), CraftingRecipeRenderer.INSTANCE);
         RecipePage.addRecipeType(AnvilRecipe.type, AnvilRecipeRenderer.INSTANCE);
-        
         RecipePage.addRecipeType(get(RecipeType.SMELTING), FurnaceRecipeRenderer.INSTANCE);
         RecipePage.addRecipeType(get(RecipeType.CAMPFIRE_COOKING), FurnaceRecipeRenderer.INSTANCE);
         RecipePage.addRecipeType(get(RecipeType.BLASTING), FurnaceRecipeRenderer.INSTANCE);
@@ -178,6 +199,7 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
         categories.clear();
         entries.clear();
         papers.clear();
+        multiblocks.clear();
         for(Map.Entry<ResourceLocation, JsonElement> entry : pObject.entrySet()){
             JsonElement element = entry.getValue();
             ResourceLocation rl = entry.getKey();
