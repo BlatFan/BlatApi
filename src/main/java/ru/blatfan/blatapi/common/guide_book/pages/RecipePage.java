@@ -55,7 +55,7 @@ public class RecipePage extends GuideBookPage {
         return RecipeHelper.getRecipe(recipeIds.get(i));
     }
     public ResourceLocation getRecipeType(int i){
-        if(getRecipe(i)==null) return new ResourceLocation("null");
+        if(getRecipe(i)==null) return ResourceLocation.parse("null");
         return ResourceLocation.tryParse(getRecipe(i).getType().toString());
     }
     

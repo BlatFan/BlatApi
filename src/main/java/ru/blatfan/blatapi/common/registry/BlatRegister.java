@@ -46,11 +46,13 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import ru.blatfan.blatapi.BlatApi;
 
 import java.util.List;
 import java.util.Optional;
@@ -93,6 +95,7 @@ public class BlatRegister {
     public final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATOR_TYPES;
     public final DeferredRegister<Biome> BIOMES;
     public final DeferredRegister<TrunkPlacerType<?>> TRUNK_PLACER_TYPE;
+    public final DeferredRegister<Codec<? extends IGlobalLootModifier>> LOOT_MODIFIERS;
     
     public BlatRegister(String modid) {
         this.modid = modid;
@@ -131,6 +134,7 @@ public class BlatRegister {
         TREE_DECORATOR_TYPES = DeferredRegister.create(ForgeRegistries.TREE_DECORATOR_TYPES, modid);
         BIOMES = DeferredRegister.create(ForgeRegistries.BIOMES, modid);
         TRUNK_PLACER_TYPE = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, modid);
+        LOOT_MODIFIERS = DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, BlatApi.MOD_ID);
     }
     
     public void register(IEventBus eventBus){
@@ -168,6 +172,7 @@ public class BlatRegister {
         TREE_DECORATOR_TYPES.register(eventBus);
         BIOMES.register(eventBus);
         TRUNK_PLACER_TYPE.register(eventBus);
+        LOOT_MODIFIERS.register(eventBus);
     }
     
     public <T extends Block> RegistryObject<T> block(String id, Supplier<T> supplier){
@@ -208,7 +213,7 @@ public class BlatRegister {
         return SOUND_EVENTS.register(id, supplier);
     }
     public RegistryObject<SoundEvent> sound_event(String name){
-        return sound_event(name, ()-> SoundEvent.createVariableRangeEvent(new ResourceLocation(modid, name)));
+        return sound_event(name, ()-> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(modid, name)));
     }
     
     public RegistryObject<Potion> potion(String id, Supplier<Potion> supplier){
@@ -271,6 +276,10 @@ public class BlatRegister {
         return block_entity_type(id, () -> BlockEntityType.Builder.of(pFactory, pValidBlocks).build(null));
     }
     
+    public <T extends BlockEntity> RegistryObject<BlockEntityType<T>> block_entity_type(String id, BlockEntityType.Builder<T> builder){
+        return block_entity_type(id, () -> builder.build(null));
+    }
+    
     public <T extends ParticleType<?>> RegistryObject<T> particle_type(String id, Supplier<T> supplier){
         return PARTICLE_TYPES.register(id, supplier);
     }
@@ -287,7 +296,7 @@ public class BlatRegister {
         return RECIPE_TYPES.register(id, supplier);
     }
     public <T extends Recipe<?>> RegistryObject<RecipeType<T>> recipe_type(String id){
-        return recipe_type(id, ()-> RecipeType.simple(new ResourceLocation(modid, id)));
+        return recipe_type(id, ()-> RecipeType.simple(ResourceLocation.fromNamespaceAndPath(modid, id)));
     }
     
     public <T extends RecipeSerializer<?>> RegistryObject<T> recipe_serializer(String id, Supplier<T> supplier){
@@ -338,7 +347,7 @@ public class BlatRegister {
     }
     
     public ResourceKey<DamageType> damage_type(String id){
-        return ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(modid, id));
+        return ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(modid, id));
     }
     
     public <T extends GameRules.Value<T>> GameRules.Key<T> gamerule(String id, GameRules.Category category, GameRules.Type<T> type){
@@ -386,5 +395,12 @@ public class BlatRegister {
     
     public RegistryObject<Biome> biome(String id, Supplier<Biome> supplier){
         return BIOMES.register(id, supplier);
+    }
+    
+    public <T extends IGlobalLootModifier, I extends T> RegistryObject<Codec<I>> loot_modifier(String id, Supplier<Codec<I>> codec){
+        return LOOT_MODIFIERS.register(id, codec);
+    }
+    public <T extends IGlobalLootModifier, I extends T> RegistryObject<Codec<I>> loot_modifier(String id, Codec<I> codec){
+        return loot_modifier(id, ()->codec);
     }
 }

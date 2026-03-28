@@ -1,7 +1,7 @@
 package ru.blatfan.blatapi.mixins.client;
 
-import  ru.blatfan.blatapi.fluffy_fur.common.creativetab.MultiCreativeTab;
-import  ru.blatfan.blatapi.fluffy_fur.common.creativetab.SubCreativeTab;
+import ru.blatfan.blatapi.common.creativetab.MultiCreativeTab;
+import ru.blatfan.blatapi.common.creativetab.SubCreativeTab;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class CreativeModeTabsMixin {
 
     @Inject(at = @At("HEAD"), method = "buildAllTabContents")
-    private static void fluffy_fur$buildAllTabContentsHead(CreativeModeTab.ItemDisplayParameters parameters, CallbackInfo ci) {
+    private static void blatapi$buildAllTabContentsHead(CreativeModeTab.ItemDisplayParameters parameters, CallbackInfo ci) {
         for (CreativeModeTab tab : CreativeModeTabs.allTabs()) {
             if (tab instanceof MultiCreativeTab multiCreativeTab) {
                 for (SubCreativeTab subTab : multiCreativeTab.getSubTabs()) {
@@ -24,7 +24,7 @@ public abstract class CreativeModeTabsMixin {
     }
 
     @Inject(at = @At("TAIL"), method = "buildAllTabContents")
-    private static void fluffy_fur$buildAllTabContentsTail(CreativeModeTab.ItemDisplayParameters parameters, CallbackInfo ci) {
+    private static void blatapi$buildAllTabContentsTail(CreativeModeTab.ItemDisplayParameters parameters, CallbackInfo ci) {
         for (CreativeModeTab tab : CreativeModeTabs.allTabs()) {
             if (tab instanceof MultiCreativeTab multiCreativeTab) {
                 multiCreativeTab.sortSubTabs();

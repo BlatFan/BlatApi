@@ -1,40 +1,57 @@
 package ru.blatfan.blatapi.common;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.ResourceLocationArgument;
+import net.minecraft.commands.arguments.item.ItemInput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
+import ru.blatfan.blatapi.common.multiblock.Multiblock;
+import ru.blatfan.blatapi.common.player_stages.PlayerStages;
+import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.command.CommandBuilder;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 
 @Mod.EventBusSubscriber
 public class BACommands {
-    
     @SubscribeEvent
     public static void onRegisterCommands(RegisterCommandsEvent event) {
-        //PlayerStagesCommands.onRegisterCommands(event);
+        PlayerStagesCommands.onRegisterCommands(event);
         MultiblockCommands.onRegisterCommands(event);
     }
     
-    public static class MultiblockCommands {
+    private static class MultiblockCommands {
+        public static final CommandBuilder.BASuggestionProvider<CommandSourceStack> MULTIBLOCK_SUGGESTION = (context, builder) -> {
+            GuideManager.multiblocks().keySet().forEach(rl -> builder.suggest(rl.toString()));
+            return builder;
+        };
+        
         public static void onRegisterCommands(RegisterCommandsEvent event) {
-            CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
-            
-            dispatcher.register(Commands.literal("multiblock")
-                .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
-                .then(Commands.literal("reset")
-                    .executes(MultiblockCommands::reset)
-                ).then(Commands.literal("build")
-                    .executes(MultiblockCommands::build)
-                ).then(Commands.literal("list")
-                    .executes(MultiblockCommands::list))
-            );
+            CommandBuilder.literal("ba_multiblock")
+                .requiresOp(CommandBuilder.OpLevels.ADMIN)
+                .then(CommandBuilder.literal("reset").executes(MultiblockCommands::reset))
+                .then(CommandBuilder.literal("build").executes(MultiblockCommands::build))
+                .then(CommandBuilder.literal("show")
+                    .then(CommandBuilder.resourceLocation("multiblock_id")
+                        .suggests(MULTIBLOCK_SUGGESTION)
+                        .executes(MultiblockCommands::show)
+                    )
+                )
+                .then(CommandBuilder.literal("list").executes(MultiblockCommands::list))
+                .register(event.getDispatcher());
         }
         
         private static int reset(CommandContext<CommandSourceStack> context) {
@@ -42,160 +59,189 @@ public class BACommands {
             return 1;
         }
         
-        private static int list(CommandContext<CommandSourceStack> context) {
-            List<String> list = new ArrayList<>();
-            GuideManager.multiblocks().keySet().forEach(id -> list.add(id.toString()));
-            
-            context.getSource().sendSuccess(()->
-                    Component.translatable("commands.blatapi.player_stages.available_multiblocks"),
-                false
-            );
-            
-            if (list.isEmpty())
-                context.getSource().sendSuccess(()->Component.literal("  No multiblocks available"), false);
-            else for (String m : list)
-                context.getSource().sendSuccess(()->Component.literal("  " + m), false);
-            return list.size();
+        private static int show(CommandContext<CommandSourceStack> context) {
+            ResourceLocation id = ResourceLocationArgument.getId(context, "multiblock_id");
+            Multiblock multiblock = GuideManager.getMultiblock(id);
+            if(multiblock==null) return 0;
+            MultiblockPreviewRenderer.setMultiblock(multiblock, Component.empty(), false);
+            return 1;
         }
         
         private static int build(CommandContext<CommandSourceStack> context) {
             return MultiblockPreviewRenderer.buildMultiblock(context.getSource().getLevel());
         }
+        
+        private static int list(CommandContext<CommandSourceStack> context) {
+            CommandSourceStack source = context.getSource();
+            Set<ResourceLocation> ids = GuideManager.multiblocks().keySet();
+            
+            source.sendSuccess(() -> Text.create("commands.blatapi.player_stages.available_multiblocks"), false);
+            
+            if (ids.isEmpty())
+                source.sendSuccess(() -> Component.literal("  No multiblocks available"), false);
+            else for (var id : ids)
+                source.sendSuccess(() -> Component.literal("  " + id.toString()), false);
+            
+            return ids.size();
+        }
     }
-    // TODO PlayerStagesCommands
-    /*
+    
     public static class PlayerStagesCommands {
-        private static final DynamicCommandExceptionType INVALID_STAGE = new DynamicCommandExceptionType(
-            stage -> Component.translatable("argument.blatapi.player_stages.invalid_stage", stage)
-        );
-        private static final SuggestionProvider<CommandSourceStack> STAGES =
-            (context, builder) -> {
-                String input = builder.getRemaining().toLowerCase();
-                Collection<String> allStages = PlayerStages.allStages;
-                for (String stage : allStages)
-                    if (stage.toLowerCase().contains(input))
-                        builder.suggest(stage);
-                return builder.buildFuture();
-            };
+        public static final CommandBuilder.BASuggestionProvider<CommandSourceStack> STAGES_SUGGESTION = (context, builder) -> {
+            PlayerStages.allStages.forEach(rl -> builder.suggest(rl.toString()));
+            return builder;
+        };
         
-        public static void onRegisterCommands(RegisterCommandsEvent event) {
-            CommandDispatcher<CommandSourceStack> dispatcher = event.getDispatcher();
+        static void onRegisterCommands(RegisterCommandsEvent event) {
+            CommandBuildContext buildContext = event.getBuildContext();
             
-            dispatcher.register(Commands.literal("player_stages")
-                .requires(source -> source.hasPermission(Commands.LEVEL_GAMEMASTERS))
-                .then(Commands.literal("get")
-                    .then(Commands.argument("player", EntityArgument.players())
-                        .then(Commands.argument("stage", StringArgumentType.word()).suggests(STAGES)
-                            .executes(PlayerStagesCommands::getStage)))
+            CommandBuilder.literal("player_stages")
+                .requiresOp(Commands.LEVEL_GAMEMASTERS)
+                .then(CommandBuilder.literal("list")
+                    .executes(PlayerStagesCommands::listAvailableStages)
                 )
-                .then(Commands.literal("set")
-                    .then(Commands.argument("player", EntityArgument.players())
-                        .then(Commands.argument("stage", StringArgumentType.word()).suggests(STAGES)
-                            .then(Commands.argument("value", BoolArgumentType.bool())
-                                .executes(PlayerStagesCommands::setStage))))
+                .then(CommandBuilder.literal("all")
+                    .then(CommandBuilder.players("targets")
+                        .executes(PlayerStagesCommands::listAllStages)
+                    )
                 )
-                .then(Commands.literal("all")
-                    .then(Commands.argument("player", EntityArgument.players())
-                        .executes(PlayerStagesCommands::listAllStages)))
-                .then(Commands.literal("list")
-                    .executes(PlayerStagesCommands::listAvailableStages))
-            );
-        }
-        
-        private static int getStage(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "player");
-            String stage = StringArgumentType.getString(context, "stage");
-            
-            if (!isValidStage(stage))
-                throw INVALID_STAGE.create(stage);
-            
-            for (ServerPlayer player : players) {
-                boolean hasStage = PlayerStages.get(player, stage);
-                context.getSource().sendSuccess(()->
-                        Component.translatable("commands.blatapi.player_stages.get",
-                            player.getDisplayName(), stage, hasStage),
-                    false
-                );
-            }
-            
-            return players.size();
-        }
-        
-        private static int setStage(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "player");
-            String stage = StringArgumentType.getString(context, "stage");
-            boolean value = BoolArgumentType.getBool(context, "value");
-            int count = 0;
-            
-            for (ServerPlayer player : players) {
-                if (value) {
-                    PlayerStages.add(player, stage);
-                } else {
-                    PlayerStages.remove(player, stage);
-                }
-                
-                context.getSource().sendSuccess(()->
-                        Component.translatable("commands.blatapi.player_stages.set",
-                            player.getDisplayName(), stage, value),
-                    false
-                );
-                count++;
-            }
-            
-            return count;
-        }
-        
-        private static int listAllStages(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-            Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "player");
-            
-            for (ServerPlayer player : players) {
-                Map<String, Boolean> stages = PlayerStages.get(player).getAll();
-                
-                if (stages.isEmpty()) {
-                    context.getSource().sendSuccess(()->
-                            Component.translatable("commands.blatapi.player_stages.no_stages",
-                                player.getDisplayName()),
-                        false
-                    );
-                } else {
-                    context.getSource().sendSuccess(()->
-                            Component.translatable("commands.blatapi.player_stages.list_header",
-                                player.getDisplayName(), stages.size()),
-                        false
-                    );
-                    
-                    for (Map.Entry<String, Boolean> entry : stages.entrySet()) {
-                        context.getSource().sendSuccess(()->
-                                Component.literal("  " + entry.getKey() + ": " + entry.getValue()),
-                            false
-                        );
-                    }
-                }
-            }
-            
-            return players.size();
+                .then(CommandBuilder.literal("get")
+                    .then(CommandBuilder.players("targets")
+                        .then(CommandBuilder.word("stage").suggests(STAGES_SUGGESTION)
+                            .executes(PlayerStagesCommands::getStage)
+                        )
+                    )
+                )
+                .then(CommandBuilder.literal("remove")
+                    .then(CommandBuilder.players("targets")
+                        .then(CommandBuilder.word("stage").suggests(STAGES_SUGGESTION)
+                            .executes(PlayerStagesCommands::removeStage)
+                        )
+                    )
+                )
+                .then(CommandBuilder.literal("set")
+                    .then(CommandBuilder.players("targets")
+                        .then(CommandBuilder.resourceLocation("stage").suggests(STAGES_SUGGESTION)
+                            .then(CommandBuilder.literal("int")
+                                .then(CommandBuilder.integer("value")
+                                    .executes(ctx -> executeSet(ctx, "int", (p, s) -> PlayerStages.setInt(p, s, ctx.getArgument("value", Integer.class))))))
+                            .then(CommandBuilder.literal("long")
+                                .then(CommandBuilder.longArg("value")
+                                    .executes(ctx -> executeSet(ctx, "long", (p, s) -> PlayerStages.setLong(p, s, ctx.getArgument("value", Long.class))))))
+                            .then(CommandBuilder.literal("double")
+                                .then(CommandBuilder.doubleArg("value")
+                                    .executes(ctx -> executeSet(ctx, "double", (p, s) -> PlayerStages.setDouble(p, s, ctx.getArgument("value", Double.class))))))
+                            .then(CommandBuilder.literal("float")
+                                .then(CommandBuilder.floatArg("value")
+                                    .executes(ctx -> executeSet(ctx, "float", (p, s) -> PlayerStages.setFloat(p, s, ctx.getArgument("value", Float.class))))))
+                            
+                            .then(CommandBuilder.literal("bool")
+                                .then(CommandBuilder.bool("value")
+                                    .executes(ctx -> executeSet(ctx, "bool", (p, s) -> PlayerStages.setBool(p, s, ctx.getArgument("value", Boolean.class))))))
+                            
+                            .then(CommandBuilder.literal("string")
+                                .then(CommandBuilder.greedyString("value")
+                                    .executes(ctx -> executeSet(ctx, "string", (p, s) -> PlayerStages.setString(p, s, ctx.getArgument("value", String.class))))))
+                            
+                            .then(CommandBuilder.literal("item")
+                                .then(CommandBuilder.item("value", buildContext)
+                                    .executes(ctx -> executeSet(ctx, "item_stack", (p, s) -> {
+                                        ItemStack stack = ctx.getArgument("value", ItemInput.class).createItemStack(1, false);
+                                        PlayerStages.setItemStack(p, s, stack);
+                                    }))))
+                        )
+                    )
+                )
+                .register(event.getDispatcher());
         }
         
         private static int listAvailableStages(CommandContext<CommandSourceStack> context) {
-            Collection<String> allStages = PlayerStages.allStages;
+            CommandSourceStack source = context.getSource();
+            Collection<ResourceLocation> allStages = PlayerStages.allStages;
             
-            context.getSource().sendSuccess(()->
-                    Component.translatable("commands.blatapi.player_stages.available_stages"),
-                false
-            );
+            source.sendSuccess(() -> Text.create("commands.blatapi.player_stages.list_header", allStages.size()), false);
             
             if (allStages.isEmpty()) {
-                context.getSource().sendSuccess(()->Component.literal("  No stages available"), false);
+                source.sendSuccess(() -> Text.create("commands.blatapi.player_stages.list_empty"), false);
             } else {
-                for (String stage : allStages) {
-                    context.getSource().sendSuccess(()->Component.literal("  " + stage), false);
+                for (ResourceLocation stage : allStages) {
+                    source.sendSuccess(() -> Component.literal("§7- §f" + stage.toString()), false);
                 }
             }
-            
             return allStages.size();
         }
-        private static boolean isValidStage(String stage) {
-            return PlayerStages.allStages.contains(stage);
+        
+        private static int listAllStages(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "targets");
+            
+            for (ServerPlayer player : players) {
+                Map<ResourceLocation, PlayerStages.Value<?>> stages = PlayerStages.get(player).getAll();
+                
+                if (stages.isEmpty()) {
+                    context.getSource().sendSuccess(() ->
+                        Text.create("commands.blatapi.player_stages.player_empty", player.getScoreboardName()), false);
+                } else {
+                    context.getSource().sendSuccess(() ->
+                        Text.create("commands.blatapi.player_stages.player_header", player.getScoreboardName()), false);
+                    for (Map.Entry<ResourceLocation, PlayerStages.Value<?>> entry : stages.entrySet()) {
+                        ResourceLocation key = entry.getKey();
+                        String type = entry.getValue().getType().getPath();
+                        Object value = entry.getValue().getValue();
+                        context.getSource().sendSuccess(() ->
+                            Text.create("commands.blatapi.player_stages.player_entry", key, type, value), false);
+                    }
+                }
+            }
+            return players.size();
         }
-    }*/
+        
+        
+        private static int getStage(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "targets");
+            ResourceLocation stage = ResourceLocationArgument.getId(context, "stage");
+            
+            for (ServerPlayer player : players) {
+                if (PlayerStages.has(player, stage)) {
+                    PlayerStages.Value<?> valueObj = PlayerStages.get(player).getAll().get(stage);
+                    context.getSource().sendSuccess(() ->
+                        Text.create("commands.blatapi.player_stages.get_success",
+                            player.getScoreboardName(), stage, valueObj.getType().getPath(), valueObj.getValue().toString()), false);
+                } else {
+                    context.getSource().sendFailure(
+                        Text.create("commands.blatapi.player_stages.get_fail", player.getScoreboardName(), stage));
+                }
+            }
+            return players.size();
+        }
+        
+        private static int removeStage(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+            Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "targets");
+            ResourceLocation stage = ResourceLocationArgument.getId(context, "stage");
+            
+            for (ServerPlayer player : players) {
+                PlayerStages.remove(player, stage);
+                context.getSource().sendSuccess(() ->
+                    Text.create("commands.blatapi.player_stages.remove", stage, player.getScoreboardName()), false);
+            }
+            return players.size();
+        }
+        
+        private static int executeSet(CommandContext<CommandSourceStack> context, String typeName, StageSetter setter) throws CommandSyntaxException {
+            Collection<ServerPlayer> players = EntityArgument.getPlayers(context, "targets");
+            ResourceLocation stage = ResourceLocationArgument.getId(context, "stage");
+            
+            for (ServerPlayer player : players) {
+                setter.apply(player, stage);
+                context.getSource().sendSuccess(() ->
+                    Component.literal(String.format("§aStage established '%s' §8[%s]§a for %s", stage, typeName, player.getScoreboardName())), false);
+            }
+            return players.size();
+        }
+        
+        @FunctionalInterface
+        private interface StageSetter {
+            void apply(ServerPlayer player, ResourceLocation stage) throws CommandSyntaxException;
+        }
+    }
+    
 }

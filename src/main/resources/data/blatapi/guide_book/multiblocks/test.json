@@ -3,13 +3,13 @@
   "pattern": [
     [
       "GAG",
-      "AAA",
+      "FFF",
       "GAG"
     ],
     [
-      "AAA",
-      "A0A",
-      "AHA"
+      "ATA",
+      "T0T",
+      "ATA"
     ],
     [
       "GAG",
@@ -19,12 +19,20 @@
   ],
   "mapping": {
     "A": {
-      "type": "blatapi:block",
-      "block": "minecraft:stone_bricks"
+      "type": "blatapi:tag",
+      "tag": "minecraft:logs"
+    },
+    "F": {
+      "type": "blatapi:tag",
+      "tag": "minecraft:fire"
     },
     "G": {
       "type": "blatapi:block",
-      "block": "minecraft:gold_block"
+      "block": "minecraft:chest"
+    },
+    "T": {
+      "type": "blatapi:block",
+      "block": "minecraft:torch"
     },
     "H":  {
       "type": "blatapi:block",

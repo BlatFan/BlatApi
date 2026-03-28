@@ -30,7 +30,7 @@ public class PositionTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
+    public Text text(Player player) {
         return Text.create("task.blatapi.position", pos.getX(), pos.getY(), pos.getZ()).withStyle(get(player) ? ChatFormatting.GREEN : ChatFormatting.RED);
     }
     

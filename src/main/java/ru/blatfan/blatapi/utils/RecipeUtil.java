@@ -24,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import ru.blatfan.blatapi.common.recipe.IRecipePattern;
 import ru.blatfan.blatapi.common.recipe.SimpleShapedRecipe;
+import ru.blatfan.blatapi.utils.collection.ItemStackList;
 
 import java.util.Map;
 
@@ -34,6 +35,17 @@ public class RecipeUtil {
     }
     public static ItemStack itemStackFromJson(JsonObject pStackObject) {
         return CraftingHelper.getItemStack(pStackObject, true, true);
+    }
+    
+    public static ItemStackList itemStacksListFromJson(JsonElement json){
+        if(!json.isJsonArray()) return new ItemStackList(false);
+        return itemStacksListFromJson(json.getAsJsonArray());
+    }
+    public static ItemStackList itemStacksListFromJson(JsonArray json){
+        ItemStackList list = new ItemStackList(true);
+        for (JsonElement element : json.getAsJsonArray())
+            list.add(itemStackFromJson(element));
+        return list;
     }
     
     public static Item itemFromJson(JsonObject pItemObject) {

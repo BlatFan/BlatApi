@@ -9,35 +9,49 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.fluffy_fur.common.network.FluffyFurPacketHandler;
-import ru.blatfan.blatapi.utils.ICapacity;
+import ru.blatfan.blatapi.common.network.BlatApiPacketHandler;
+import ru.blatfan.blatapi.utils.capacity.ICapacity;
+import ru.blatfan.blatapi.utils.collection.Couple;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class PlayerStages implements ICapacity<PlayerStages> {
-    public static final List<String> allStages = new ArrayList<>();
-    private final Map<String, Value<?>> DATA = new ConcurrentHashMap<>();
+    public static final List<ResourceLocation> allStages = Collections.synchronizedList(new LinkedList<>());
+    private final Map<ResourceLocation, Value<?>> DATA = new ConcurrentHashMap<>();
     
-    private static <T> Value<T> sendSetEvent(Player player, String key, Value<T> value){
-        PlayerStageEvent.Set<T> event = new PlayerStageEvent.Set<>(player, key, value);
+    private static <T> PlayerStageEvent.Add<T> sendAddEvent(Player player, ResourceLocation key, Value<T> value){
+        var event = new PlayerStageEvent.Add<>(key, player, value);
         MinecraftForge.EVENT_BUS.post(event);
-        return event.getValue();
+        return event;
     }
-    private static boolean sendRemEvent(Player player, String key){
-        PlayerStageEvent.Remove event = new PlayerStageEvent.Remove(player, key);
-        return !MinecraftForge.EVENT_BUS.post(event);
+    private static <T> PlayerStageEvent.Set<T> sendSetEvent(Player player, ResourceLocation key, Value<T> value){
+        var event = new PlayerStageEvent.Set<>(key, player, value);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event;
+    }
+    private static PlayerStageEvent.Remove sendRemEvent(Player player, ResourceLocation key){
+        var event = new PlayerStageEvent.Remove(player, key);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event;
+    }
+    
+    private static boolean create(Player player, ResourceLocation key){
+        if(allStages.contains(key)) return false;
+        var event = new PlayerStageEvent.Create(player, key);
+        if (event.isCanceled()) return true;
+        allStages.add(event.getKey());
+        return false;
     }
     
     @Override
     public void sync(Entity entity) {
         if(entity instanceof Player player)
-            FluffyFurPacketHandler.sendTo(player, new PlayerStagesSync(this));
+            BlatApiPacketHandler.sendTo(player, new PlayerStagesSync(this));
     }
     
-    public Map<String, Value<?>> getAll(){
+    public Map<ResourceLocation, Value<?>> getAll(){
         return Collections.unmodifiableMap(DATA);
     }
     
@@ -45,148 +59,113 @@ public class PlayerStages implements ICapacity<PlayerStages> {
         return player.getCapability(PlayerStagesProvider.CAPABILITY, null).orElse(new PlayerStages());
     }
     
-    public static boolean has(Player player, String key){
+    public static boolean has(Player player, ResourceLocation key){
         return get(player).DATA.containsKey(key);
     }
     
-    public static Object get(Player player, String key, Class<Object> clazz){
+    public static Object get(Player player, ResourceLocation key, Class<Object> clazz){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key).isSimilar(clazz))
             return stages.DATA.get(key).getValue();
         return null;
     }
-    public static void set(Player player, String key, Object value){
-        if(!allStages.contains(key)) allStages.add(key);
+    public static void set(Player player, ResourceLocation key, Object value){
+        if(create(player, key)) return;
         if(Value.getDes(value.getClass())==null) return;
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, Value.getDes(value.getClass()).apply(value)));
-            playerStages.sync(player);
-        });
+        set(player, key, Value.getDes(value.getClass()).apply(value));
     }
-    public static void set(Player player, String key, Value<?> value){
-        if(!allStages.contains(key)) allStages.add(key);
+    public static void set(Player player, ResourceLocation key, Value<?> value){
+        if(create(player, key)) return;
+        var event = sendSetEvent(player, key, value);
+        if(event.isCanceled()) return;
         player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, value));
+            playerStages.DATA.put(key, event.getValue());
             playerStages.sync(player);
         });
     }
     
-    public static int getInt(Player player, String key){
+    public static int getInt(Player player, ResourceLocation key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof IntValue val)
             return val.getValue();
         return 0;
     }
-    public static void setInt(Player player, String key, int value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new IntValue(value)));
-            playerStages.sync(player);
-        });
+    public static void setInt(Player player, ResourceLocation key, int value){
+        IntValue val = new IntValue(value);
+        set(player, key, val);
     }
     
-    public static double getDouble(Player player, String key){
+    public static double getDouble(Player player, ResourceLocation key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof DoubleValue val)
             return val.getValue();
         return 0;
     }
-    public static void setDouble(Player player, String key, double value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new DoubleValue(value)));
-            playerStages.sync(player);
-        });
+    public static void setDouble(Player player, ResourceLocation key, double value){
+        DoubleValue val = new DoubleValue(value);
+        set(player, key, val);
     }
     
-    public static float getFloat(Player player, String key){
+    public static float getFloat(Player player, ResourceLocation key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof FloatValue val)
             return val.getValue();
         return 0;
     }
-    public static void setFloat(Player player, String key, float value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new FloatValue(value)));
-            playerStages.sync(player);
-        });
+    public static void setFloat(Player player, ResourceLocation key, float value){
+        FloatValue val = new FloatValue(value);
+        set(player, key, val);
     }
     
-    public static String getString(Player player, String key){
+    public static String getString(Player player, ResourceLocation key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof StringValue val)
             return val.getValue();
         return "";
     }
-    public static void setString(Player player, String key, String value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new StringValue(value)));
-            playerStages.sync(player);
-        });
+    public static void setString(Player player, ResourceLocation key, String value){
+        StringValue val = new StringValue(value);
+        set(player, key, val);
     }
     
-    public static long getLong(Player player, String key){
+    public static long getLong(Player player, ResourceLocation key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof LongValue val)
             return val.getValue();
         return 0;
     }
-    public static void setLong(Player player, String key, long value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new LongValue(value)));
-            playerStages.sync(player);
-        });
+    public static void setLong(Player player, ResourceLocation key, long value){
+        LongValue val = new LongValue(value);
+        set(player, key, val);
     }
     
-    public static boolean getBool(Player player, String key){
+    public static boolean getBool(Player player, ResourceLocation key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof BooleanValue val)
             return val.getValue();
         return false;
     }
-    public static void setBool(Player player, String key, boolean value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new BooleanValue(value)));
-            playerStages.sync(player);
-        });
+    public static void setBool(Player player, ResourceLocation key, boolean value){
+        BooleanValue val = new BooleanValue(value);
+        set(player, key, val);
     }
     
-    public static ItemStack getItemStack(Player player, String key){
+    public static ItemStack getItemStack(Player player, ResourceLocation key){
         PlayerStages stages = get(player);
         if(stages.DATA.get(key) instanceof ItemStackValue val)
             return val.getValue();
         return ItemStack.EMPTY;
     }
-    public static void setItemStack(Player player, String key, ItemStack value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new ItemStackValue(value)));
-            playerStages.sync(player);
-        });
+    public static void setItemStack(Player player, ResourceLocation key, ItemStack value){
+        ItemStackValue val = new ItemStackValue(value);
+        set(player, key, val);
     }
     
-    public static CompoundTag getCompoundTag(Player player, String key){
-        PlayerStages stages = get(player);
-        if(stages.DATA.get(key) instanceof CompoundTagValue val)
-            return val.getValue();
-        return null;
-    }
-    public static void setCompoundTag(Player player, String key, CompoundTag value){
-        if(!allStages.contains(key)) allStages.add(key);
-        player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-            playerStages.DATA.put(key, sendSetEvent(player, key, new CompoundTagValue(value)));
-            playerStages.sync(player);
-        });
-    }
-    
-    public static void remove(Player player, String key){
-        if(sendRemEvent(player, key))
+    public static void remove(Player player, ResourceLocation key){
+        var event = sendRemEvent(player, key);
+        if(!event.isCanceled())
             player.getCapability(PlayerStagesProvider.CAPABILITY, null).ifPresent(playerStages -> {
-                playerStages.DATA.remove(key);
+                playerStages.DATA.remove(event.getKey());
                 playerStages.sync(player);
             });
     }
@@ -194,12 +173,12 @@ public class PlayerStages implements ICapacity<PlayerStages> {
     @Override
     public Tag toNBT() {
         CompoundTag nbt = new CompoundTag();
-        for(String key : DATA.keySet()) {
+        for(ResourceLocation key : DATA.keySet()) {
             Value<?> value = DATA.get(key);
             if(value==null) continue;
             CompoundTag vt = value.serializeNBT();
             vt.putString("type", value.getType().toString());
-            nbt.put(key, vt);
+            nbt.put(key.toString(), vt);
         }
         return nbt;
     }
@@ -209,17 +188,19 @@ public class PlayerStages implements ICapacity<PlayerStages> {
         DATA.clear();
         CompoundTag nbt = (CompoundTag) tag;
         for(String key : nbt.getAllKeys()){
+            ResourceLocation stage = ResourceLocation.parse(key);
             CompoundTag nbtM = nbt.getCompound(key);
-            ResourceLocation type = ResourceLocation.tryParse(nbtM.getString("type"));
+            ResourceLocation type = ResourceLocation.parse(nbtM.getString("type"));
             Value<?> value = Value.deserialize(type, nbtM);
-            if(value != null) DATA.put(key, value);
+            if(!allStages.contains(stage)) allStages.add(stage);
+            if(value != null) DATA.put(stage, value);
         }
     }
     
     @Override
     public void copy(PlayerStages instance) {
         DATA.clear();
-        for(String key : instance.DATA.keySet())
+        for(ResourceLocation key : instance.DATA.keySet())
             DATA.put(key, instance.DATA.get(key));
     }
     
@@ -231,30 +212,30 @@ public class PlayerStages implements ICapacity<PlayerStages> {
     }
     
     @Getter
-    public abstract static class Value<T> implements Predicate<Object>, Function<Object, Value<?>> {
+    public abstract static class Value<T> {
         private final T value;
         private final Class<T> clazz;
         private final ResourceLocation type;
-        private static final Map<Predicate<Object>, Function<Object, Value<?>>> TYPES = new LinkedHashMap<>();
+        protected static final Map<Couple<ResourceLocation, Class<?>>, Function<Object, Value<?>>> TYPES = new LinkedHashMap<>();
         
         protected Value(ResourceLocation type, T value, Class<T> clazz) {
             this.value = value;
             this.type = type;
             this.clazz = clazz;
-            TYPES.put(this, this);
         }
         
-        @Override
-        public Value<T> apply(Object o) {
-            if(o instanceof CompoundTag tag) return deserializeNBT(tag);
-            return fromValue(o);
+        public static <V> void register(ResourceLocation id, Class<V> clazz, Function<Object, Value<?>> des){
+            TYPES.put(new Couple<>(id, clazz), des);
         }
         
-        @Override
-        public boolean test(Object o) {
-            if(o instanceof ResourceLocation rl) return isSimilar(rl);
-            if(o instanceof Class<?> tClass) return isSimilar(tClass);
-            return false;
+        public static void init() {
+            register(BlatApi.loc("int"), Integer.class, PlayerStages.IntValue::des);
+            register(BlatApi.loc("float"), Float.class, PlayerStages.FloatValue::des);
+            register(BlatApi.loc("double"), Double.class, PlayerStages.DoubleValue::des);
+            register(BlatApi.loc("boolean"), Boolean.class, PlayerStages.BooleanValue::des);
+            register(BlatApi.loc("string"), String.class, PlayerStages.StringValue::des);
+            register(BlatApi.loc("long"), Long.class, PlayerStages.LongValue::des);
+            register(BlatApi.loc("item_stack"), ItemStack.class, PlayerStages.ItemStackValue::des);
         }
         
         public <V> boolean isSimilar(Class<V> oClazz){
@@ -265,21 +246,21 @@ public class PlayerStages implements ICapacity<PlayerStages> {
         }
         
         public abstract CompoundTag serializeNBT();
-        protected abstract Value<T> deserializeNBT(CompoundTag nbt);
-        protected abstract Value<T> fromValue(Object value);
         public static Value<?> deserialize(ResourceLocation type, CompoundTag nbt){
             if(getDes(type)!=null)
                 return getDes(type).apply(nbt);
             return null;
         }
         
-        public static Map<Predicate<Object>, Function<Object, Value<?>>> types(){
+        public static Map<Couple<ResourceLocation, Class<?>>, Function<Object, Value<?>>> types(){
             return Collections.unmodifiableMap(TYPES);
         }
         public static Function<Object, Value<?>> getDes(Object type){
-            for(Predicate<Object> pr : types().keySet())
-                if(pr.test(type))
-                    return types().get(pr);
+            for(Couple<ResourceLocation, Class<?>> pr : types().keySet())
+                if(
+                    (type instanceof ResourceLocation rl && pr.getKey().equals(rl)) ||
+                        (type instanceof Class<?> clazz && pr.getValue().equals(clazz))
+                ) return types().get(pr);
             return null;
         }
     }
@@ -296,15 +277,15 @@ public class PlayerStages implements ICapacity<PlayerStages> {
             return tag;
         }
         
-        @Override
-        protected Value<Integer> deserializeNBT(CompoundTag nbt) {
+        protected static Value<Integer> deserializeNBT(CompoundTag nbt) {
             return new IntValue(nbt.getInt("value"));
         }
         
-        @Override
-        protected Value<Integer> fromValue(Object value) {
+        public static Value<Integer> des(Object value) {
             if(value instanceof Integer v)
                 return new IntValue(v);
+            if(value instanceof CompoundTag nbt)
+                return deserializeNBT(nbt);
             return null;
         }
     }
@@ -320,15 +301,15 @@ public class PlayerStages implements ICapacity<PlayerStages> {
             return tag;
         }
         
-        @Override
-        protected Value<ItemStack> deserializeNBT(CompoundTag nbt) {
+        protected static ItemStackValue deserializeNBT(CompoundTag nbt) {
             return new ItemStackValue(ItemStack.of(nbt.getCompound("value")));
         }
         
-        @Override
-        protected Value<ItemStack> fromValue(Object value) {
+        public static ItemStackValue des(Object value) {
             if(value instanceof ItemStack v)
                 return new ItemStackValue(v);
+            if(value instanceof CompoundTag nbt)
+                return deserializeNBT(nbt);
             return null;
         }
     }
@@ -345,15 +326,15 @@ public class PlayerStages implements ICapacity<PlayerStages> {
             return tag;
         }
         
-        @Override
-        protected Value<Double> deserializeNBT(CompoundTag nbt) {
+        protected static DoubleValue deserializeNBT(CompoundTag nbt) {
             return new DoubleValue(nbt.getDouble("value"));
         }
         
-        @Override
-        protected Value<Double> fromValue(Object value) {
+        public static DoubleValue des(Object value) {
             if(value instanceof Double v)
                 return new DoubleValue(v);
+            if(value instanceof CompoundTag nbt)
+                return deserializeNBT(nbt);
             return null;
         }
     }
@@ -369,15 +350,15 @@ public class PlayerStages implements ICapacity<PlayerStages> {
             return tag;
         }
         
-        @Override
-        protected Value<Float> deserializeNBT(CompoundTag nbt) {
+        protected static FloatValue deserializeNBT(CompoundTag nbt) {
             return new FloatValue(nbt.getFloat("value"));
         }
         
-        @Override
-        protected Value<Float> fromValue(Object value) {
+        public static FloatValue des(Object value) {
             if(value instanceof Float v)
                 return new FloatValue(v);
+            if(value instanceof CompoundTag nbt)
+                return deserializeNBT(nbt);
             return null;
         }
     }
@@ -394,15 +375,15 @@ public class PlayerStages implements ICapacity<PlayerStages> {
             return tag;
         }
         
-        @Override
-        protected Value<String> deserializeNBT(CompoundTag nbt) {
+        protected static StringValue deserializeNBT(CompoundTag nbt) {
             return new StringValue(nbt.getString("value"));
         }
         
-        @Override
-        protected Value<String> fromValue(Object value) {
+        public static StringValue des(Object value) {
             if(value instanceof String v)
                 return new StringValue(v);
+            if(value instanceof CompoundTag nbt)
+                return deserializeNBT(nbt);
             return null;
         }
     }
@@ -419,15 +400,15 @@ public class PlayerStages implements ICapacity<PlayerStages> {
             return tag;
         }
         
-        @Override
-        protected Value<Long> deserializeNBT(CompoundTag nbt) {
+        protected static LongValue deserializeNBT(CompoundTag nbt) {
             return new LongValue(nbt.getLong("value"));
         }
         
-        @Override
-        protected Value<Long> fromValue(Object value) {
+        public static LongValue des(Object value) {
             if(value instanceof Long v)
                 return new LongValue(v);
+            if(value instanceof CompoundTag nbt)
+                return deserializeNBT(nbt);
             return null;
         }
     }
@@ -444,38 +425,15 @@ public class PlayerStages implements ICapacity<PlayerStages> {
             return tag;
         }
         
-        @Override
-        protected Value<Boolean> deserializeNBT(CompoundTag nbt) {
+        protected static BooleanValue deserializeNBT(CompoundTag nbt) {
             return new BooleanValue(nbt.getBoolean("value"));
         }
         
-        @Override
-        protected Value<Boolean> fromValue(Object value) {
+        public static BooleanValue des(Object value) {
             if(value instanceof Boolean v)
                 return new BooleanValue(v);
-            return null;
-        }
-    }
-    
-    public static class CompoundTagValue extends Value<CompoundTag> {
-        public CompoundTagValue(CompoundTag value) {
-            super(BlatApi.loc("compound_tag"), value, CompoundTag.class);
-        }
-        
-        @Override
-        public CompoundTag serializeNBT() {
-            return getValue();
-        }
-        
-        @Override
-        protected Value<CompoundTag> deserializeNBT(CompoundTag nbt) {
-            return new CompoundTagValue(nbt);
-        }
-        
-        @Override
-        protected Value<CompoundTag> fromValue(Object value) {
-            if(value instanceof CompoundTag v)
-                return new CompoundTagValue(v);
+            if(value instanceof CompoundTag nbt)
+                return deserializeNBT(nbt);
             return null;
         }
     }

@@ -31,7 +31,7 @@ public class ViewBookEntryTask extends BookEntryTask {
         public Task fromJson(JsonObject json) {
             boolean b = !json.has("visible") || json.get("visible").getAsBoolean();
             String stage = json.get("book_entry").getAsString();
-            return new ViewBookEntryTask(b, new ResourceLocation(stage));
+            return new ViewBookEntryTask(b, ResourceLocation.parse(stage));
         }
         
         @Override

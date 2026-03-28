@@ -7,8 +7,8 @@ import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 @AllArgsConstructor
 @Getter
@@ -58,7 +58,7 @@ public class CommandReward extends Reward {
     }
     
     @Override
-    public Component text(Player player) {
-        return Component.literal(getFormatedCommand(player)).withStyle(ChatFormatting.GRAY);
+    public Text text(Player player) {
+        return Text.create(getFormatedCommand(player)).withStyle(ChatFormatting.GRAY);
     }
 }

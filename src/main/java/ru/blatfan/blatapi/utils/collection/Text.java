@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.UnaryOperator;
 
-// List<Component> to List<Text>
 public class Text implements Component {
     protected final MutableComponent component;
     
@@ -29,19 +28,19 @@ public class Text implements Component {
     public static Text create(Component component){
         return new Text(component.copy());
     }
-    public static Text create(Component component, ResourceLocation font){
+    public static Text createWithFont(Component component, ResourceLocation font){
         return new Text(component.copy().withStyle(style -> style.withFont(font)));
     }
     public static Text create(String component, Object... args) {
         return new Text(Component.translatable(component, args));
     }
-    public static Text create(String component, ResourceLocation font, Object... args) {
+    public static Text createWithFont(String component, ResourceLocation font, Object... args) {
         return new Text(Component.translatable(component, args).withStyle(style -> style.withFont(font)));
     }
     public static Text create(String component){
         return new Text(Component.translatable(component));
     }
-    public static Text create(String component, ResourceLocation font){
+    public static Text createWithFont(String component, ResourceLocation font){
         return new Text(Component.translatable(component).withStyle(style -> style.withFont(font)));
     }
     public static Text create(){
@@ -202,5 +201,9 @@ public class Text implements Component {
     @Override
     public String toString() {
         return component.toString();
+    }
+    
+    public boolean isEmpty() {
+        return getString().isEmpty();
     }
 }

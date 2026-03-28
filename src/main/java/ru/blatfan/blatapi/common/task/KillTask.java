@@ -29,12 +29,12 @@ public class KillTask extends Task {
     private boolean visible;
     private ResourceLocation entity;
     
-    public static String getStage(ResourceLocation entity){
-        return "player_kill_"+entity.getNamespace()+"_"+entity.getPath();
+    public static ResourceLocation getStage(ResourceLocation entity){
+        return ResourceLocation.fromNamespaceAndPath("player_kill_ba", entity.getNamespace()+"_"+entity.getPath());
     }
-    public static String getStage(EntityType<?> type){
+    public static ResourceLocation getStage(EntityType<?> type){
         ResourceLocation entity = ForgeRegistries.ENTITY_TYPES.getKey(type);
-        if(entity==null) return "EMPTY";
+        if(entity==null) return BlatApi.loc("EMPTY");
         return getStage(entity);
     }
     
@@ -53,7 +53,7 @@ public class KillTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
+    public Text text(Player player) {
         return Text.create("task.blatapi.kill").add(getEntity().getDescriptionId()).withColor(Color.WHITE);
     }
     

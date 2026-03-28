@@ -15,6 +15,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPaper;
@@ -26,6 +27,7 @@ import ru.blatfan.blatapi.utils.PlayerUtil;
 
 import java.util.Map;
 
+@Mod.EventBusSubscriber(modid = BlatApi.MOD_ID)
 public class PlayerStagesEvents {
     @SubscribeEvent
     public static void onPlayerEat(LivingEntityUseItemEvent.Finish event){
@@ -45,7 +47,7 @@ public class PlayerStagesEvents {
                 if (PlayerStages.allStages.contains(ItemTask.getStage(stack.getItem())))
                     PlayerStages.setBool(event.player, ItemTask.getStage(stack.getItem()), true);
             for(Map.Entry<ResourceLocation, GuideBookPaper> entry : GuideManager.papers().entrySet()) {
-                String stage = entry.getKey().toString()+"_paper";
+                ResourceLocation stage = ResourceLocation.fromNamespaceAndPath(entry.getKey().getNamespace(), entry.getKey().getPath()+"_paper");
                 if (entry.getValue().completed(event.player) && !PlayerStages.getBool(event.player, stage)) {
                     PlayerStages.setBool(event.player, stage, true);
                     PlayerUtil.addItem(event.player, entry.getValue().getItemStack());

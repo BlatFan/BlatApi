@@ -1,8 +1,5 @@
 package ru.blatfan.blatapi.mixins.client;
 
-import  ru.blatfan.blatapi.fluffy_fur.client.event.FluffyFurClientEvents;
-import  ru.blatfan.blatapi.fluffy_fur.client.gui.components.SubCreativeTabButton;
-import  ru.blatfan.blatapi.fluffy_fur.common.creativetab.MultiCreativeTab;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.sounds.SoundEvents;
@@ -13,19 +10,22 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import ru.blatfan.blatapi.client.event.BAClientEvents;
+import ru.blatfan.blatapi.client.gui.components.SubCreativeTabButton;
+import ru.blatfan.blatapi.common.creativetab.MultiCreativeTab;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeModeInventoryScreenMixin {
 
     @Inject(at = @At("HEAD"), method = "selectTab")
-    private void fluffy_fur$selectTab(CreativeModeTab tab, CallbackInfo ci) {
-        for (SubCreativeTabButton sb : FluffyFurClientEvents.subCreativeTabButtons) {
+    private void blatapi$selectTab(CreativeModeTab tab, CallbackInfo ci) {
+        for (SubCreativeTabButton sb : BAClientEvents.subCreativeTabButtons) {
             sb.refreshSubVisible(tab);
         }
     }
 
     @Inject(at = @At("HEAD"), method = "mouseScrolled", cancellable = true)
-    private void fluffy_fur$mouseScrolled(double mouseX, double mouseY, double delta, CallbackInfoReturnable<Boolean> cir) {
+    private void blatapi$mouseScrolled(double mouseX, double mouseY, double delta, CallbackInfoReturnable<Boolean> cir) {
         CreativeModeInventoryScreen self = (CreativeModeInventoryScreen) ((Object) this);
         int i = self.getGuiLeft();
         int j = self.getGuiTop();
@@ -41,7 +41,7 @@ public abstract class CreativeModeInventoryScreenMixin {
                     } else {
                         Minecraft.getInstance().player.playNotifySound(SoundEvents.UI_BUTTON_CLICK.get(), SoundSource.NEUTRAL, 0.1f, 2.0f);
                     }
-                    for (SubCreativeTabButton sb : FluffyFurClientEvents.subCreativeTabButtons) {
+                    for (SubCreativeTabButton sb : BAClientEvents.subCreativeTabButtons) {
                         if (multiCreativeTab.getSortedSubTabs().contains(sb.subTab)) {
                             sb.refreshSub();
                         }

@@ -1,6 +1,6 @@
 package ru.blatfan.blatapi.mixins.client;
 
-import ru.blatfan.blatapi.fluffy_fur.client.render.entity.ExtraLayer;
+import ru.blatfan.blatapi.client.render.entity.ExtraLayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class PlayerRendererMixin {
 
     @Inject(at = @At("RETURN"), method = "<init>")
-    private void fluffy_fur$PlayerRenderer(EntityRendererProvider.Context context, boolean useSlimModel, CallbackInfo ci) {
+    private void blatapi$PlayerRenderer(EntityRendererProvider.Context context, boolean useSlimModel, CallbackInfo ci) {
         PlayerRenderer self = (PlayerRenderer) ((Object) this);
         self.addLayer(new ExtraLayer<>(self));
     }

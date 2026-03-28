@@ -2,10 +2,10 @@ package ru.blatfan.blatapi.mixins.client;
 
 import com.mojang.blaze3d.preprocessor.GlslPreprocessor;
 import com.mojang.blaze3d.shaders.EffectProgram;
-import ru.blatfan.blatapi.fluffy_fur.client.shader.postprocess.FluffyFurGlslPreprocessor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import ru.blatfan.blatapi.client.shader.postprocess.BlatApiGlslPreprocessor;
 
 @Mixin(EffectProgram.class)
 public class EffectProgramMixin {
@@ -17,7 +17,7 @@ public class EffectProgramMixin {
             ),
             index = 4
     )
-    private static GlslPreprocessor fluffy_fur$useCustomPreprocessor(GlslPreprocessor org) {
-        return FluffyFurGlslPreprocessor.PREPROCESSOR;
+    private static GlslPreprocessor blatapi$useCustomPreprocessor(GlslPreprocessor org) {
+        return BlatApiGlslPreprocessor.PREPROCESSOR;
     }
 }

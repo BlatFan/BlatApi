@@ -1,7 +1,11 @@
 package ru.blatfan.blatapi.common;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.client.gui.Font;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.CreativeModeTab;
@@ -13,24 +17,31 @@ import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.RegistryObject;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.FontHandler;
+import ru.blatfan.blatapi.client.particle.type.*;
+import ru.blatfan.blatapi.common.block.sign.*;
+import ru.blatfan.blatapi.common.creativetab.MultiCreativeTab;
+import ru.blatfan.blatapi.common.creativetab.SubCreativeTab;
+import ru.blatfan.blatapi.common.creativetab.SubCreativeTabStack;
 import ru.blatfan.blatapi.common.guide_book.GuideBookItem;
 import ru.blatfan.blatapi.common.guide_book.GuidePaperItem;
+import ru.blatfan.blatapi.common.item.TestStickItem;
+import ru.blatfan.blatapi.common.loot.AddItemListLootModifier;
+import ru.blatfan.blatapi.common.loot.AddItemLootModifier;
+import ru.blatfan.blatapi.common.loot.AddLootTableModifier;
+import ru.blatfan.blatapi.common.mobeffect.*;
 import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
 import ru.blatfan.blatapi.common.recipe.AnvilRepairRecipe;
 import ru.blatfan.blatapi.common.recipe.IAnvilRecipe;
 import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
 import ru.blatfan.blatapi.common.registry.BlatRegister;
-import ru.blatfan.blatapi.fluffy_fur.common.creativetab.MultiCreativeTab;
-import ru.blatfan.blatapi.fluffy_fur.common.creativetab.SubCreativeTab;
-import ru.blatfan.blatapi.fluffy_fur.common.creativetab.SubCreativeTabStack;
-import ru.blatfan.blatapi.fluffy_fur.common.mobeffect.*;
-import ru.blatfan.blatapi.fluffy_fur.registry.common.item.FluffyFurItems;
 import ru.blatfan.blatapi.utils.NBTHelper;
+import ru.blatfan.blatapi.utils.RegistryUtils;
 import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.util.Collection;
@@ -63,7 +74,7 @@ public class BARegistry {
         public static final RegistryObject<MobEffect> SWIM_SPEED = REG.mob_effect("swim_speed", SwimSpeedMobEffect::new);
         public static final RegistryObject<MobEffect> SWIM_SLOWNESS = REG.mob_effect("swim_slowness", SwimSlownessMobEffect::new);
         
-        public static void init(){}
+        static void init(){}
     }
     
     public static class Potions {
@@ -115,18 +126,20 @@ public class BARegistry {
         public static final RegistryObject<Potion> SWIM_SLOWNESS = REG.potion("swim_slowness", ()-> new Potion(new MobEffectInstance(MobEffects.SWIM_SLOWNESS.get(), 600, 0)));
         public static final RegistryObject<Potion> LONG_SWIM_SLOWNESS = REG.potion("long_swim_slowness", ()-> new Potion(new MobEffectInstance(MobEffects.SWIM_SLOWNESS.get(), 1200, 1)));
         
-        public static void init(){}
+        static void init(){}
     }
     
     public static class Fonts {
         public static ResourceLocation ICONS_LOCATION = BlatApi.loc("icons");
         public static Font ICONS = FontHandler.createFont(ICONS_LOCATION);
         
-        public static void init(){}
+        static void init(){}
     }
     
     public static class Items {
+        public static final RegistryObject<Item> TEST_STICK = REG.item("test_stick", TestStickItem::new);
         public static final RegistryObject<Item> GUIDE_BOOK = REG.item("guide_book", GuideBookItem::new);
+        public static final RegistryObject<Item> QUESTION = REG.singleItem("question");
         public static final RegistryObject<Item> RED_BOOK = REG.singleItem("red_book");
         public static final RegistryObject<Item> BLUE_BOOK = REG.singleItem("blue_book");
         public static final RegistryObject<Item> GREEN_BOOK = REG.singleItem("green_book");
@@ -137,7 +150,7 @@ public class BARegistry {
         public static final RegistryObject<Item> ERROR_BOOK = REG.item("error_book", () -> new GuideBookItem.Transfer(BlatApi.loc("error")));
         public static final RegistryObject<Item> GUIDE_BOOK_PAPER = REG.item("guide_book_paper", GuidePaperItem::new);
         
-        public static void init(){}
+        static void init(){}
     }
     
     public static class CreativeTabs {
@@ -184,7 +197,7 @@ public class BARegistry {
                         addInSub(event, BOOKS, GuideBookItem.getBook(guideBookData));
                 }
                 if(event.hasPermissions()){
-                    addInSub(event, DEBUG, FluffyFurItems.TEST_STICK);
+                    addInSub(event, DEBUG, Items.TEST_STICK);
                 }
                 for(RegistryObject<Potion> potion : REG.POTIONS.getEntries()) {
                     addInSub(event, POTIONS, PotionUtils.setPotion(net.minecraft.world.item.Items.POTION.getDefaultInstance(), potion.get()));
@@ -194,7 +207,7 @@ public class BARegistry {
                 }
             }
             if (event.getTabKey() == CreativeModeTabs.OP_BLOCKS && event.hasPermissions()) {
-                event.accept(FluffyFurItems.TEST_STICK);
+                event.accept(Items.TEST_STICK);
             }
         }
         
@@ -212,10 +225,55 @@ public class BARegistry {
             event.acceptAll(items);
             subTab.addDisplayItems(items);
         }
-        public static void init(){}
+        static void init(){}
+    }
+    
+    public static class LootModifiers {
+        public static final RegistryObject<Codec<AddItemLootModifier>> ADD_ITEM = REG.loot_modifier("add_item", AddItemLootModifier.CODEC);
+        public static final RegistryObject<Codec<AddItemListLootModifier>> ADD_ITEM_LIST = REG.loot_modifier("add_item_list", AddItemListLootModifier.CODEC);
+        public static final RegistryObject<Codec<AddLootTableModifier>> ADD_LOOT_TABLE = REG.loot_modifier("add_loot_table", AddLootTableModifier.CODEC);
+        
+        static void init(){}
+    }
+    
+    public static class BlockEntities {
+        public static final RegistryObject<BlockEntityType<CustomSignBlockEntity>> SIGN = REG.block_entity_type("sign", () -> BlockEntityType.Builder.of(CustomSignBlockEntity::new, RegistryUtils.getBlocks(CustomStandingSignBlock.class, CustomWallSignBlock.class)).build(null));
+        public static final RegistryObject<BlockEntityType<CustomHangingSignBlockEntity>> HANGING_SIGN = REG.block_entity_type("hanging_sign", () -> BlockEntityType.Builder.of(CustomHangingSignBlockEntity::new, RegistryUtils.getBlocks(CustomCeilingHangingSignBlock.class, CustomWallHangingSignBlock.class)).build(null));
+        
+        static void init(){}
+    }
+    
+    public static class Particles {
+        public static RegistryObject<GenericParticleType> EMERALD = REG.particle_type("emerald", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> WISP = REG.particle_type("wisp", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> TINY_WISP = REG.particle_type("tiny_wisp", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> SPARKLE = REG.particle_type("sparkle", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> STAR = REG.particle_type("star", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> TINY_STAR = REG.particle_type("tiny_star", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> FIRE = REG.particle_type("fire", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> SQUARE = REG.particle_type("square", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> DOT = REG.particle_type("dot", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> CIRCLE = REG.particle_type("circle", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> TINY_CIRCLE = REG.particle_type("tiny_circle", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> HEART = REG.particle_type("heart", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> SKULL = REG.particle_type("skull", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> SMOKE = REG.particle_type("smoke", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> TRAIL = REG.particle_type("trail", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> PANCAKE = REG.particle_type("pancake", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> DEATH = REG.particle_type("death", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> EARTH = REG.particle_type("earth", GenericParticleType::new);
+        public static RegistryObject<GenericParticleType> SUN = REG.particle_type("sun", GenericParticleType::new);
+        public static RegistryObject<ItemParticleType> ITEM = REG.particle_type("item", ItemParticleType::new);
+        public static RegistryObject<BlockParticleType> BLOCK = REG.particle_type("block", BlockParticleType::new);
+        public static RegistryObject<FluidParticleType> FLUID = REG.particle_type("fluid", FluidParticleType::new);
+        public static RegistryObject<SpriteParticleType> SPRITE = REG.particle_type("sprite", SpriteParticleType::new);
+        public static RegistryObject<LeavesParticleType> CHERRY_LEAVES = REG.particle_type("cherry_leaves", LeavesParticleType::new);
+        
+        static void init(){}
     }
     
     public static final int POTION_RAINBOW_COLOR = -676767;
+    public static final TagKey<DamageType> MAGIC = TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("forge", "is_magic"));
     
     public static void register(IEventBus event){
         Items.init();
@@ -223,6 +281,9 @@ public class BARegistry {
         Potions.init();
         CreativeTabs.init();
         Fonts.init();
+        LootModifiers.init();
+        BlockEntities.init();
+        Particles.init();
         REG.register(event);
     }
 }

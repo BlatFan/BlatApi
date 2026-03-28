@@ -46,11 +46,11 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
+import ru.blatfan.blatapi.client.registry.BARenderTypes;
+import ru.blatfan.blatapi.client.render.BlatApiRenderType;
 import ru.blatfan.blatapi.client.render.FluidRenderMap;
-import ru.blatfan.blatapi.fluffy_fur.client.render.FluffyFurRenderType;
-import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
-import ru.blatfan.blatapi.fluffy_fur.client.render.item.CustomItemRenderer;
-import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
+import ru.blatfan.blatapi.client.render.RenderBuilder;
+import ru.blatfan.blatapi.client.render.item.CustomItemRenderer;
 import ru.blatfan.blatapi.utils.collection.SplitText;
 import ru.blatfan.blatapi.utils.collection.Text;
 
@@ -125,7 +125,7 @@ public class GuiUtil {
         VertexConsumer buffer = bufferSource.getBuffer(renderType);
         
         float s = 4f;
-        int light = 15728880;
+        int light = FULL_BRIGHT;
         Matrix4f m = poseStack.last().pose();
         Matrix3f n = poseStack.last().normal();
         int overlay = LivingEntityRenderer.getOverlayCoords(player, 0f);
@@ -210,7 +210,7 @@ public class GuiUtil {
             entityrenderdispatcher.overrideCameraOrientation(cameraOrientation);
         }
         entityrenderdispatcher.setRenderShadow(false);
-        entityrenderdispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, gui.pose(), gui.bufferSource(), 15728880);
+        entityrenderdispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, gui.pose(), gui.bufferSource(), FULL_BRIGHT);
         gui.flush();
         entityrenderdispatcher.setRenderShadow(true);
         gui.pose().popPose();
@@ -388,6 +388,11 @@ public class GuiUtil {
     public static void blit(GuiGraphics gui, ResourceLocation pAtlasLocation, float x, float y, float pUOffset, float pVOffset, int pWidth, int pHeight, int pTextureWidth, int pTextureHeight, float red, float green, float blue, float alpha) {
         blit(gui, pAtlasLocation, x, y, x+pWidth, y+pHeight, pUOffset/pTextureWidth, (pUOffset+pWidth)/pTextureWidth, pVOffset/pTextureHeight, (pVOffset+pWidth)/pTextureHeight, red, green, blue, alpha);
     }
+    
+    public void blit(GuiGraphics gui, int x, int y, int width, int height, TextureAtlasSprite sprite, float red, float green, float blue, float alpha) {
+        blit(gui, sprite.atlasLocation(), x, y, x + width, y + height, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1(), red, green, blue, alpha);
+    }
+    
     public static void blit(GuiGraphics gui, ResourceLocation pAtlasLocation, float x0, float y0, float x1, float y1, float u0, float u1, float v0, float v1, float red, float green, float blue, float alpha) {
         testColorValues(red, green, blue, alpha);
         RenderSystem.setShaderTexture(0, pAtlasLocation);
@@ -512,7 +517,7 @@ public class GuiUtil {
         if (component == null) {
             return 0;
         } else {
-            int i = font.drawInBatch(component, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+            int i = font.drawInBatch(component, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
             guiGraphics.flushIfUnmanaged();
             return i;
         }
@@ -525,7 +530,7 @@ public class GuiUtil {
         if (string == null) {
             return 0;
         } else {
-            int i = font.drawInBatch(string, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+            int i = font.drawInBatch(string, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
             guiGraphics.flushIfUnmanaged();
             return i;
         }
@@ -538,14 +543,14 @@ public class GuiUtil {
         if (string == null) {
             return 0;
         } else {
-            int i = font.drawInBatch(string, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, 15728880);
+            int i = font.drawInBatch(string, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
             guiGraphics.flushIfUnmanaged();
             return i;
         }
     }
     
     private static CustomItemRenderer customItemRenderer;
-    public static int FULL_BRIGHT = 15728880;
+    public static final int FULL_BRIGHT = LightTexture.FULL_BRIGHT;
     
     public static Function<Float, Float> FULL_WIDTH_FUNCTION = (f) -> 1f;
     public static Function<Float, Float> LINEAR_IN_WIDTH_FUNCTION = (f) -> f;
@@ -556,7 +561,7 @@ public class GuiUtil {
     public static Function<Float, Float> LINEAR_OUT_SEMI_ROUND_WIDTH_FUNCTION = (f) -> f == 0 ? 0.5f : 1f - f;
     
     public static ShaderInstance getShader(RenderType type) {
-        if (type instanceof FluffyFurRenderType renderType) {
+        if (type instanceof BlatApiRenderType renderType) {
             Optional<Supplier<ShaderInstance>> shader = renderType.state.shaderState.shader;
             if (shader.isPresent()) {
                 return shader.get().get();
@@ -761,14 +766,14 @@ public class GuiUtil {
     public static TextureAtlasSprite getMissingTexture() {
         try {
             return Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS)
-                .apply(new ResourceLocation("minecraft:missingno"));
+                .apply(ResourceLocation.fromNamespaceAndPath("minecraft", "missingno"));
         } catch (Exception e) {
             return null;
         }
     }
     
     public static TextureAtlasSprite getSprite(String modId, String sprite) {
-        return getSprite(new ResourceLocation(modId, sprite));
+        return getSprite(ResourceLocation.fromNamespaceAndPath(modId, sprite));
     }
     
     public static void renderFluid(PoseStack stack, FluidStack fluidStack, float size, float texSize, boolean flowing, int light) {
@@ -838,7 +843,7 @@ public class GuiUtil {
     }
     
     public static RenderBuilder getFluidRenderBuilder(FluidStack fluidStack, float texWidth, float texHeight, float texLength, boolean flowing, int light) {
-        RenderBuilder builder = RenderBuilder.create().setRenderType(FluffyFurRenderTypes.TRANSLUCENT_TEXTURE);
+        RenderBuilder builder = RenderBuilder.create().setRenderType(BARenderTypes.TRANSLUCENT_TEXTURE);
         if (!fluidStack.isEmpty()) {
             TextureAtlasSprite sprite = FluidRenderMap.getFluidTexture(fluidStack, flowing ? FluidRenderMap.FluidFlow.FLOWING : FluidRenderMap.FluidFlow.STILL);
             
@@ -862,7 +867,7 @@ public class GuiUtil {
         stack.pushPose();
         stack.mulPose(Axis.YP.rotationDegrees((float) Math.toDegrees(-yaw)));
         stack.mulPose(Axis.ZP.rotationDegrees((float) Math.toDegrees(-pitch) - 180f));
-        RenderBuilder.create().setRenderType(FluffyFurRenderTypes.ADDITIVE)
+        RenderBuilder.create().setRenderType(BARenderTypes.ADDITIVE)
             .setColor(color)
             .setAlpha(alpha)
             .renderRay(stack, 0.01f, (float) from.distanceTo(to) + 0.01f);
@@ -897,7 +902,7 @@ public class GuiUtil {
         renderConnectLineOffset(stack, new Vec3(0, size.y(), size.z()), new Vec3(0, size.y(), 0), color, alpha);
         stack.pushPose();
         stack.translate(0.01f, 0.01f, 0.01f);
-        RenderBuilder.create().setRenderType(FluffyFurRenderTypes.ADDITIVE)
+        RenderBuilder.create().setRenderType(BARenderTypes.ADDITIVE)
             .setColor(color)
             .setAlpha(alpha / 8f)
             .enableSided()
@@ -912,7 +917,7 @@ public class GuiUtil {
         renderConnectLineOffset(stack, new Vec3(0, 0, size.z()), new Vec3(0, 0, 0), color, alpha);
         stack.pushPose();
         stack.mulPose(Axis.XP.rotationDegrees(90f));
-        RenderBuilder.create().setRenderType(FluffyFurRenderTypes.ADDITIVE)
+        RenderBuilder.create().setRenderType(BARenderTypes.ADDITIVE)
             .setColor(color)
             .setAlpha(alpha / 8f)
             .enableSided()

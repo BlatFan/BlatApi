@@ -3,7 +3,7 @@ package ru.blatfan.blatapi.common.player_stages;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.simple.SimpleChannel;
-import ru.blatfan.blatapi.fluffy_fur.common.network.CapacitySync;
+import ru.blatfan.blatapi.utils.capacity.CapacitySync;
 
 public class PlayerStagesSync extends CapacitySync<PlayerStages> {
     public PlayerStagesSync(PlayerStages capacity) {
@@ -11,7 +11,7 @@ public class PlayerStagesSync extends CapacitySync<PlayerStages> {
     }
     
     public static void register(SimpleChannel instance, int index) {
-        instance.registerMessage(index, PlayerStagesSync.class, PlayerStagesSync::toBuf, PlayerStagesSync::buf, CapacitySync::handler);
+        instance.registerMessage(index, PlayerStagesSync.class, PlayerStagesSync::toBuf, PlayerStagesSync::buf, PlayerStagesSync::handler);
     }
     
     public static PlayerStagesSync buf(FriendlyByteBuf buf) {

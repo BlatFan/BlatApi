@@ -80,7 +80,6 @@ mixin {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven { url = "https://maven.theillusivec4.top/" }
     maven { url = "https://maven.tterrag.com/" }
     maven { url = "https://modmaven.k-4u.nl"}
     maven { url = "https://cursemaven.com" }
@@ -115,16 +114,20 @@ dependencies {
     compileOnly fg.deobf("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     implementation fg.deobf("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
 
-    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:4.4.7")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+${minecraft_version}")
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:4.8.3")
+    implementation fg.deobf("curse.maven:curios-309927:6418456")
     compileOnly fg.deobf("curse.maven:oculus-581495:5299671")
     compileOnly fg.deobf("com.github.glitchfiend:TerraBlender-forge:${minecraft_version}-${terrablender_version}")
+    implementation fg.deobf("curse.maven:jade-324717:5493390")
 
     implementation fg.deobf("dev.architectury:architectury-forge:${architectury_version}")
     implementation fg.deobf("dev.latvian.mods:kubejs-forge:${kubejs_version}")
     implementation fg.deobf("dev.latvian.mods:rhino-forge:${rhino_version}")
 
-    runtimeOnly fg.deobf("curse.maven:jade-324717:5493390")
+    implementation fg.deobf("curse.maven:ftb-library-forge-404465:7296748")
+    implementation fg.deobf("curse.maven:ftb-teams-forge-404468:7499810")
+    implementation fg.deobf("curse.maven:ftb-quests-forge-289412:7608804")
+
     runtimeOnly fg.deobf("curse.maven:fusion-connected-textures-854949:5129294")
     runtimeOnly fg.deobf("curse.maven:configured-457570:5180900")
     runtimeOnly fg.deobf("curse.maven:model-gap-fix-676136:5200949")

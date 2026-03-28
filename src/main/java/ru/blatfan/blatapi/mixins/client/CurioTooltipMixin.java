@@ -2,8 +2,6 @@ package ru.blatfan.blatapi.mixins.client;
 
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-import ru.blatfan.blatapi.fluffy_fur.client.tooltip.AttributeTooltipModifier;
-import ru.blatfan.blatapi.fluffy_fur.client.tooltip.TooltipModifierHandler;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -12,6 +10,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import ru.blatfan.blatapi.client.tooltip.AttributeTooltipModifier;
+import ru.blatfan.blatapi.client.tooltip.TooltipModifierHandler;
 import top.theillusivec4.curios.client.ClientEventHandler;
 
 import java.util.Map;
@@ -28,7 +28,7 @@ public abstract class CurioTooltipMixin implements IMixinConfigPlugin {
     }
 
     @ModifyVariable(method = "onTooltip", at = @At("STORE"), remap = false)
-    public Multimap<Attribute, AttributeModifier> fluffy_fur$getTooltip(Multimap<Attribute, AttributeModifier> multimap, ItemTooltipEvent event) {
+    public Multimap<Attribute, AttributeModifier> blatapi$getTooltip(Multimap<Attribute, AttributeModifier> multimap, ItemTooltipEvent event) {
         if (event != null && multimap != null) {
             Multimap<Attribute, AttributeModifier> copied = LinkedHashMultimap.create();
             for (Map.Entry<Attribute, AttributeModifier> entry : multimap.entries()) {

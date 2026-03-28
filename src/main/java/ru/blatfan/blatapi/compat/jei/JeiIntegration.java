@@ -1,5 +1,6 @@
 package ru.blatfan.blatapi.compat.jei;
 
+import com.google.common.base.Stopwatch;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -13,6 +14,7 @@ import mezz.jei.library.plugins.vanilla.anvil.AnvilRecipe;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AnvilScreen;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.EnchantedBookItem;
@@ -24,6 +26,7 @@ import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
 import ru.blatfan.blatapi.compat.jei.category.AnvilRecipeCategory;
 import ru.blatfan.blatapi.mixins.common.AccessorJEIRecipeManager;
+import ru.blatfan.blatapi.utils.BlockedStageHelper;
 import ru.blatfan.blatapi.utils.DisabledRecipes;
 import ru.blatfan.blatapi.utils.RecipeHelper;
 
@@ -31,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @JeiPlugin
@@ -204,10 +208,8 @@ public final class JeiIntegration implements IModPlugin {
                 }
             }
         });
-
-        var recipes = new ArrayList<IJeiAnvilRecipe>();
-
-        recipes.addAll(recipesToAdd);
+        
+        var recipes = new ArrayList<>(recipesToAdd);
         
         List<IJeiAnvilRecipe> rec = new ArrayList<>();
         for(IAnvilRepairRecipe recipe : RecipeHelper.getRecipes(BARegistry.ANVIL_REPAIR.get())){
@@ -224,5 +226,23 @@ public final class JeiIntegration implements IModPlugin {
 
         if (!ingredientsToAdd.isEmpty())
             registration.getIngredientManager().addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, ingredientsToAdd);
+    }
+    
+    public static void updateHiddenItems() {
+        Player player = Minecraft.getInstance().player;
+        if (jeiRuntime != null && player!=null) {
+            BlatApi.LOGGER.debug("Calculating items to hide.");
+            Stopwatch stopwatch = Stopwatch.createStarted();
+            
+            List<ItemStack> itemsToHide = new ArrayList<>(BlockedStageHelper.getBlockedItems());
+            
+            jeiRuntime.getIngredientManager().addIngredientsAtRuntime(VanillaTypes.ITEM_STACK, itemsToHide);
+            
+            itemsToHide.removeIf(stack -> BlockedStageHelper.isVisible(player, stack));
+            if(!itemsToHide.isEmpty())
+                jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK, itemsToHide);
+            
+            BlatApi.LOGGER.debug("Marked {} entries for hiding. Took {}ms.", itemsToHide.size(), stopwatch.stop().elapsed(TimeUnit.MILLISECONDS));
+        }
     }
 }

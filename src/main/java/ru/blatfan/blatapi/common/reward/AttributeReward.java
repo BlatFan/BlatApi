@@ -12,6 +12,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 @AllArgsConstructor
 @Getter
@@ -62,9 +63,9 @@ public class AttributeReward extends Reward {
     }
     
     @Override
-    public Component text(Player player) {
-        return Component.translatable(BuiltInRegistries.ATTRIBUTE.get(getAttributeLoc()).getDescriptionId())
-            .append(": ").withStyle(ChatFormatting.GRAY).append(Component.literal(
+    public Text text(Player player) {
+        return Text.create(BuiltInRegistries.ATTRIBUTE.get(getAttributeLoc()).getDescriptionId())
+            .add(": ").withStyle(ChatFormatting.GRAY).add(Component.literal(
                     (getValue()>0 ? "+":"")+
                         (getOperation()== AttributeModifier.Operation.ADDITION ? getValue() : (getValue()*100)+"%"))
                 .withStyle(getValue()>0 ? ChatFormatting.GREEN : ChatFormatting.RED));

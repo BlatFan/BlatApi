@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.render.FluidRenderMap;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,10 +33,10 @@ public class FluidBar extends AbstractWidget {
     this.barColor = barColor;
   }
   public FluidBar(int pX, int pY, int pWidth, IFluidHandler fluidHandler, int tank, Color barColor){
-    this(pX, pY, pWidth, BlatApi.loc("textures/gui/fluid.png"), fluidHandler, tank, barColor);
+    this(pX, pY, pWidth, BlatApi.guiLoc("fluid"), fluidHandler, tank, barColor);
   }
   public FluidBar(int pX, int pY, int pWidth, IFluidHandler fluidHandler, int tank){
-    this(pX, pY, pWidth, BlatApi.loc("textures/gui/fluid.png"), fluidHandler, tank, Color.WHITE);
+    this(pX, pY, pWidth, BlatApi.guiLoc("fluid"), fluidHandler, tank, Color.WHITE);
   }
   
   public boolean isMouseover(int mouseX, int mouseY) {
@@ -92,7 +93,7 @@ public class FluidBar extends AbstractWidget {
           tt = current.getAmount() + "mb /" + fluidHandler.getTankCapacity(tank) + "mb " + current.getDisplayName().getString();
         }
         List<Component> list = new ArrayList<>();
-        list.add(Component.translatable(tt));
+        list.add(Text.create(tt));
         gui.renderComponentTooltip(Minecraft.getInstance().font, list, mouseX, mouseY);
       }
     }

@@ -12,7 +12,6 @@ import ru.blatfan.blatapi.utils.ColorHelper;
 
 @Mixin(PotionUtils.class)
 public class PotionUtilsMixin {
-    
     @Inject(at = @At("RETURN"), method = "getColor(Lnet/minecraft/world/item/ItemStack;)I", cancellable = true)
     private static void rainbow(ItemStack pStack, CallbackInfoReturnable<Integer> cir){
         if(cir.getReturnValue()==BARegistry.POTION_RAINBOW_COLOR)

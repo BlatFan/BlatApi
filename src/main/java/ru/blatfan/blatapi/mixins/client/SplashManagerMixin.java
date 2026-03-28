@@ -1,6 +1,6 @@
 package ru.blatfan.blatapi.mixins.client;
 
-import ru.blatfan.blatapi.fluffy_fur.client.splash.SplashHandler;
+import ru.blatfan.blatapi.client.splash.SplashHandler;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -21,7 +21,7 @@ public abstract class SplashManagerMixin {
     private List<String> splashes;
 
     @Inject(at = @At("RETURN"), method = "apply*")
-    public void fluffy_fur$apply(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
+    public void blatapi$apply(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
         this.splashes.addAll(SplashHandler.getSplashes());
     }
 }

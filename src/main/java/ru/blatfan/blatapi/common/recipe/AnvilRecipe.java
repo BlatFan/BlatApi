@@ -3,10 +3,6 @@ package ru.blatfan.blatapi.common.recipe;
 import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import net.minecraft.world.item.Items;
-import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.common.BARegistry;
-import ru.blatfan.blatapi.utils.ItemHelper;
 import lombok.Getter;
 import net.minecraft.Util;
 import net.minecraft.advancements.Advancement;
@@ -26,6 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -35,6 +32,9 @@ import net.minecraftforge.common.crafting.conditions.ICondition;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.Nullable;
+import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.common.BARegistry;
+import ru.blatfan.blatapi.utils.ItemHelper;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -507,7 +507,7 @@ public class AnvilRecipe implements IAnvilRecipe {
 
         Result(ResourceLocation id) {
             this.id = id;
-            this.advancementId = new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath());
+            this.advancementId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "recipes/" + id.getPath());
         }
 
         @Override

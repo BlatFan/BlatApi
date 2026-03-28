@@ -17,10 +17,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
-import ru.blatfan.blatapi.fluffy_fur.client.event.ClientTickHandler;
-import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
-import ru.blatfan.blatapi.fluffy_fur.common.block.entity.BlockSimpleInventory;
-import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
+import ru.blatfan.blatapi.client.event.ClientTickHandler;
+import ru.blatfan.blatapi.client.render.RenderBuilder;
+import ru.blatfan.blatapi.common.block.entity.BlockSimpleInventory;
+import ru.blatfan.blatapi.client.registry.BARenderTypes;
 
 import java.awt.*;
 import java.util.List;
@@ -74,7 +74,7 @@ public class BlockUtil {
     public static void renderItemWithDragon(BlockPos pos, double x, double y, double z, List<Float> size, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1, ItemStack itemStack, Color color){
         renderItem(pos, x, y, z, size, poseStack, multiBufferSource, i, i1, itemStack);
         RenderBuilder.create()
-            .setRenderType(FluffyFurRenderTypes.ADDITIVE)
+            .setRenderType(BARenderTypes.ADDITIVE)
             .replaceBufferSource(multiBufferSource)
             .setAlpha(0.5f)
             .setColor(color)

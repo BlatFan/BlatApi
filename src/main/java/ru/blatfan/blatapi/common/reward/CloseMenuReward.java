@@ -2,8 +2,8 @@ package ru.blatfan.blatapi.common.reward;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 public class CloseMenuReward extends ClientReward{
     @Override
@@ -26,7 +26,7 @@ public class CloseMenuReward extends ClientReward{
     }
     
     @Override
-    public Component text(Player player) {
-        return Component.empty();
+    public Text text(Player player) {
+        return Text.create();
     }
 }

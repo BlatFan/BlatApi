@@ -6,13 +6,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
-import ru.blatfan.blatapi.fluffy_fur.common.network.FluffyFurPacketHandler;
+import ru.blatfan.blatapi.common.network.BlatApiPacketHandler;
 
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 public class PlayerStagesAdd<T> {
-    private final String stage;
+    private final ResourceLocation stage;
     private final PlayerStages.Value<T> b;
     
     public static void register(SimpleChannel instance, int index) {
@@ -21,18 +21,18 @@ public class PlayerStagesAdd<T> {
     
     private void handler(Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context context = contextSupplier.get();
-        ServerPlayer player = FluffyFurPacketHandler.getPlayer(context);
+        ServerPlayer player = BlatApiPacketHandler.getPlayer(context);
         context.enqueueWork(() -> PlayerStages.set(player, stage, b.getValue()));
         context.setPacketHandled(true);
     }
     
     private void toBuf(FriendlyByteBuf buf) {
-        buf.writeUtf(stage);
+        buf.writeResourceLocation(stage);
         buf.writeUtf(b.getType().toString());
         buf.writeNbt(b.serializeNBT());
     }
     
     public static PlayerStagesAdd<?> buf(FriendlyByteBuf buf) {
-        return new PlayerStagesAdd<>(buf.readUtf(), PlayerStages.Value.deserialize(ResourceLocation.tryParse(buf.readUtf()), buf.readNbt()));
+        return new PlayerStagesAdd<>(buf.readResourceLocation(), PlayerStages.Value.deserialize(ResourceLocation.tryParse(buf.readUtf()), buf.readNbt()));
     }
 }

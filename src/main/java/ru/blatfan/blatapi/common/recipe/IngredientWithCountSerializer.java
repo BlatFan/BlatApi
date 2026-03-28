@@ -9,7 +9,7 @@ import ru.blatfan.blatapi.BlatApi;
 
 public class IngredientWithCountSerializer implements IIngredientSerializer<IngredientWithCount> {
     public static final IngredientWithCountSerializer INSTANCE = new IngredientWithCountSerializer();
-    public static final ResourceLocation ID = new ResourceLocation(BlatApi.MOD_ID, "with_count");
+    public static final ResourceLocation ID = BlatApi.loc("with_count");
     
     @Override
     public IngredientWithCount parse(JsonObject json) {

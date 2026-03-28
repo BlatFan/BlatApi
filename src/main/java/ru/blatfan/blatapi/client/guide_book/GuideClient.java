@@ -33,7 +33,7 @@ public class GuideClient {
     }
     
     @SubscribeEvent
-    public void playerClientTick(TickEvent.PlayerTickEvent event){
+    public static void playerClientTick(TickEvent.PlayerTickEvent event){
         GuideClient.player = event.player;
         GuideClient.mc = Minecraft.getInstance();
         GuideClient.level = mc.level;

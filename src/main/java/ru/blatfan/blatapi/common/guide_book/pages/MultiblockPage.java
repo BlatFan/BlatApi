@@ -2,6 +2,7 @@ package ru.blatfan.blatapi.common.guide_book.pages;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
@@ -12,23 +13,24 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.model.data.ModelData;
-import org.joml.Vector4f;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.client.render.FluidBlockVertexConsumer;
+import ru.blatfan.blatapi.client.render.GhostBuffers;
 import ru.blatfan.blatapi.client.render.MultiblockPreviewRenderer;
 import ru.blatfan.blatapi.common.GuideManager;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
@@ -160,8 +162,6 @@ public class MultiblockPage extends GuideBookPage {
         pose.translate(-(float) sizeX / 2, -(float) sizeY / 2, 0);
         pose.scale(scale, scale, scale);
         
-        Vector4f eye = new Vector4f(0, 0, -100, 1);
-        
         pose.mulPose(Axis.XP.rotationDegrees(-30F));
         
         float offX = (float) -sizeX / 2;
@@ -171,27 +171,20 @@ public class MultiblockPage extends GuideBookPage {
         pose.mulPose(Axis.YP.rotationDegrees(45));
         pose.translate(offX, 0, offZ);
         
-        eye.div(eye.w);
-        
-        var buffers = mc.renderBuffers().bufferSource();
-        BlockPos checkPos = null;
-        if (mc.hitResult instanceof BlockHitResult blockRes)
-            checkPos = blockRes.getBlockPos().relative(blockRes.getDirection());
+        var buffer=initBuffers(mc.renderBuffers().bufferSource());
         
         pose.pushPose();
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         pose.translate(0, 0, -1);
         
-        if(multiblockSimulation==null)multiblockSimulation = getMultiblock().simulate(level, pos, facingRotation, false, false);
+        Lighting.setupForFlatItems();
+        
+        if(multiblockSimulation==null) multiblockSimulation = getMultiblock().simulate(level, pos, facingRotation, false, false);
         for (Multiblock.SimulateResult r : multiblockSimulation.getSecond()) {
-            float alpha = 0.3F;
             BlockPos renderPos = r.getWorldPosition().offset(-sizeX/2, -sizeY/2, -sizeZ/2);
             
-            if (renderPos.equals(checkPos))
-                alpha = 0.6F + (float) (Math.sin(ClientTicks.total * 0.3F) + 1F) * 0.1F;
-            
             BlockState renderState = r.getStateMatcher().getDisplayedState(ClientTicks.ticks).rotate(facingRotation);
-            this.renderBlock(buffers, level, renderState, renderPos, alpha, pose);
+            this.renderBlock(buffer, renderState, renderPos, pose);
             
             if (renderState.getBlock() instanceof EntityBlock eb) {
                 var be = this.blockEntityCache.computeIfAbsent(renderPos.immutable(), p -> eb.newBlockEntity(p, renderState));
@@ -200,13 +193,12 @@ public class MultiblockPage extends GuideBookPage {
                     be.setBlockState(renderState);
                     
                     pose.pushPose();
-                    var bePos = r.getWorldPosition();
-                    pose.translate(bePos.getX(), bePos.getY(), bePos.getZ());
+                    pose.translate(renderPos.getX(), renderPos.getY(), renderPos.getZ());
                     
                     try {
                         BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
                         if (renderer != null)
-                            renderer.render(be, ClientTicks.partialTicks, pose, buffers, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                            renderer.render(be, ClientTicks.partialTicks, pose, buffer, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                     } catch (Exception e) {
                         this.erroredBlockEntities.add(be);
                         BlatApi.LOGGER.error("Error rendering block entity", e);
@@ -215,34 +207,46 @@ public class MultiblockPage extends GuideBookPage {
                 }
             }
         }
-        pose.popPose();
-        buffers.endBatch();
-        pose.popPose();
         
+        Lighting.setupFor3DItems();
+        
+        pose.popPose();
+        buffer.endBatch();
+        pose.popPose();
     }
     
-    private void renderBlock(MultiBufferSource.BufferSource buffers, ClientLevel level, BlockState state, BlockPos pos, float alpha, PoseStack ps) {
-        if (pos != null) {
-            ps.pushPose();
-            ps.translate(pos.getX(), pos.getY(), pos.getZ());
-            var blockRenderer = Minecraft.getInstance().getBlockRenderer();
-            
-            var fluidState = state.getFluidState();
-            if (!fluidState.isEmpty()) {
-                var layer = ItemBlockRenderTypes.getRenderLayer(fluidState);
-                var buffer = buffers.getBuffer(layer);
-                blockRenderer.renderLiquid(pos, getMultiblock(), new FluidBlockVertexConsumer(buffer, ps, pos), state, fluidState);
-            }
-            
-            if (state.getRenderShape() != RenderShape.INVISIBLE) {
-                var model = blockRenderer.getBlockModel(state);
-                for (var layer : model.getRenderTypes(state, level.random, ModelData.EMPTY)) {
-                    var buffer = buffers.getBuffer(layer);
-                    blockRenderer.renderBatched(state, pos, getMultiblock(), ps, buffer, false, level.random, ModelData.EMPTY, layer);
-                }
-            }
-            
-            ps.popPose();
+    private final RandomSource random = RandomSource.create();
+    
+    private void renderBlock(MultiBufferSource.BufferSource buffers, BlockState state, BlockPos pos, PoseStack pose) {
+        if (pos == null || state.isAir()) return;
+        
+        pose.pushPose();
+        pose.translate(pos.getX(), pos.getY(), pos.getZ());
+        
+        var blockRenderer = Minecraft.getInstance().getBlockRenderer();
+        var fluidState = state.getFluidState();
+        
+        if (!fluidState.isEmpty()) {
+            var layer = ItemBlockRenderTypes.getRenderLayer(fluidState);
+            var buffer = buffers.getBuffer(layer);
+            blockRenderer.renderLiquid(pos, getMultiblock(), new FluidBlockVertexConsumer(buffer, pose, pos), state, fluidState);
         }
+        
+        if (state.getRenderShape() != RenderShape.INVISIBLE) {
+            var model = blockRenderer.getBlockModel(state);
+            this.random.setSeed(state.getSeed(pos));
+            
+            for (RenderType renderType : model.getRenderTypes(state, random, ModelData.EMPTY)) {
+                var buf = buffers.getBuffer(renderType);
+                blockRenderer.renderBatched(state, pos, getMultiblock(), pose, buf, true, random, ModelData.EMPTY, renderType);
+            }
+        }
+        
+        pose.popPose();
+    }
+    
+    private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
+        float alpha = 0.8f + 0.15f*(float)Math.cos(ClientTicks.ticks/20f);
+        return GhostBuffers.create(original, alpha);
     }
 }

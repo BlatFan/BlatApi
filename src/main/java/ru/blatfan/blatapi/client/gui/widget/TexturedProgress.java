@@ -1,15 +1,15 @@
 package ru.blatfan.blatapi.client.gui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.Setter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.utils.collection.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TexturedProgress{
   protected final int x;
@@ -24,10 +24,10 @@ public class TexturedProgress{
   protected boolean topDown = false;
   
   public static TexturedProgress createHorizontal(int x, int y) {
-    return new TexturedProgress(x, y, 22, 16, BlatApi.loc("textures/gui/progress_bar.png"));
+    return new TexturedProgress(x, y, 22, 16, BlatApi.guiLoc("progress_bar"));
   }
   public static TexturedProgress createVertical(int x, int y) {
-    TexturedProgress vert = new TexturedProgress(x, y, 16, 22, BlatApi.loc("textures/gui/progress_bar_vertical.png"));
+    TexturedProgress vert = new TexturedProgress(x, y, 16, 22, BlatApi.guiLoc("progress_bar_vertical"));
     vert.setTopDown(true);
     return vert;
   }
@@ -93,7 +93,7 @@ public class TexturedProgress{
         display = curr + "t";
       }
       List<Component> list = new ArrayList<>();
-      list.add(Component.translatable(display));
+      list.add(Text.create(display));
       gg.renderComponentTooltip(Minecraft.getInstance().font, list, mouseX, mouseY);
     }
   }

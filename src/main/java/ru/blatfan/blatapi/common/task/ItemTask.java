@@ -25,10 +25,10 @@ public class ItemTask extends Task {
     private boolean visible;
     private ItemStack item;
     
-    public static String getStage(ItemLike item){
+    public static ResourceLocation getStage(ItemLike item){
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(item.asItem());
-        if(id==null) return "EMPTY";
-        return "item_"+id.getNamespace()+"_"+id.getPath();
+        if(id==null) return BlatApi.loc("EMPTY");
+        return ResourceLocation.fromNamespaceAndPath("item_ba", id.getNamespace()+"_"+id.getPath());
     }
     
     @Override
@@ -42,7 +42,7 @@ public class ItemTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
+    public Text text(Player player) {
         return Text.create("task.blatapi.item").add(item.getHoverName()).withColor(Color.WHITE);
     }
     

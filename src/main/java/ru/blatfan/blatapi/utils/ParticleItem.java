@@ -1,8 +1,8 @@
 package ru.blatfan.blatapi.utils;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import ru.blatfan.blatapi.fluffy_fur.common.item.IGuiParticleItem;
-import ru.blatfan.blatapi.fluffy_fur.common.item.IParticleItem;
+import ru.blatfan.blatapi.common.item.IGuiParticleItem;
+import ru.blatfan.blatapi.common.item.IParticleItem;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;

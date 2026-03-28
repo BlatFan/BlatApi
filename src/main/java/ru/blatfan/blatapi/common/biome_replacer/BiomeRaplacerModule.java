@@ -6,27 +6,24 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.utils.BiomeHelper;
 
 import java.util.Optional;
 
+@Mod.EventBusSubscriber(modid = BlatApi.MOD_ID)
 public class BiomeRaplacerModule {
     public static final Logger LOGGER = LoggerFactory.getLogger("BiomeReplacer");
     public static RegistryAccess registryAccess;
     
-    public BiomeRaplacerModule(IEventBus modEventBus) {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
-    
     @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onServerAboutToStart(ServerAboutToStartEvent event) {
+    public static void onServerAboutToStart(ServerAboutToStartEvent event) {
         registryAccess = event.getServer().registryAccess();
         
         Registry<LevelStem> levelStems = registryAccess.registryOrThrow(Registries.LEVEL_STEM);

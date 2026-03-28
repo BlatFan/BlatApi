@@ -6,7 +6,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.ApiStatus;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
@@ -46,13 +45,6 @@ public class TextPage extends GuideBookPage {
     
     public static SplitText splitText(List<Component> text, int width, int height){
         return GuiUtil.splitText(text, width, GuiUtil.findScale(text, width, height));
-    }
-    
-    // TODO
-    @Deprecated(forRemoval = true, since = "0.3.4")
-    @ApiStatus.ScheduledForRemoval(inVersion = "0.4")
-    public static float findOptimalScale(List<Component> text, int width, int height) {
-        return GuiUtil.findScale(text, width, height);
     }
     
     @Override

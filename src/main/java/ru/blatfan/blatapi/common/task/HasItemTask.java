@@ -37,7 +37,7 @@ public class HasItemTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
+    public Text text(Player player) {
         return Text.create(item.getHoverName()).add(" x"+amount).withColor(Color.WHITE);
     }
     

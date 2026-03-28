@@ -25,10 +25,10 @@ public class EatTask extends Task {
     private boolean visible;
     private ItemStack food;
     
-    public static String getStage(ItemLike item){
+    public static ResourceLocation getStage(ItemLike item){
         ResourceLocation id = ForgeRegistries.ITEMS.getKey(item.asItem());
-        if(id==null) return "EMPTY";
-        return "player_eat_"+id.getNamespace()+"_"+id.getPath();
+        if(id==null) return BlatApi.loc("EMPTY");
+        return ResourceLocation.fromNamespaceAndPath("player_eat_ba", id.getNamespace()+"_"+id.getPath());
     }
     
     @Override
@@ -42,7 +42,7 @@ public class EatTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
+    public Text text(Player player) {
         return Text.create("task.blatapi.eat").add(food.getHoverName()).withColor(Color.WHITE);
     }
     

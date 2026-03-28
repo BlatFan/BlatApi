@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.common.GuideManager;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 @AllArgsConstructor
 @Getter
@@ -29,8 +30,8 @@ public class BookEntryTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
-        return Component.translatable("task.blatapi.book_entry", getEntry());
+    public Text text(Player player) {
+        return Text.create("task.blatapi.book_entry", getEntry());
     }
     
     public static class Serializer implements ITaskSerializer {
@@ -40,7 +41,7 @@ public class BookEntryTask extends Task {
         public Task fromJson(JsonObject json) {
             boolean b = !json.has("visible") || json.get("visible").getAsBoolean();
             String stage = json.get("book_entry").getAsString();
-            return new BookEntryTask(b, new ResourceLocation(stage));
+            return new BookEntryTask(b, ResourceLocation.parse(stage));
         }
         
         @Override

@@ -155,7 +155,7 @@ public class AnvilRepairRecipe implements IAnvilRepairRecipe {
 
         Result(ResourceLocation id) {
             this.id = id;
-            this.advancementId = new ResourceLocation(id.getNamespace(), "recipes/" + id.getPath());
+            this.advancementId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "recipes/" + id.getPath());
         }
 
         @Override

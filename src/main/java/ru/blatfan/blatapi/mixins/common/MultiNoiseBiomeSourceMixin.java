@@ -37,12 +37,11 @@ public abstract class MultiNoiseBiomeSourceMixin {
     )
     private void elysium$getNoiseBiome(int x, int y, int z, Climate.Sampler sampler, CallbackInfoReturnable<Holder<Biome>> cir) {
         Holder<Biome> currentBiome;
-        if (FMLLoader.getLoadingModList().getModFileById("terrablender") != null) {
+        if (FMLLoader.getLoadingModList().getModFileById("terrablender") != null)
             // if Terrablender is present then obtain its climate parameters for more accurate replacements
             currentBiome = TerrablenderHelper.getCurrentBiome(((MultiNoiseBiomeSource) (Object) this), x, y, z, sampler);
-        } else {
+        else
             currentBiome = this.parameters().findValue(sampler.sample(x, y, z));
-        }
 
         if (this instanceof BABiomeSource source && source.getDimension() != null) {
             List<BiomeHelper.BiomeReplacer> biomeReplacers = BiomeHelper.biomesForDimension(source.getDimension());
@@ -69,9 +68,8 @@ public abstract class MultiNoiseBiomeSourceMixin {
                 }
             } while (biomeReplacedInThisIteration); // we do this to allow other BiomeReplacers to replace already biomeReplaced biomes
 
-            if (biomeReplaced) {
+            if (biomeReplaced)
                 cir.setReturnValue(currentBiome);
-            }
         }
     }
 

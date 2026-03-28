@@ -20,7 +20,7 @@ public abstract class ThrownTridentMixin {
     private static EntityDataAccessor<Byte> ID_LOYALTY;
 
     @Inject(at = @At("HEAD"), method = "tick")
-    public void fluffy_fur$tick(CallbackInfo ci) {
+    public void blatapi$tick(CallbackInfo ci) {
         ThrownTrident self = (ThrownTrident) ((Object) this);
         int i = self.getEntityData().get(ID_LOYALTY);
         if (i > 0 && self.position().y() < self.level().dimensionType().minY() - 32) {

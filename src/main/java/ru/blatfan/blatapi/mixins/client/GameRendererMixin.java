@@ -1,10 +1,10 @@
 package ru.blatfan.blatapi.mixins.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import ru.blatfan.blatapi.fluffy_fur.client.render.LevelRenderHandler;
-import ru.blatfan.blatapi.fluffy_fur.client.render.RenderBuilder;
-import ru.blatfan.blatapi.fluffy_fur.client.shader.postprocess.PostProcessHandler;
-import ru.blatfan.blatapi.fluffy_fur.registry.client.FluffyFurRenderTypes;
+import ru.blatfan.blatapi.client.render.LevelRenderHandler;
+import ru.blatfan.blatapi.client.render.RenderBuilder;
+import ru.blatfan.blatapi.client.shader.postprocess.PostProcessHandler;
+import ru.blatfan.blatapi.client.registry.BARenderTypes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,26 +19,26 @@ public abstract class GameRendererMixin {
     @Shadow public abstract void renderLevel(float pPartialTicks, long pFinishTimeNano, PoseStack pPoseStack);
 
     @Inject(at = @At(value = "RETURN"), method = "renderItemInHand")
-    private void fluffy_fur$renderItemInHand(PoseStack pPoseStack, Camera pActiveRenderInfo, float pPartialTicks, CallbackInfo ci) {
-        for (RenderBuilder builder : FluffyFurRenderTypes.customItemRenderBuilderFirst) {
+    private void blatapi$renderItemInHand(PoseStack pPoseStack, Camera pActiveRenderInfo, float pPartialTicks, CallbackInfo ci) {
+        for (RenderBuilder builder : BARenderTypes.customItemRenderBuilderFirst) {
             builder.endBatch();
         }
-        FluffyFurRenderTypes.customItemRenderBuilderFirst.clear();
+        BARenderTypes.customItemRenderBuilderFirst.clear();
     }
 
     @Inject(method = "resize", at = @At(value = "HEAD"))
-    public void fluffy_fur$injectionResizeListener(int width, int height, CallbackInfo ci) {
+    public void blatapi$injectionResizeListener(int width, int height, CallbackInfo ci) {
         LevelRenderHandler.resize(width, height);
         PostProcessHandler.resize(width, height);
     }
 
     @Inject(at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/pipeline/RenderTarget;bindWrite(Z)V"), method = "render")
-    public void fluffy_fur$renderScreenPostProcess(float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci) {
+    public void blatapi$renderScreenPostProcess(float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci) {
         PostProcessHandler.onScreenRender((GameRenderer) (Object) this, partialTicks, nanoTime, renderLevel);
     }
 
     @Inject(at = @At(value = "RETURN"), method = "render")
-    public void fluffy_fur$renderWindowPostProcess(float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci) {
+    public void blatapi$renderWindowPostProcess(float partialTicks, long nanoTime, boolean renderLevel, CallbackInfo ci) {
         PostProcessHandler.onWindowRender((GameRenderer) (Object) this, partialTicks, nanoTime, renderLevel);
     }
 }

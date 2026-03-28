@@ -1,13 +1,5 @@
 package ru.blatfan.blatapi.mixins.common;
 
-
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
-import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.common.recipe.AnvilRecipe;
-import ru.blatfan.blatapi.common.recipe.IngredientWithCount;
-import ru.blatfan.blatapi.utils.RecipeHelper;
 import com.google.common.collect.ImmutableMap;
 import com.google.gson.JsonElement;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import ru.blatfan.blatapi.utils.RecipeHelper;
 
 import java.util.Map;
 

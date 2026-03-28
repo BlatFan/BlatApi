@@ -1,6 +1,6 @@
 package ru.blatfan.blatapi.mixins.common;
 
-import ru.blatfan.blatapi.fluffy_fur.common.item.ICustomBlockEntityDataItem;
+import ru.blatfan.blatapi.common.item.ICustomBlockEntityDataItem;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class BlockItemMixin {
 
     @Inject(at = @At("RETURN"), method = "getBlockEntityData", cancellable = true)
-    private static void fluffy_fur$getBlockEntityData(ItemStack stack, CallbackInfoReturnable<CompoundTag> cir) {
+    private static void blatapi$getBlockEntityData(ItemStack stack, CallbackInfoReturnable<CompoundTag> cir) {
         if (stack.getItem() instanceof ICustomBlockEntityDataItem customBlockEntityDataItem) {
             CompoundTag tileNbt = cir.getReturnValue();
             if (tileNbt == null) tileNbt = new CompoundTag();

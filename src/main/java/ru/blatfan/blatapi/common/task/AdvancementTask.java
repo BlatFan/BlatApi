@@ -36,7 +36,7 @@ public class AdvancementTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
+    public Text text(Player player) {
         return Text.create("task.blatapi.advancement", advancement);
     }
     

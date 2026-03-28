@@ -142,9 +142,9 @@ public class ResearchScreen extends Screen {
             RenderSystem.setShaderColor(1, 1, 1, a);
             
             if(node.advance())
-                gui.blit(texture, node.x() - 5, node.y() - 5, 74, PlayerStages.getBool(GuideClient.player, id.toString()) ? 26 : 0, 26, 26, 256, 256);
+                gui.blit(texture, node.x() - 5, node.y() - 5, 74, PlayerStages.getBool(GuideClient.player, id) ? 26 : 0, 26, 26, 256, 256);
             else
-                gui.blit(texture, node.x() - 5, node.y() - 5, 48, PlayerStages.getBool(GuideClient.player, id.toString()) ? 26 : 0, 26, 26, 256, 256);
+                gui.blit(texture, node.x() - 5, node.y() - 5, 48, PlayerStages.getBool(GuideClient.player, id) ? 26 : 0, 26, 26, 256, 256);
             gui.renderFakeItem(node.icon(), node.x(), node.y());
             
             RenderSystem.setShaderColor(1, 1, 1, 1);

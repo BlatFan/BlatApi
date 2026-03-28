@@ -2,9 +2,8 @@ package ru.blatfan.blatapi.common.reward;
 
 import lombok.AllArgsConstructor;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import ru.blatfan.blatapi.common.task.EmptyTask;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 @AllArgsConstructor
 public class RunnableReward extends Reward {
@@ -26,8 +25,8 @@ public class RunnableReward extends Reward {
     }
     
     @Override
-    public Component text(Player player) {
-        return null;
+    public Text text(Player player) {
+        return Text.create();
     }
 }
 

@@ -2,16 +2,18 @@ package ru.blatfan.blatapi.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat.Mode;
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -50,7 +52,6 @@ import java.util.*;
 import java.util.function.Function;
 
 public class MultiblockPreviewRenderer {
-    
     public static boolean hasMultiblock;
     
     public static Map<BlockPos, BlockEntity> blockEntityCache = new Object2ObjectOpenHashMap<>();
@@ -175,9 +176,8 @@ public class MultiblockPreviewRenderer {
     }
     
     public static void onRenderLevelLastEvent(PoseStack poseStack) {
-        if (hasMultiblock && multiblock != null) {
+        if (hasMultiblock && multiblock != null)
             renderMultiblock(Minecraft.getInstance().level, poseStack);
-        }
     }
     
     public static void anchorTo(BlockPos target, Rotation rot) {
@@ -225,19 +225,15 @@ public class MultiblockPreviewRenderer {
         Minecraft mc = Minecraft.getInstance();
         if (!isAnchored) {
             facingRotation = getRotation(mc.player);
-            if (mc.hitResult instanceof BlockHitResult) {
+            if (mc.hitResult instanceof BlockHitResult)
                 pos = ((BlockHitResult) mc.hitResult).getBlockPos();
-            }
-        } else if (pos.distToCenterSqr(mc.player.position()) > 64 * 64) {
+        } else if (pos.distToCenterSqr(mc.player.position()) > 64 * 64)
             return;
-        }
         
-        if (pos == null) {
+        if (pos == null)
             return;
-        }
-        if (multiblock.isSymmetrical()) {
+        if (multiblock.isSymmetrical())
             facingRotation = Rotation.NONE;
-        }
         
         multiblock.setLevel(level);
         
@@ -248,14 +244,11 @@ public class MultiblockPreviewRenderer {
         ms.pushPose();
         ms.translate(-renderPosX, -renderPosY, -renderPosZ);
         
-        if (buffers == null) {
-            buffers = initBuffers(mc.renderBuffers().bufferSource());
-        }
+        buffers = GhostBuffers.create(mc.renderBuffers().bufferSource(), 0.75f+0.25f*(float) Math.sin(ClientTicks.ticks/20f));
         
         BlockPos checkPos = null;
-        if (mc.hitResult instanceof BlockHitResult blockRes) {
+        if (mc.hitResult instanceof BlockHitResult blockRes)
             checkPos = blockRes.getBlockPos().relative(blockRes.getDirection());
-        }
         
         blocks = blocksDone = airFilled = 0;
         lookingState = null;
@@ -278,8 +271,6 @@ public class MultiblockPreviewRenderer {
                         var be = blockEntityCache.computeIfAbsent(r.getWorldPosition().immutable(), p -> eb.newBlockEntity(p, renderState));
                         if (be != null && !erroredBlockEntities.contains(be)) {
                             be.setLevel(mc.level);
-                            
-                            // fake cached state in case the renderer checks it as we don't want to query the actual world
                             be.setBlockState(renderState);
                             
                             ms.pushPose();
@@ -290,7 +281,8 @@ public class MultiblockPreviewRenderer {
                             
                             try {
                                 BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
-                                if (renderer != null) renderer.render(be, ClientTicks.partialTicks, ms, buffers, 15728880, OverlayTexture.NO_OVERLAY);
+                                if (renderer != null)
+                                    renderer.render(be, ClientTicks.partialTicks, ms, buffers, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                             } catch (Exception e) {
                                 erroredBlockEntities.add(be);
                                 BlatApi.LOGGER.error("Error rendering block entity", e);
@@ -317,10 +309,19 @@ public class MultiblockPreviewRenderer {
             ms.translate(0.25, 0.25, 0.25);
             ms.scale(0.5f, 0.5f, 0.5f);
             
+            var br = GuideClient.mc.getBlockRenderer();
+            
             if (state.getBlock() == Blocks.AIR)
                 state = Blocks.BEDROCK.defaultBlockState();
             
-           GuideClient.mc.getBlockRenderer().renderSingleBlock(state, ms, buffers, 15728880, OverlayTexture.NO_OVERLAY);
+            var fluidState = state.getFluidState();
+            if (!fluidState.isEmpty()) {
+                var layer = ItemBlockRenderTypes.getRenderLayer(fluidState);
+                var buffer = buffers.getBuffer(layer);
+                br.renderLiquid(pos, getMultiblock(), new FluidBlockVertexConsumer(buffer, ms, pos), state, fluidState);
+            }
+            
+            br.renderSingleBlock(state, ms, buffers, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             
             ms.popPose();
         }
@@ -363,54 +364,4 @@ public class MultiblockPreviewRenderer {
     private static Rotation getRotation(Entity entity) {
         return AbstractMultiblock.rotationFromFacing(entity.getDirection());
     }
-    
-    private static MultiBufferSource.BufferSource initBuffers(MultiBufferSource.BufferSource original) {
-        BufferBuilder fallback = original.builder;
-        Map<RenderType, BufferBuilder> layerBuffers = original.fixedBuffers;
-        Map<RenderType, BufferBuilder> remapped = new Object2ObjectLinkedOpenHashMap<>();
-        for (Map.Entry<RenderType, BufferBuilder> e : layerBuffers.entrySet()) {
-            remapped.put(GhostRenderLayer.remap(e.getKey()), e.getValue());
-        }
-        return new GhostBuffers(fallback, remapped);
-    }
-    
-    private static class GhostBuffers extends MultiBufferSource.BufferSource {
-        protected GhostBuffers(BufferBuilder fallback, Map<RenderType, BufferBuilder> layerBuffers) {
-            super(fallback, layerBuffers);
-        }
-        
-        @Override
-        public VertexConsumer getBuffer(RenderType type) {
-            return super.getBuffer(GhostRenderLayer.remap(type));
-        }
-    }
-    
-    private static class GhostRenderLayer extends RenderType {
-        private static final Map<RenderType, RenderType> remappedTypes = new IdentityHashMap<>();
-        
-        private GhostRenderLayer(RenderType original) {
-            super(String.format("%s_%s_ghost", original.toString(), BlatApi.MOD_ID), original.format(), original.mode(), original.bufferSize(), original.affectsCrumbling(), true, () -> {
-                original.setupRenderState();
-                
-                RenderSystem.disableDepthTest();
-                RenderSystem.enableBlend();
-                RenderSystem.setShaderColor(1, 1, 1, 0.4F);
-            }, () -> {
-                RenderSystem.setShaderColor(1, 1, 1, 1);
-                RenderSystem.disableBlend();
-                RenderSystem.enableDepthTest();
-                
-                original.clearRenderState();
-            });
-        }
-        
-        public static RenderType remap(RenderType in) {
-            if (in instanceof GhostRenderLayer) {
-                return in;
-            } else {
-                return remappedTypes.computeIfAbsent(in, GhostRenderLayer::new);
-            }
-        }
-    }
-    
 }

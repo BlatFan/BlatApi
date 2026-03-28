@@ -1,20 +1,17 @@
 package ru.blatfan.blatapi.client.gui.widget;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.energy.IEnergyStorage;
 import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.utils.collection.Text;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EnergyBar extends AbstractWidget {
   public final ResourceLocation ENERGY_BAR;
@@ -26,7 +23,7 @@ public class EnergyBar extends AbstractWidget {
       this.energy = energy;
   }
   public EnergyBar(int pX, int pY, int pWidth, IEnergyStorage energy) {
-    this(pX, pY, pWidth, BlatApi.loc("textures/gui/energy_bar.png"), energy);
+    this(pX, pY, pWidth, BlatApi.guiLoc("energy_bar"), energy);
   }
   
   public boolean isMouseover(int mouseX, int mouseY) {
@@ -44,7 +41,7 @@ public class EnergyBar extends AbstractWidget {
     if (visible && this.isMouseover(mouseX, mouseY)) {
       String tt = energy.getEnergyStored() + "FE /" + energy.getMaxEnergyStored()+"FE";
       List<Component> list = new ArrayList<>();
-      list.add(Component.translatable(tt));
+      list.add(Text.create(tt));
       gui.renderComponentTooltip(Minecraft.getInstance().font, list, mouseX, mouseY);
     }
   }

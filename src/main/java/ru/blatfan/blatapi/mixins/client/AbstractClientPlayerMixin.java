@@ -1,8 +1,8 @@
 package ru.blatfan.blatapi.mixins.client;
 
-import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkin;
-import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkinCape;
-import ru.blatfan.blatapi.fluffy_fur.client.playerskin.PlayerSkinHandler;
+import ru.blatfan.blatapi.client.playerskin.PlayerSkin;
+import ru.blatfan.blatapi.client.playerskin.PlayerSkinCape;
+import ru.blatfan.blatapi.client.playerskin.PlayerSkinHandler;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class AbstractClientPlayerMixin {
 
     @Inject(at = @At("RETURN"), method = "getSkinTextureLocation", cancellable = true)
-    private void fluffy_fur$getSkinTextureLocation(CallbackInfoReturnable<ResourceLocation> cir) {
+    private void blatapi$getSkinTextureLocation(CallbackInfoReturnable<ResourceLocation> cir) {
         AbstractClientPlayer self = (AbstractClientPlayer) ((Object) this);
         PlayerSkin skin = PlayerSkinHandler.getSkin(self);
 
@@ -27,7 +27,7 @@ public abstract class AbstractClientPlayerMixin {
     }
 
     @Inject(at = @At("RETURN"), method = "getCloakTextureLocation", cancellable = true)
-    private void fluffy_fur$getCloakTextureLocation(CallbackInfoReturnable<ResourceLocation> cir) {
+    private void blatapi$getCloakTextureLocation(CallbackInfoReturnable<ResourceLocation> cir) {
         AbstractClientPlayer self = (AbstractClientPlayer) ((Object) this);
         PlayerSkinCape cape = PlayerSkinHandler.getSkinCape(self);
 
@@ -40,7 +40,7 @@ public abstract class AbstractClientPlayerMixin {
     }
 
     @Inject(at = @At("RETURN"), method = "getModelName", cancellable = true)
-    private void fluffy_fur$getModelName(CallbackInfoReturnable<String> cir) {
+    private void blatapi$getModelName(CallbackInfoReturnable<String> cir) {
         AbstractClientPlayer self = (AbstractClientPlayer) ((Object) this);
         PlayerSkin skin = PlayerSkinHandler.getSkin(self);
 

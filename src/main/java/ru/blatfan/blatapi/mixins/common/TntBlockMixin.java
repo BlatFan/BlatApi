@@ -1,7 +1,7 @@
 package ru.blatfan.blatapi.mixins.common;
 
-import ru.blatfan.blatapi.fluffy_fur.common.fire.FireItemHandler;
-import ru.blatfan.blatapi.fluffy_fur.common.fire.FireItemModifier;
+import ru.blatfan.blatapi.common.fire.FireItemHandler;
+import ru.blatfan.blatapi.common.fire.FireItemModifier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class TntBlockMixin {
 
     @Inject(method = "use", at = @At("RETURN"), cancellable = true)
-    private void fluffy_fur$use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
+    private void blatapi$use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit, CallbackInfoReturnable<InteractionResult> cir) {
         TntBlock self = (TntBlock) ((Object) this);
         for (FireItemModifier modifier : FireItemHandler.getModifiers()) {
             if (modifier.isTntUse(state, level, pos, player, hand, hit)) {

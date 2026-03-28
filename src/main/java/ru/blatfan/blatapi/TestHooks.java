@@ -9,7 +9,6 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.lwjgl.glfw.GLFW;
 import ru.blatfan.blatapi.client.TestScreen;
 
@@ -17,9 +16,8 @@ public class TestHooks {
     public static final KeyMapping TEST = new KeyMapping("Test",
         KeyConflictContext.UNIVERSAL, InputConstants.Type.KEYSYM.getOrCreate(GLFW.GLFW_KEY_H), BlatApi.MOD_NAME);
     
-    public static void setup(){
+    public static void setup(IEventBus modEventBus){
         MinecraftForge.EVENT_BUS.register(CustomClientEventHandler.class);
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(TestHooks::registerKeybindEvent);
     }
     

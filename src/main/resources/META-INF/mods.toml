@@ -28,6 +28,6 @@ license = "${mod_license}"
 [[dependencies."${mod_id}"]]
     modId = "geckolib"
     mandatory = false
-    versionRange = "[4.4.7, )"
+    versionRange = "[4.8.3, )"
     ordering = "AFTER"
     side = "CLIENT"

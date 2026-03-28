@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import ru.blatfan.blatapi.BlatApi;
@@ -27,8 +26,8 @@ public class NotTask extends Task {
     }
     
     @Override
-    public Component text(Player player) {
-        return Text.create("!").add(task.text(player)).asComponent();
+    public Text text(Player player) {
+        return Text.create("!").add(task.text(player));
     }
     
     public static class Serializer implements ITaskSerializer {

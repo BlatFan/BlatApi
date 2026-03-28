@@ -38,7 +38,7 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
     private static final Map<ResourceLocation, BookGuiExtension> bookExtensions = new HashMap<>();
     
     public static final GuideBookData ERROR_BOOK = new GuideBookData(
-        BlatApi.loc("textures/gui/book/book.png"),
+        BlatApi.guiLoc("book/book"),
         Component.literal("Unknown Book"), Component.literal("Unknown Author"),
         new Color(192, 0, 0), ItemStack.EMPTY, Component.literal("Unknown lang"),
         BlatApi.loc("error_book"), false
@@ -226,17 +226,14 @@ public class GuideManager extends SimpleJsonResourceReloadListener {
                 register(id, GuideBookPaper.json(element));
             }
             if(id==null) BlatApi.LOGGER.warn("Noncorrect file {}", rl);
-            else BlatApi.LOGGER.info("Loading {} from json {}", id, rl);
+            else BlatApi.LOGGER.debug("Loading {} from json {}", id, rl);
         }
     }
     
     private static boolean contains(ResourceLocation rl, String str){
         return rl.toString().contains(str);
     }
-    private static ResourceLocation replace(ResourceLocation rl, String str1, String str2){
-        return ResourceLocation.tryParse(rl.toString().replace(str1, str2));
-    }
     private static ResourceLocation remove(ResourceLocation rl, String str1){
-        return replace(rl, str1, "");
+        return ResourceLocation.tryParse(rl.toString().replace(str1, ""));
     }
 }

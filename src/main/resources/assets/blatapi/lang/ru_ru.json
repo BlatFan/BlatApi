@@ -1,21 +1,90 @@
 {
   "_comment_0": "Commands",
-  "commands.blatapi.player_stages.get": "%s имеет стадию %s: %s",
-  "commands.blatapi.player_stages.set": "Стадия %s установлена в %s для %s",
-  "commands.blatapi.player_stages.list_header": "Стадии для %s (%d):",
-  "commands.blatapi.player_stages.no_stages": "%s не имеет стадий",
-  "commands.blatapi.player_stages.available_stages": "Доступные стадии:",
-  "argument.blatapi.player_stages.invalid_stage": "Стадия '%s' недействительна",
-  "command.blatapi.player_stages.description": "Управление стадиями прогрессии игрока",
-  "command.blatapi.player_stages.get.description": "Получить значение стадии для игрока",
-  "command.blatapi.player_stages.set.description": "Установить значение стадии для игрока",
-  "command.blatapi.player_stages.all.description": "Показать все стадии игрока",
-  "command.blatapi.player_stages.list.description": "Показать все доступные стадии в системе",
+  "commands.blatapi.player_stages.list_header": "§e--- Зарегистрированные стадии (%s) ---",
+  "commands.blatapi.player_stages.list_empty": "§7Нет доступных стадий.",
+  
+  "commands.blatapi.player_stages.player_empty": "§cУ игрока %s нет активных стадий.",
+  "commands.blatapi.player_stages.player_header": "§e--- Стадии игрока %s ---",
+  "commands.blatapi.player_stages.player_entry": "§7- §f%s §8[%s]§7: §a%s",
+  
+  "commands.blatapi.player_stages.get_success": "§aИгрок %s имеет стадию '%s' §8(%s)§a: %s",
+  "commands.blatapi.player_stages.get_fail": "У игрока %s нет стадии '%s'",
+  
+  "commands.blatapi.player_stages.remove": "§eСтадия '%s' удалена у %s",
+  "commands.blatapi.player_stages.set_success": "§aУстановлена стадия '%s' §8[%s]§a для %s",
+  
+  "commands.blatapi.player_stages.available_multiblocks": "Доступные мультиблоки:",
+  
+  "_comment_ftb": "FTB",
+  
+  "ftbquests.task.blatapi.player_stage_bool": "Стадия игрока Bool",
+  "ftbquests.task.blatapi.player_stage_bool.stage": "Стадия игрока",
+  
+  "ftbquests.task.blatapi.player_stage_string": "Стадия игрока String",
+  "ftbquests.task.blatapi.player_stage_string.stage": "Стадия игрока",
+  "ftbquests.task.blatapi.player_stage_string.value": "Значение",
+  
+  "ftbquests.task.blatapi.player_stage_itemstack": "Стадия игрока ItemStack",
+  "ftbquests.task.blatapi.player_stage_itemstack.stage": "Стадия игрока",
+  "ftbquests.task.blatapi.player_stage_itemstack.value": "Значение",
+  
+  "ftbquests.task.blatapi.player_stage_int": "Стадия игрока Int",
+  "ftbquests.task.blatapi.player_stage_int.stage": "Стадия игрока",
+  "ftbquests.task.blatapi.player_stage_int.min": "Минимальное значение (value > min)",
+  "ftbquests.task.blatapi.player_stage_int.max": "Максимальное значение (value < max)",
+  
+  "ftbquests.task.blatapi.player_stage_float": "Стадия игрока Float",
+  "ftbquests.task.blatapi.player_stage_float.stage": "Стадия игрока",
+  "ftbquests.task.blatapi.player_stage_float.min": "Минимальное значение (value > min)",
+  "ftbquests.task.blatapi.player_stage_float.max": "Максимальное значение (value < max)",
+  
+  "ftbquests.task.blatapi.player_stage_long": "Стадия игрока Long",
+  "ftbquests.task.blatapi.player_stage_long.stage": "Стадия игрока",
+  "ftbquests.task.blatapi.player_stage_long.min": "Минимальное значение (value > min)",
+  "ftbquests.task.blatapi.player_stage_long.max": "Максимальное значение (value < max)",
+  
+  "ftbquests.task.blatapi.player_stage_double": "Стадия игрока Double",
+  "ftbquests.task.blatapi.player_stage_double.stage": "Стадия игрока",
+  "ftbquests.task.blatapi.player_stage_double.min": "Минимальное значение (value > min)",
+  "ftbquests.task.blatapi.player_stage_double.max": "Максимальное значение (value < max)",
+  
+  "ftbquests.reward.blatapi.player_stage_string": "Стадия игрока String",
+  "ftbquests.reward.blatapi.player_stage_string.stage": "Стадия игрока",
+  "ftbquests.reward.blatapi.player_stage_string.value": "Значение",
+  
+  "ftbquests.reward.blatapi.player_stage_bool": "Стадия игрока Bool",
+  "ftbquests.reward.blatapi.player_stage_bool.stage": "Стадия игрока",
+  "ftbquests.reward.blatapi.player_stage_bool.value": "Значение",
+  
+  "ftbquests.reward.blatapi.player_stage_int": "Стадия игрока Int",
+  "ftbquests.reward.blatapi.player_stage_int.stage": "Стадия игрока",
+  "ftbquests.reward.blatapi.player_stage_int.value": "Значение",
+  
+  "ftbquests.reward.blatapi.player_stage_double": "Стадия игрока Double",
+  "ftbquests.reward.blatapi.player_stage_double.stage": "Стадия игрока",
+  "ftbquests.reward.blatapi.player_stage_double.value": "Значение",
+  
+  "ftbquests.reward.blatapi.player_stage_float": "Стадия игрока Float",
+  "ftbquests.reward.blatapi.player_stage_float.stage": "Стадия игрока",
+  "ftbquests.reward.blatapi.player_stage_float.value": "Значение",
+  
+  "ftbquests.reward.blatapi.player_stage_long": "Стадия игрока Long",
+  "ftbquests.reward.blatapi.player_stage_long.stage": "Стадия игрока",
+  "ftbquests.reward.blatapi.player_stage_long.value": "Значение",
+  
+  "ftbquests.reward.blatapi.player_stage_itemstack": "Стадия игрока ItemStack",
+  "ftbquests.reward.blatapi.player_stage_itemstack.stage": "Стадия игрока",
+  "ftbquests.reward.blatapi.player_stage_itemstack.value": "Значение",
   
   "_comment_1": "Tasks, rewards, multiblocks",
-  "commands.blatapi.player_stages.available_multiblocks": "Доступные мультиблоки:",
   "task.blatapi.position": "Позиция: %s %s %s",
-  "task.blatapi.stage": "Стадия:",
+  "task.blatapi.stage_bool": "Иметь стадию '%s'",
+  "task.blatapi.stage_int": "Уровень стадии '%s' от %s до %s",
+  "task.blatapi.stage_double": "Значение стадии '%s' от %s до %s",
+  "task.blatapi.stage_float": "Значение стадии '%s' от %s до %s",
+  "task.blatapi.stage_long": "Количество для стадии '%s' от %s до %s",
+  "task.blatapi.stage_string": "Стадия '%s' совпадает с '%s'",
+  "task.blatapi.stage_item_stack": "Стадия '%s' содержит предмет %s (x%s)",
   "task.blatapi.advancement": "Достижение: %s",
   "task.blatapi.book_entry": "Знание из книги: %s",
   "task.blatapi.craft": "Создать: ",
@@ -38,7 +107,7 @@
   "_comment_3": "Menu",
   "mod_description.blatapi": "BlatApi - библиотека от BlatFan.",
   "panorama.minecraft.vanilla": "Ванилла",
-  "panorama.blatapi.blat_zone": "BlatZone",
+  "panorama.blatapi.cherry": "Вишня",
   
   "_comment_4": "Gui",
   "gui.blatapi.menu.optifine.0": "Предупреждение! У тебя скачан Optifine",

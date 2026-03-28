@@ -1,26 +1,94 @@
 {
   "_comment_0": "Commands",
-  "commands.blatapi.player_stages.get": "%s has stage %s: %s",
-  "commands.blatapi.player_stages.set": "Set stage %s to %s for %s",
-  "commands.blatapi.player_stages.list_header": "Stages for %s (%d):",
-  "commands.blatapi.player_stages.no_stages": "%s has no stages",
-  "commands.blatapi.player_stages.available_stages": "Available stages:",
-  "argument.blatapi.player_stages.invalid_stage": "Stage '%s' is not valid",
-  "commands.blatapi.player_stages.available_multiblocks": "Available multiblocks:",
-  "command.blatapi.player_stages.description": "Manage player progression stages",
-  "command.blatapi.player_stages.get.description": "Get the value of a stage for a player",
-  "command.blatapi.player_stages.set.description": "Set a stage value for a player",
-  "command.blatapi.player_stages.all.description": "List all stages of a player",
-  "command.blatapi.player_stages.list.description": "List all available stages in the system",
+  "commands.blatapi.player_stages.list_header": "§e--- Registered stages (%s) ---",
+  "commands.blatapi.player_stages.list_empty": "§7No stages available.",
+  
+  "commands.blatapi.player_stages.player_empty": "§cPlayer %s has no active stages.",
+  "commands.blatapi.player_stages.player_header": "§e--- Stages for player %s ---",
+  "commands.blatapi.player_stages.player_entry": "§7- §f%s §8[%s]§7: §a%s",
+  
+  "commands.blatapi.player_stages.get_success": "§aPlayer %s has stage '%s' §8(%s)§a: %s",
+  "commands.blatapi.player_stages.get_fail": "Player %s does not have stage '%s'",
+  
+  "commands.blatapi.player_stages.remove": "§eStage '%s' removed from %s",
+  "commands.blatapi.player_stages.set_success": "§aSet stage '%s' §8[%s]§a for %s",
+  
+  "commands.blatapi.player_stages.available_multiblocks": "Available Multiblocks:",
+  
+  "_comment_ftb": "FTB",
+  "ftbquests.task.blatapi.player_stage_bool": "PlayerStage Bool",
+  "ftbquests.task.blatapi.player_stage_bool.stage": "PlayerStage",
+  
+  "ftbquests.task.blatapi.player_stage_string": "PlayerStage String",
+  "ftbquests.task.blatapi.player_stage_string.stage": "PlayerStage",
+  "ftbquests.task.blatapi.player_stage_string.value": "Value",
+  
+  "ftbquests.task.blatapi.player_stage_itemstack": "PlayerStage ItemStack",
+  "ftbquests.task.blatapi.player_stage_itemstack.stage": "PlayerStage",
+  "ftbquests.task.blatapi.player_stage_itemstack.value": "Value",
+  
+  "ftbquests.task.blatapi.player_stage_int": "PlayerStage Int",
+  "ftbquests.task.blatapi.player_stage_int.stage": "PlayerStage",
+  "ftbquests.task.blatapi.player_stage_int.min": "Min Value (value > min)",
+  "ftbquests.task.blatapi.player_stage_int.max": "Max Value (value < max)",
+  
+  "ftbquests.task.blatapi.player_stage_float": "PlayerStage Float",
+  "ftbquests.task.blatapi.player_stage_float.stage": "PlayerStage",
+  "ftbquests.task.blatapi.player_stage_float.min": "Min Value (value > min)",
+  "ftbquests.task.blatapi.player_stage_float.max": "Max Value (value < max)",
+  
+  "ftbquests.task.blatapi.player_stage_long": "PlayerStage Long",
+  "ftbquests.task.blatapi.player_stage_long.stage": "PlayerStage",
+  "ftbquests.task.blatapi.player_stage_long.min": "Min Value (value > min)",
+  "ftbquests.task.blatapi.player_stage_long.max": "Max Value (value < max)",
+  
+  "ftbquests.task.blatapi.player_stage_double": "PlayerStage Double",
+  "ftbquests.task.blatapi.player_stage_double.stage": "PlayerStage",
+  "ftbquests.task.blatapi.player_stage_double.min": "Min Value (value > min)",
+  "ftbquests.task.blatapi.player_stage_double.max": "Max Value (value < max)",
+  
+  "ftbquests.reward.blatapi.player_stage_string": "PlayerStage String",
+  "ftbquests.reward.blatapi.player_stage_string.stage": "PlayerStage",
+  "ftbquests.reward.blatapi.player_stage_string.value": "Value",
+  
+  "ftbquests.reward.blatapi.player_stage_bool": "PlayerStage Bool",
+  "ftbquests.reward.blatapi.player_stage_bool.stage": "PlayerStage",
+  "ftbquests.reward.blatapi.player_stage_bool.value": "Value",
+  
+  "ftbquests.reward.blatapi.player_stage_int": "PlayerStage Int",
+  "ftbquests.reward.blatapi.player_stage_int.stage": "PlayerStage",
+  "ftbquests.reward.blatapi.player_stage_int.value": "Value",
+  
+  "ftbquests.reward.blatapi.player_stage_double": "PlayerStage Double",
+  "ftbquests.reward.blatapi.player_stage_double.stage": "PlayerStage",
+  "ftbquests.reward.blatapi.player_stage_double.value": "Value",
+  
+  "ftbquests.reward.blatapi.player_stage_float": "PlayerStage Float",
+  "ftbquests.reward.blatapi.player_stage_float.stage": "PlayerStage",
+  "ftbquests.reward.blatapi.player_stage_float.value": "Value",
+  
+  "ftbquests.reward.blatapi.player_stage_long": "PlayerStage Long",
+  "ftbquests.reward.blatapi.player_stage_long.stage": "PlayerStage",
+  "ftbquests.reward.blatapi.player_stage_long.value": "Value",
+  
+  "ftbquests.reward.blatapi.player_stage_itemstack": "PlayerStage ItemStack",
+  "ftbquests.reward.blatapi.player_stage_itemstack.stage": "PlayerStage",
+  "ftbquests.reward.blatapi.player_stage_itemstack.value": "Value",
   
   "_comment_1": "Tasks, rewards, multiblocks",
   "task.blatapi.position": "Position: %s %s %s",
-  "task.blatapi.stage": "Stage:",
   "task.blatapi.advancement": "Advancement: %s",
   "task.blatapi.book_entry": "Knowledge from the book: %s",
   "task.blatapi.craft": "Craft: ",
   "task.blatapi.eat": "Eat: ",
   "task.blatapi.kill": "Kill: ",
+  "task.blatapi.stage_bool": "Have stage '%s'",
+  "task.blatapi.stage_int": "Stage '%s' level between %s and %s",
+  "task.blatapi.stage_double": "Stage '%s' value between %s and %s",
+  "task.blatapi.stage_float": "Stage '%s' value between %s and %s",
+  "task.blatapi.stage_long": "Stage '%s' count between %s and %s",
+  "task.blatapi.stage_string": "Stage '%s' matches '%s'",
+  "task.blatapi.stage_item_stack": "Stage '%s' contains %s (x%s)",
   "multiblock.blatapi.complete": "Complete!",
   "multiblock.blatapi.not_anchored": "Not Anchored",
   "multiblock.blatapi.remove_blocks": "Remove Blocks",
@@ -39,7 +107,7 @@
   "mod_description.blatapi": "BlatApi - a mod library by BlatFan",
   
   "panorama.minecraft.vanilla": "Vanilla",
-  "panorama.blatapi.blat_zone": "BlatZone",
+  "panorama.blatapi.cherry": "Cherry",
   
   "_comment_4": "Gui",
   "gui.blatapi.menu.optifine.0": "ATTENTION! It seems you have Optifine installed",
@@ -266,5 +334,8 @@
   "item.minecraft.tipped_arrow.effect.long_block_reach_expand": "Tipped Arrow of Long Block Reach Expand",
   "item.minecraft.tipped_arrow.effect.long_block_reach_shrink": "Tipped Arrow of Long Block Reach Shrink",
   "item.minecraft.tipped_arrow.effect.long_swim_speed": "Tipped Arrow of Long Swim Speed",
-  "item.minecraft.tipped_arrow.effect.long_swim_slowness": "Tipped Arrow of Long Swim Slowness"
+  "item.minecraft.tipped_arrow.effect.long_swim_slowness": "Tipped Arrow of Long Swim Slowness",
+  
+  "config.jade.plugin_blatapi.locked_item": "Locked Item",
+  "config.jade.plugin_blatapi.locked_block": "Locked Block"
 }

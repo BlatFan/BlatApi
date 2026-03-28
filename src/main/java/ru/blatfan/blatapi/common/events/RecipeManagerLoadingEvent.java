@@ -1,22 +1,22 @@
 package ru.blatfan.blatapi.common.events;
 
+import lombok.Getter;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraftforge.eventbus.api.Event;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.List;
 
 public class RecipeManagerLoadingEvent extends Event {
-    private final RecipeManager manager;
+    @Getter
+    private final RecipeManager recipeManager;
     private final List<Recipe<?>> recipes;
     
-    public RecipeManagerLoadingEvent(RecipeManager manager, List<Recipe<?>> recipes) {
-        this.manager = manager;
+    @ApiStatus.Internal
+    public RecipeManagerLoadingEvent(RecipeManager recipeManager, List<Recipe<?>> recipes) {
+        this.recipeManager = recipeManager;
         this.recipes = recipes;
-    }
-    
-    public RecipeManager getRecipeManager() {
-        return this.manager;
     }
     
     public void addRecipe(Recipe<?> recipe) {

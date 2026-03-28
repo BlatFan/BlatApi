@@ -1,7 +1,7 @@
 package ru.blatfan.blatapi.mixins.common;
 
-import ru.blatfan.blatapi.fluffy_fur.common.fire.FireItemHandler;
-import ru.blatfan.blatapi.fluffy_fur.common.fire.FireItemModifier;
+import ru.blatfan.blatapi.common.fire.FireItemHandler;
+import ru.blatfan.blatapi.common.fire.FireItemModifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.monster.Creeper;
@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class CreeperMixin {
 
     @Inject(method = "mobInteract", at = @At("RETURN"), cancellable = true)
-    private void fluffy_fur$mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
+    private void blatapi$mobInteract(Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         Creeper self = (Creeper) ((Object) this);
         for (FireItemModifier modifier : FireItemHandler.getModifiers()) {
             if (modifier.isCreeperInteract(self, player, hand)) {

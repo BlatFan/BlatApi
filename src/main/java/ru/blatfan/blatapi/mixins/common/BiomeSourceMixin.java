@@ -30,16 +30,14 @@ public class BiomeSourceMixin implements BABiomeSource {
 
     @Override
     public void addPossibleBiomes(Set<Holder<Biome>> biomes) {
-        if(blatapi$hasMergedPossibleBiomes) {
+        if(blatapi$hasMergedPossibleBiomes)
             return;
-        }
-
         ImmutableSet.Builder<Holder<Biome>> builder = ImmutableSet.builder();
         builder.addAll(this.possibleBiomes.get());
         builder.addAll(biomes);
         this.possibleBiomes = Suppliers.memoize(builder::build);
         this.blatapi$hasMergedPossibleBiomes = true;
-        BiomeRaplacerModule.LOGGER.info("BFBiomeSource successfully initialized for " + blatapi$currentDimension.location());
+        BiomeRaplacerModule.LOGGER.info("BFBiomeSource successfully initialized for {}", blatapi$currentDimension.location());
     }
 
     @Override

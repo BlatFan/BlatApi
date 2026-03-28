@@ -1,9 +1,5 @@
 package ru.blatfan.blatapi.compat.jei.category;
 
-import net.minecraft.client.gui.Font;
-import net.minecraft.world.entity.player.Player;
-import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.common.recipe.IAnvilRecipe;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,18 +11,23 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
+import ru.blatfan.blatapi.BlatApi;
+import ru.blatfan.blatapi.common.recipe.IAnvilRecipe;
 import ru.blatfan.blatapi.utils.ItemHelper;
+import ru.blatfan.blatapi.utils.collection.Text;
 
 import java.util.Arrays;
 import java.util.List;
 
 public final class AnvilRecipeCategory implements IRecipeCategory<IAnvilRecipe> {
-    private static final ResourceLocation TEXTURE = BlatApi.loc("textures/gui/jei/anvil.png");
+    private static final ResourceLocation TEXTURE = BlatApi.guiLoc("jei/anvil");
     public static final RecipeType<IAnvilRecipe> RECIPE_TYPE = RecipeType.create(BlatApi.MOD_ID, "anvil", IAnvilRecipe.class);
 
     private final IDrawable background;
@@ -47,7 +48,7 @@ public final class AnvilRecipeCategory implements IRecipeCategory<IAnvilRecipe> 
 
     @Override
     public Component getTitle() {
-        return Component.translatable("block.minecraft.anvil");
+        return Text.create("block.minecraft.anvil");
     }
 
     @Override
@@ -96,14 +97,14 @@ public final class AnvilRecipeCategory implements IRecipeCategory<IAnvilRecipe> 
         }
 
         if (recipe.getExperience() > 0)
-            graphics.drawString(font, Component.translatable("container.repair.cost", recipe.getExperience() < 0 ? "err" : String.valueOf(recipe.getExperience())).getString(), 9, 65, (player == null || player.isCreative()) || (recipe.getExperience() < 40 && recipe.getExperience() <= player.experienceLevel) ? 0xFF80FF20 : 0xFFFF6060);
+            graphics.drawString(font, Text.create("container.repair.cost", recipe.getExperience() < 0 ? "err" : String.valueOf(recipe.getExperience())).getString(), 9, 65, (player == null || player.isCreative()) || (recipe.getExperience() < 40 && recipe.getExperience() <= player.experienceLevel) ? 0xFF80FF20 : 0xFFFF6060);
     }
 
     @Override
     public List<Component> getTooltipStrings(IAnvilRecipe recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         if (recipe.isShapeless())
             if (mouseX > 135 && mouseX < this.shapeless.getWidth() + 135 && mouseY > 62 && mouseY < this.shapeless.getHeight() + 62)
-                return List.of(Component.translatable("tooltip.blatapi.shapeless"));
+                return List.of(Text.create("tooltip.blatapi.shapeless"));
 
         return IRecipeCategory.super.getTooltipStrings(recipe, recipeSlotsView, mouseX, mouseY);
     }
@@ -111,32 +112,32 @@ public final class AnvilRecipeCategory implements IRecipeCategory<IAnvilRecipe> 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, IAnvilRecipe recipe, IFocusGroup focuses) {
         builder.addSlot(recipe.isConsuming(0) ? RecipeIngredientRole.INPUT : RecipeIngredientRole.CATALYST, 10, 40).addItemStacks(Arrays.stream(recipe.getInput(0).getItems()).map(stack -> ItemHelper.withSize(stack, recipe.getInputCount(0), false)).peek(stack -> stack.setTag(recipe.getInputNbt(0))).toList()).addTooltipCallback(((slotView, tooltip) -> {
-            tooltip.add(Component.translatable("tooltip.blatapi.consumes").append(": ").withStyle(ChatFormatting.GRAY).append(recipe.isConsuming(0) ? Component.literal("Yes").withStyle(ChatFormatting.RED) : Component.literal("No").withStyle(ChatFormatting.GREEN)));
+            tooltip.add(Text.create("tooltip.blatapi.consumes").add(": ").withStyle(ChatFormatting.GRAY).add(recipe.isConsuming(0) ? Component.literal("Yes").withStyle(ChatFormatting.RED) : Component.literal("No").withStyle(ChatFormatting.GREEN)));
 
             if (recipe.isUsingDurability(0))
-                tooltip.add(Component.translatable("tooltip.blatapi.uses_durability").append(": ").withStyle(ChatFormatting.GRAY).append(Component.translatable("tooltip.blatapi.yes").withStyle(ChatFormatting.RED)));
+                tooltip.add(Text.create("tooltip.blatapi.uses_durability").add(": ").withStyle(ChatFormatting.GRAY).add(Text.create("tooltip.blatapi.yes").withStyle(ChatFormatting.RED)));
 
             if (recipe.hasNbt(0))
-                tooltip.add(Component.translatable("tooltip.blatapi.strict_nbt").append(": ").withStyle(ChatFormatting.GRAY).append(recipe.isNbtStrict(0) ? Component.translatable("tooltip.blatapi.yes").withStyle(ChatFormatting.RED) : Component.translatable("tooltip.blatapi.no").withStyle(ChatFormatting.GREEN)));
+                tooltip.add(Text.create("tooltip.blatapi.strict_nbt").add(": ").withStyle(ChatFormatting.GRAY).add(recipe.isNbtStrict(0) ? Text.create("tooltip.blatapi.yes").withStyle(ChatFormatting.RED) : Text.create("tooltip.blatapi.no").withStyle(ChatFormatting.GREEN)));
 
             if (!recipe.getReturn(0).isEmpty()) {
-                tooltip.add(Component.translatable("tooltip.blatapi.returns").append(": ").withStyle(ChatFormatting.GRAY));
+                tooltip.add(Text.create("tooltip.blatapi.returns").add(": ").withStyle(ChatFormatting.GRAY));
                 tooltip.add(Component.empty());
                 tooltip.add(Component.empty());
             }
         }));
 
         builder.addSlot(recipe.isConsuming(1) ? RecipeIngredientRole.INPUT : RecipeIngredientRole.CATALYST, 59, 40).addItemStacks(Arrays.stream(recipe.getInput(1).getItems()).map(stack -> ItemHelper.withSize(stack, recipe.getInputCount(1), false)).peek(stack -> stack.setTag(recipe.getInputNbt(1))).toList()).addTooltipCallback(((slotView, tooltip) -> {
-            tooltip.add(Component.translatable("tooltip.blatapi.consumes").append(": ").withStyle(ChatFormatting.GRAY).append(recipe.isConsuming(1) ? Component.literal("Yes").withStyle(ChatFormatting.RED) : Component.literal("No").withStyle(ChatFormatting.GREEN)));
+            tooltip.add(Text.create("tooltip.blatapi.consumes").add(": ").withStyle(ChatFormatting.GRAY).add(recipe.isConsuming(1) ? Component.literal("Yes").withStyle(ChatFormatting.RED) : Component.literal("No").withStyle(ChatFormatting.GREEN)));
 
             if (recipe.isUsingDurability(1))
-                tooltip.add(Component.translatable("tooltip.blatapi.uses_durability").append(": ").withStyle(ChatFormatting.GRAY).append(Component.translatable("tooltip.blatapi.yes").withStyle(ChatFormatting.RED)));
+                tooltip.add(Text.create("tooltip.blatapi.uses_durability").add(": ").withStyle(ChatFormatting.GRAY).add(Text.create("tooltip.blatapi.yes").withStyle(ChatFormatting.RED)));
 
             if (recipe.hasNbt(1))
-                tooltip.add(Component.translatable("tooltip.blatapi.strict_nbt").append(": ").withStyle(ChatFormatting.GRAY).append(recipe.isNbtStrict(1) ? Component.translatable("tooltip.blatapi.yes").withStyle(ChatFormatting.RED) : Component.translatable("tooltip.blatapi.no").withStyle(ChatFormatting.GREEN)));
+                tooltip.add(Text.create("tooltip.blatapi.strict_nbt").add(": ").withStyle(ChatFormatting.GRAY).add(recipe.isNbtStrict(1) ? Text.create("tooltip.blatapi.yes").withStyle(ChatFormatting.RED) : Text.create("tooltip.blatapi.no").withStyle(ChatFormatting.GREEN)));
 
             if (!recipe.getReturn(1).isEmpty()) {
-                tooltip.add(Component.translatable("tooltip.blatapi.returns").append(": ").withStyle(ChatFormatting.GRAY));
+                tooltip.add(Text.create("tooltip.blatapi.returns").add(": ").withStyle(ChatFormatting.GRAY));
                 tooltip.add(Component.empty());
                 tooltip.add(Component.empty());
             }
