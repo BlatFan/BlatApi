@@ -1,0 +1,14 @@
+{
+  "type": "blatapi:block",
+  "tasks": [
+    {
+      "type": "blatapi:stage_int",
+      "stage": "blatapi:level",
+      "min": 4
+    }
+  ],
+  "visible": false,
+  "value": {
+    "block": "minecraft:barrier"
+  }
+}
