@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.common.block;
+package ru.blatfan.blatapi.common.block.entity;
 
 import com.google.common.base.Preconditions;
 import lombok.Getter;
@@ -23,7 +23,7 @@ import ru.blatfan.blatapi.utils.BlockUtil;
 import javax.annotation.Nonnull;
 
 @Getter
-public abstract class BlockFluidInventory extends BlockEntity {
+public abstract class BlockFluidInventory extends BlockEntityBase {
     private boolean changed = false;
     private final Container itemHandler = this.createItemHandler();
     private final FluidTank fluidTank = this.createFluidTank();

@@ -97,7 +97,7 @@ public class BlockedStagesEvents {
             EquipmentSlot slot = event.getSlot();
             if (slot.getType() != EquipmentSlot.Type.ARMOR && slot != EquipmentSlot.OFFHAND) return;
             
-            if (BlockedStageHelper.canUse(player, newItem))
+            if (!BlockedStageHelper.canUse(player, newItem))
                 try {
                     player.setItemSlot(slot, ItemStack.EMPTY);
                     if (!player.getInventory().add(newItem.copy()))

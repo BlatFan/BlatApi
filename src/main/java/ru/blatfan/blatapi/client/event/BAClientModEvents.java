@@ -1,8 +1,6 @@
 package ru.blatfan.blatapi.client.event;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.blockentity.HangingSignRenderer;
@@ -30,31 +28,30 @@ import java.io.IOException;
 public class BAClientModEvents {
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        ParticleEngine particleEngine = Minecraft.getInstance().particleEngine;
-        particleEngine.register(BARegistry.Particles.EMERALD.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.WISP.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.TINY_WISP.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.SPARKLE.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.STAR.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.TINY_STAR.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.FIRE.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.SQUARE.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.DOT.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.CIRCLE.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.TINY_CIRCLE.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.HEART.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.SKULL.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.SMOKE.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.TRAIL.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.PANCAKE.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.DEATH.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.EARTH.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.SUN.get(), GenericParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.ITEM.get(), ItemParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.BLOCK.get(), BlockParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.FLUID.get(), FluidParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.SPRITE.get(), SpriteParticleType.Factory::new);
-        particleEngine.register(BARegistry.Particles.CHERRY_LEAVES.get(), LeavesParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.EMERALD.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.WISP.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.TINY_WISP.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.SPARKLE.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.STAR.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.TINY_STAR.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.FIRE.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.SQUARE.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.DOT.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.CIRCLE.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.TINY_CIRCLE.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.HEART.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.SKULL.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.SMOKE.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.TRAIL.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.PANCAKE.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.DEATH.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.EARTH.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.SUN.get(), GenericParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.ITEM.get(), ItemParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.BLOCK.get(), BlockParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.FLUID.get(), FluidParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.SPRITE.get(), SpriteParticleType.Factory::new);
+        event.registerSpriteSet(BARegistry.Particles.CHERRY_LEAVES.get(), LeavesParticleType.Factory::new);
     }
     
     @SubscribeEvent

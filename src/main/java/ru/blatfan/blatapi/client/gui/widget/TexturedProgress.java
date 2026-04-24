@@ -11,7 +11,7 @@ import ru.blatfan.blatapi.utils.collection.Text;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TexturedProgress{
+public class TexturedProgress {
   protected final int x;
   protected final int y;
   protected final int width;

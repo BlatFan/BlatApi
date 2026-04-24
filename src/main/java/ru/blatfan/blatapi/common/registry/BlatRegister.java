@@ -228,7 +228,7 @@ public class BlatRegister {
         return ENTITY_TYPES.register(id, supplier);
     }
     public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String id, EntityType.Builder<T> builder){
-        return ENTITY_TYPES.register(id, ()->builder.build(modid+":"+id));
+        return entity_type(id, ()->builder.build(modid+":"+id));
     }
     public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory, float width, float height, int trackingRange, EntityType.EntityFactory<T> factory) {
         return entity_type(name, mobCategory, width, height, trackingRange, 1, factory);
@@ -242,7 +242,7 @@ public class BlatRegister {
     public <T extends Entity> RegistryObject<EntityType<T>> entity_type(String name, MobCategory mobCategory,
         boolean noSave, boolean noSummon, boolean fireImmune, boolean canSpawnFarFromPlayer,
         float width, float height, int clientTrackingRange, int trackingRange, int updateInterval, EntityType.EntityFactory<T> factory, FeatureFlag... requiredFeatures) {
-        EntityType.Builder<T> builder = EntityType.Builder.of(factory, mobCategory)
+        EntityType.Builder<T> builder = EntityType.Builder.<T>of(factory, mobCategory)
             .clientTrackingRange(clientTrackingRange)
             .setTrackingRange(trackingRange)
             .setUpdateInterval(updateInterval)
@@ -306,14 +306,15 @@ public class BlatRegister {
     public <T extends Attribute> RegistryObject<T> attribute(String id, Supplier<T> supplier){
         return ATTRIBUTES.register(id, supplier);
     }
-    public RegistryObject<RangedAttribute> attribute(String id, double defValue, double minValue, double maxValue){
-        return attribute(id, ()-> new RangedAttribute(id, defValue, minValue, maxValue));
+    @SuppressWarnings("unchecked")
+    public <T extends RangedAttribute> RegistryObject<T> attribute(String id, double defValue, double minValue, double maxValue, boolean sync){
+        return attribute(id, ()-> (T) new RangedAttribute(id, defValue, minValue, maxValue).setSyncable(sync));
     }
-    public RegistryObject<RangedAttribute> attribute(String id, double defValue, double minValue){
-        return attribute(id, defValue, minValue, Integer.MAX_VALUE);
+    public <T extends RangedAttribute> RegistryObject<T> attribute(String id, double defValue, double minValue, boolean sync){
+        return attribute(id, defValue, minValue, Integer.MAX_VALUE, sync);
     }
-    public RegistryObject<RangedAttribute> attribute(String id, double defValue){
-        return attribute(id, defValue, 0, Integer.MAX_VALUE);
+    public <T extends RangedAttribute> RegistryObject<T> attribute(String id, double defValue, boolean sync){
+        return attribute(id, defValue, 0, Integer.MAX_VALUE, sync);
     }
     
     public <T> RegistryObject<StatType<T>> stat_type(String id, Supplier<StatType<T>> supplier){

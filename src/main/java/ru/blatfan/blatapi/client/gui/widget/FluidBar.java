@@ -19,10 +19,10 @@ import java.util.List;
 
 public class FluidBar extends AbstractWidget {
   public final ResourceLocation FLUID_WIDGET;
-  private final IFluidHandler fluidHandler;
-  private final int tank;
-  private final float scale;
-  private final Color barColor;
+  protected final IFluidHandler fluidHandler;
+  protected final int tank;
+  protected final float scale;
+  protected final Color barColor;
   
   public FluidBar(int pX, int pY, int pWidth, ResourceLocation fluidWidget, IFluidHandler fluidHandler, int tank, Color barColor) {
     super(pX, pY, pWidth, 62*(pWidth/16), Component.literal("Fluid Bar"));

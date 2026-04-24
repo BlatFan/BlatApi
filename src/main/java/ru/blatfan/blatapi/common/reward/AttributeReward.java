@@ -8,11 +8,15 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.utils.collection.Text;
+
+import java.util.UUID;
 
 @AllArgsConstructor
 @Getter
@@ -21,18 +25,21 @@ public class AttributeReward extends Reward {
     private final ResourceLocation attributeLoc;
     private final float value;
     private final AttributeModifier.Operation operation;
+    
+    private final UUID uuid;
+    private final String name;
+    
     @Override
     public void apply(Player player) {
         Attribute attribute = BuiltInRegistries.ATTRIBUTE.get(attributeLoc);
         if (attribute==null) {
-            BlatApi.LOGGER.warn("Unknow attribute {}", attributeLoc);
+            BlatApi.LOGGER.warn("Unknown attribute {}", attributeLoc);
             return;
         }
-        if(player.getAttributes().hasAttribute(attribute)){
+        if(player.getAttributes().hasAttribute(attribute))
             player.getAttribute(attribute).addPermanentModifier(
-                new AttributeModifier("Skill", value, operation)
+                new AttributeModifier(uuid, name, value, operation)
             );
-        }
     }
     
     public static AttributeReward fromJson(JsonObject json){
@@ -40,7 +47,9 @@ public class AttributeReward extends Reward {
         boolean b = !json.has("visible") || json.get("visible").getAsBoolean();
         float v = json.get("value").getAsFloat();
         AttributeModifier.Operation op = AttributeModifier.Operation.valueOf(json.get("operation").getAsString().toUpperCase());
-        return new AttributeReward(b, lc, v, op);
+        UUID uuid = json.has("uuid") ? UUID.fromString(json.get("uuid").getAsString()) : Mth.createInsecureUUID(RandomSource.createNewThreadLocalInstance());
+        String name = json.has("name") ? json.get("name").getAsString() : "attribute_reward";
+        return new AttributeReward(b, lc, v, op, uuid, name);
     }
     
     @Override
@@ -50,6 +59,8 @@ public class AttributeReward extends Reward {
         tag.putBoolean("visible", visible);
         tag.putFloat("value", value);
         tag.putString("op", operation.name());
+        tag.putUUID("uuid", uuid);
+        tag.putString("name", name);
         return tag;
     }
     
@@ -58,7 +69,9 @@ public class AttributeReward extends Reward {
             tag.getBoolean("visible"),
             ResourceLocation.tryParse(tag.getString("attribute")),
             tag.getFloat("value"),
-            AttributeModifier.Operation.valueOf(tag.getString("op"))
+            AttributeModifier.Operation.valueOf(tag.getString("op")),
+            tag.getUUID("uuid"),
+            tag.getString("name")
         );
     }
     

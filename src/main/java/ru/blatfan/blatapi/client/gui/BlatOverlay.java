@@ -6,29 +6,29 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 
 @SuppressWarnings("unused")
 public abstract class BlatOverlay implements IGuiOverlay {
-    private static final int HOTBAR_HEIGHT = 32;
-    private static final int SCREEN_BORDER_MARGIN = 20;
-    protected int DEFAULT_IMAGE_WIDTH, IMAGE_HEIGHT;
+    protected static final int HOTBAR_HEIGHT = 32;
+    protected static final int SCREEN_BORDER_MARGIN = 20;
+    protected int defaultImageWidth, imageHeight;
     
     protected BlatOverlay(int defaultImageWidth, int imageHeight) {
-        DEFAULT_IMAGE_WIDTH = defaultImageWidth;
-        IMAGE_HEIGHT = imageHeight;
+        this.defaultImageWidth = defaultImageWidth;
+        this.imageHeight = imageHeight;
     }
     
     public int getBarX(Anchor anchor, int screenWidth) {
         if (anchor == Anchor.Center)
-            return screenWidth / 2 - DEFAULT_IMAGE_WIDTH / 2;
+            return screenWidth / 2 - defaultImageWidth / 2;
         else if (anchor == Anchor.TopLeft || anchor == Anchor.BottomLeft)
             return SCREEN_BORDER_MARGIN;
-        else return screenWidth - SCREEN_BORDER_MARGIN - DEFAULT_IMAGE_WIDTH;
+        else return screenWidth - SCREEN_BORDER_MARGIN - defaultImageWidth;
     }
     
     public int getBarY(Anchor anchor, int screenHeight) {
         if (anchor == Anchor.Center)
-            return screenHeight - HOTBAR_HEIGHT - IMAGE_HEIGHT / 2;
+            return screenHeight - HOTBAR_HEIGHT - imageHeight / 2;
         if (anchor == Anchor.TopLeft || anchor == Anchor.TopRight)
             return SCREEN_BORDER_MARGIN;
-        return screenHeight - SCREEN_BORDER_MARGIN - IMAGE_HEIGHT;
+        return screenHeight - SCREEN_BORDER_MARGIN - imageHeight;
     }
     
     @Override

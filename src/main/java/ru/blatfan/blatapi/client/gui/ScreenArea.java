@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class ScreenArea {
-    private final float minX, minY, maxX, maxY;
+    protected final float minX, minY, maxX, maxY;
     
     protected ScreenArea(float minX, float minY, float maxX, float maxY) {
         this.minX = minX;

@@ -15,7 +15,7 @@ import java.util.List;
 
 public class EnergyBar extends AbstractWidget {
   public final ResourceLocation ENERGY_BAR;
-  private final IEnergyStorage energy;
+  protected final IEnergyStorage energy;
   
   public EnergyBar(int pX, int pY, int pWidth, ResourceLocation energyBar, IEnergyStorage energy) {
     super(pX, pY, pWidth, 62*(pWidth/16), Component.literal("Energy Bar"));
