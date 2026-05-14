@@ -1,50 +1,51 @@
-    package ru.blatfan.blatapi;
-    
-    import net.minecraft.resources.ResourceLocation;
-    import net.minecraftforge.api.distmarker.Dist;
-    import net.minecraftforge.common.ForgeMod;
-    import net.minecraftforge.common.MinecraftForge;
-    import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
-    import net.minecraftforge.common.crafting.CraftingHelper;
-    import net.minecraftforge.event.AddReloadListenerEvent;
-    import net.minecraftforge.eventbus.api.IEventBus;
-    import net.minecraftforge.fml.DistExecutor;
-    import net.minecraftforge.fml.IExtensionPoint;
-    import net.minecraftforge.fml.ModList;
-    import net.minecraftforge.fml.common.Mod;
-    import net.minecraftforge.fml.config.ModConfig;
-    import net.minecraftforge.fml.event.config.ModConfigEvent;
-    import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-    import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-    import net.minecraftforge.gametest.ForgeGameTestHooks;
-    import org.slf4j.Logger;
-    import org.slf4j.LoggerFactory;
-    import ru.blatfan.blatapi.client.guide_book.GuideClient;
-    import ru.blatfan.blatapi.common.BARegistry;
-    import ru.blatfan.blatapi.common.GuideManager;
-    import ru.blatfan.blatapi.common.capability.IPlayerSkin;
-    import ru.blatfan.blatapi.common.itemskin.ItemSkin;
-    import ru.blatfan.blatapi.common.itemskin.ItemSkinHandler;
-    import ru.blatfan.blatapi.common.multiblock.MultiBlockData;
-    import ru.blatfan.blatapi.common.network.BlatApiPacketHandler;
-    import ru.blatfan.blatapi.common.player_stages.PlayerStages;
-    import ru.blatfan.blatapi.common.player_stages.blocked.BlockedStageType;
-    import ru.blatfan.blatapi.common.player_stages.blocked.BlockedStagesManager;
-    import ru.blatfan.blatapi.common.proxy.ClientProxy;
-    import ru.blatfan.blatapi.common.proxy.ISidedProxy;
-    import ru.blatfan.blatapi.common.proxy.ServerProxy;
-    import ru.blatfan.blatapi.common.recipe.IngredientWithCountSerializer;
-    import ru.blatfan.blatapi.common.reward.Reward;
-    import ru.blatfan.blatapi.common.task.Task;
-    import ru.blatfan.blatapi.compat.ftb_quests.FTBQuestsBA;
-    import ru.blatfan.blatapi.compat.ftb_teams.IFTBTeam;
-    import ru.blatfan.blatapi.config.BlatApiClientConfig;
-    import ru.blatfan.blatapi.config.BlatApiConfig;
-    import ru.blatfan.blatapi.utils.*;
-    
-    import java.util.ArrayList;
-    import java.util.Arrays;
-    import java.util.List;
+package ru.blatfan.blatapi;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.common.crafting.CraftingHelper;
+import net.minecraftforge.event.AddReloadListenerEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.IExtensionPoint;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.gametest.ForgeGameTestHooks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import ru.blatfan.blatapi.client.guide_book.GuideClient;
+import ru.blatfan.blatapi.common.BARegistry;
+import ru.blatfan.blatapi.common.GuideManager;
+import ru.blatfan.blatapi.common.cap.IPlayerSkin;
+import ru.blatfan.blatapi.common.itemskin.ItemSkin;
+import ru.blatfan.blatapi.common.itemskin.ItemSkinHandler;
+import ru.blatfan.blatapi.common.multiblock.MultiBlockData;
+import ru.blatfan.blatapi.common.network.BlatApiPacketHandler;
+import ru.blatfan.blatapi.common.player_stages.PlayerStages;
+import ru.blatfan.blatapi.common.player_stages.blocked.BlockedStageType;
+import ru.blatfan.blatapi.common.player_stages.blocked.BlockedStagesManager;
+import ru.blatfan.blatapi.common.proxy.ClientProxy;
+import ru.blatfan.blatapi.common.proxy.ISidedProxy;
+import ru.blatfan.blatapi.common.proxy.ServerProxy;
+import ru.blatfan.blatapi.common.recipe.ExclusionIngredient;
+import ru.blatfan.blatapi.common.recipe.IngredientWithCount;
+import ru.blatfan.blatapi.common.reward.Reward;
+import ru.blatfan.blatapi.common.task.Task;
+import ru.blatfan.blatapi.compat.ftb_quests.FTBQuestsBA;
+import ru.blatfan.blatapi.compat.ftb_teams.IFTBTeam;
+import ru.blatfan.blatapi.config.BlatApiClientConfig;
+import ru.blatfan.blatapi.config.BlatApiConfig;
+import ru.blatfan.blatapi.utils.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 // TODO PlayerStages for block render
 
@@ -52,7 +53,7 @@
 public class BlatApi {
     public static final String MOD_ID = "blatapi";
     public static final String MOD_NAME = "BlatApi";
-    public static final String MOD_VERSION = "0.4.1";
+    public static final String MOD_VERSION = "0.4.2";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatAPI");
     public static String CUSTOM_WINDOW_TITLE = "";
     public static final ISidedProxy proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
@@ -106,10 +107,10 @@ public class BlatApi {
         
         if(ModList.get().isLoaded("ftbteams")) TeamHelper.TEAMS.put("ftbteams", new IFTBTeam());
         
-        
-        event.enqueueWork(() ->
-            CraftingHelper.register(IngredientWithCountSerializer.ID, IngredientWithCountSerializer.INSTANCE)
-        );
+        event.enqueueWork(() -> {
+            CraftingHelper.register(IngredientWithCount.Serializer.ID, IngredientWithCount.Serializer.INSTANCE);
+            CraftingHelper.register(ExclusionIngredient.Serializer.ID, ExclusionIngredient.Serializer.INSTANCE);
+        });
         
         for (ItemSkin skin : ItemSkinHandler.getSkins())
             skin.setupSkinEntries();

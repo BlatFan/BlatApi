@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.simple.SimpleChannel;
 import ru.blatfan.blatapi.BlatApi;
-import ru.blatfan.blatapi.common.capability.IPlayerSkin;
+import ru.blatfan.blatapi.common.cap.IPlayerSkin;
 import ru.blatfan.blatapi.common.network.ClientPacket;
 
 import java.util.UUID;

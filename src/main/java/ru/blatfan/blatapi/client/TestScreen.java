@@ -40,9 +40,11 @@ public class TestScreen extends Screen {
         super.init();
         addRenderableWidget(new EnergyBar(width/2-48, height/2-16, 16, energyStorage));
         
-        addRenderableWidget(new FluidBar(width/2+48, height/2-16, 16, fluidTank, 0));
-        addRenderableWidget(new FluidBar(width/2+16, height/2-16, 32, fluidTank2, 0));
-        addRenderableWidget(new FluidBar(width/2+96, height/2-16, 32, fluidTank3, 0, Color.MAGENTA));
+        addRenderableWidget(new FluidBar(width/2, height/2-16, 10, new FluidTank(1000)));
+        addRenderableWidget(new FluidBar(width/2+10, height/2-16, 10, fluidTank));
+        addRenderableWidget(new FluidBar(width/2+48, height/2-16, 16, fluidTank));
+        addRenderableWidget(new FluidBar(width/2+16, height/2-16, 32, fluidTank2));
+        addRenderableWidget(new FluidBar(width/2+96, height/2-16, 48, fluidTank3, Color.MAGENTA));
         
         progress = TexturedProgress.createHorizontal(width/2-16, height/2-64);
         progress2 = TexturedProgress.createVertical(width/2+16, height/2-64);
@@ -54,15 +56,13 @@ public class TestScreen extends Screen {
     @Override
     public void render(GuiGraphics gui, int mX, int mY, float partialTick) {
         super.render(gui, mX, mY, partialTick);
-        tick+=invert? -partialTick : partialTick;
-        float time = tick/60f;
-        if(time>=1) invert=true;
-        if(time<=0) invert=false;
-        time = Math.max(0, Math.min(1, time));
+        tick+=partialTick;
+        float time = (float) (Math.sin(tick*0.025)*Math.sin(tick*0.025));
+        float time2 = (float) (Math.sin(tick*0.005)*Math.sin(tick*0.005));
         energyStorage.setEnergy((int) (energyStorage.getMaxEnergyStored()*time));
         fluidTank.setFluid(new FluidStack(Fluids.WATER, (int) (fluidTank.getCapacity()*time)));
-        fluidTank2.setFluid(new FluidStack(Fluids.LAVA, (int) (fluidTank2.getCapacity()*time)));
-        fluidTank3.setFluid(new FluidStack(ForgeMod.MILK.get(), (int) (fluidTank3.getCapacity()*time)));
+        fluidTank2.setFluid(new FluidStack(ForgeMod.MILK.get(), (int) (fluidTank2.getCapacity()*time)));
+        fluidTank3.setFluid(new FluidStack(Fluids.LAVA, (int) (fluidTank3.getCapacity()*time2)));
         
         gui.pose().pushPose();
         gui.pose().translate(width/2f+48, height/2f+16, 0);

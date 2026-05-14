@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 import ru.blatfan.blatapi.utils.BaseItemStackHandler;
 
@@ -16,8 +17,15 @@ import javax.annotation.Nonnull;
 
 @Getter
 public abstract class BlockISSimpleInventory extends BlockEntityBase {
-    private boolean isChanged = false;
-    private final BaseItemStackHandler itemHandler = this.createItemHandler();
+    private final BaseItemStackHandler itemHandler;
+    private LazyOptional<IItemHandler> itemOpt = LazyOptional.empty();
+    
+    public BlockISSimpleInventory(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
+        super(pType, pPos, pBlockState);
+        this.itemHandler = this.createItemHandler();
+        
+        if(this.itemHandler!=null) itemOpt = LazyOptional.of(()-> itemHandler);
+    }
     
     protected abstract BaseItemStackHandler createItemHandler();
     
@@ -37,18 +45,7 @@ public abstract class BlockISSimpleInventory extends BlockEntityBase {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return LazyOptional.of(this::getItemHandler).cast();
-        
+        if (cap == ForgeCapabilities.ITEM_HANDLER) return itemOpt.cast();
         return super.getCapability(cap, side);
-    }
-    
-    public void setChanged() {
-        super.setChanged();
-        this.isChanged = true;
-    }
-    
-    public BlockISSimpleInventory(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
-        super(pType, pPos, pBlockState);
     }
 }

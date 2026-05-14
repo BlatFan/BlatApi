@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,11 +17,14 @@ import javax.annotation.Nonnull;
 
 @Getter
 public abstract class BlockFluidTank extends BlockEntityBase {
-    private boolean changed = false;
-    private FluidTank fluidTank = this.createFluidTank();
+    private final FluidTank fluidTank;
+    private LazyOptional<IFluidHandler> fluidOpt = LazyOptional.empty();
     
     public BlockFluidTank(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        this.fluidTank = this.createFluidTank();
+        
+        if(this.fluidTank!=null) fluidOpt = LazyOptional.of(()-> fluidTank);
     }
     
     protected abstract FluidTank createFluidTank();
@@ -40,9 +44,7 @@ public abstract class BlockFluidTank extends BlockEntityBase {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.FLUID_HANDLER)
-            return LazyOptional.of(this::getFluidTank).cast();
-        
+        if (cap == ForgeCapabilities.FLUID_HANDLER) return fluidOpt.cast();
         return super.getCapability(cap, side);
     }
 }

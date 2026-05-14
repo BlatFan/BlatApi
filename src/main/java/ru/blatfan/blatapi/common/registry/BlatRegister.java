@@ -175,11 +175,11 @@ public class BlatRegister {
         LOOT_MODIFIERS.register(eventBus);
     }
     
-    public <T extends Block> RegistryObject<T> block(String id, Supplier<T> supplier){
-        return BLOCKS.register(id, supplier);
+    public <T extends Block> BlockRegistryObject<T> block(String id, Supplier<T> supplier){
+        return new BlockRegistryObject<T>(BLOCKS.register(id, supplier));
     }
     
-    public RegistryObject<Block> block(String id){
+    public BlockRegistryObject<Block> block(String id){
         return block(id, ()-> new Block(BlockBehaviour.Properties.of()));
     }
     
@@ -191,13 +191,13 @@ public class BlatRegister {
         return FLUID_TYPES.register(id, supplier);
     }
     
-    public <T extends Item> RegistryObject<T> item(String id, Supplier<T> supplier){
-        return ITEMS.register(id, supplier);
+    public <T extends Item> ItemRegistryObject<T> item(String id, Supplier<T> supplier){
+        return new ItemRegistryObject<T>(ITEMS.register(id, supplier));
     }
-    public RegistryObject<Item> item(String id){
+    public ItemRegistryObject<Item> item(String id){
         return item(id, ()-> new Item(new Item.Properties()));
     }
-    public RegistryObject<Item> singleItem(String id){
+    public ItemRegistryObject<Item> singleItem(String id){
         return item(id, ()-> new Item(new Item.Properties().stacksTo(1)));
     }
     

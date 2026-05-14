@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import ru.blatfan.blatapi.utils.BlockUtil;
@@ -25,11 +26,14 @@ import ru.blatfan.blatapi.utils.BlockUtil;
 import javax.annotation.Nonnull;
 
 public abstract class BlockSimpleInventory extends BlockEntityBase {
-    private final SimpleContainer itemHandler = createItemHandler();
+    private final SimpleContainer itemHandler;
+    private LazyOptional<IItemHandler> itemOpt = LazyOptional.empty();
 
     public BlockSimpleInventory(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+        this.itemHandler = this.createItemHandler();
         itemHandler.addListener(i -> setChanged());
+        if(this.itemHandler!=null) itemOpt = BlockUtil.getLazyItems(itemHandler);
     }
 
     private static void copyToInv(NonNullList<ItemStack> src, Container dest) {

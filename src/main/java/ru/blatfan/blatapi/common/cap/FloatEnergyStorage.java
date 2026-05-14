@@ -31,45 +31,29 @@ public class FloatEnergyStorage extends CustomEnergyStorage {
     
     public void setCapacity(int newCapacity) {
         this.capacity = newCapacity;
+        if (this.energy > this.capacity) this.energy = this.capacity;
     }
     
-    public void setMaxReceive(int newMaxReceive) {
-        this.maxReceive = newMaxReceive;
-    }
-    
-    public void setMaxExtract(int newMaxExtract) {
-        this.maxExtract = newMaxExtract;
-    }
-    
-    public int getMaxReceive() {
-        return maxReceive;
-    }
-    
-    public int getMaxExtract() {
-        return maxExtract;
-    }
+    public void setMaxReceive(int newMaxReceive) { this.maxReceive = newMaxReceive; }
+    public void setMaxExtract(int newMaxExtract) { this.maxExtract = newMaxExtract; }
+    public int getMaxReceive() { return this.maxReceive; }
+    public int getMaxExtract() { return this.maxExtract; }
     
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag tag = super.serializeNBT();
-        tag.putInt("capacity", capacity);
-        tag.putInt("originalCapacity", originalCapacity);
-        tag.putInt("maxReceive", maxReceive);
-        tag.putInt("originalMaxReceive", originalMaxReceive);
-        tag.putInt("maxExtract", maxExtract);
-        tag.putInt("originalMaxExtract", originalMaxExtract);
-        return tag;
+        CompoundTag nbtTag = super.serializeNBT();
+        nbtTag.putInt("originalCapacity", this.originalCapacity);
+        nbtTag.putInt("originalMaxReceive", this.originalMaxReceive);
+        nbtTag.putInt("originalMaxExtract", this.originalMaxExtract);
+        return nbtTag;
     }
     
     @Override
     public void deserializeNBT(Tag nbt) {
+        if (!(nbt instanceof CompoundTag compound)) return;
         super.deserializeNBT(nbt);
-        CompoundTag tag = (CompoundTag) nbt;
-        capacity = tag.getInt("capacity");
-        originalCapacity = tag.getInt("originalCapacity");
-        maxReceive = tag.getInt("maxReceive");
-        originalMaxReceive = tag.getInt("originalMaxReceive");
-        maxExtract = tag.getInt("maxExtract");
-        originalMaxExtract = tag.getInt("originalMaxExtract");
+        this.originalCapacity = compound.getInt("originalCapacity");
+        this.originalMaxReceive = compound.getInt("originalMaxReceive");
+        this.originalMaxExtract = compound.getInt("originalMaxExtract");
     }
 }

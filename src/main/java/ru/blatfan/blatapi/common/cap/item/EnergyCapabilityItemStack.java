@@ -29,8 +29,8 @@ public class EnergyCapabilityItemStack implements ICapabilityProvider {
 
       @Override
       public void setEnergy(int energy) {
-        getTag().putInt(tag, energy);
         super.setEnergy(energy);
+        getTag().putInt(tag, getEnergyStored());
       }
     };
   }
@@ -48,9 +48,7 @@ public class EnergyCapabilityItemStack implements ICapabilityProvider {
 
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-    if (ForgeCapabilities.ENERGY == capability)
-      return energy.cast();
-    
+    if (ForgeCapabilities.ENERGY == capability) return energy.cast();
     return LazyOptional.empty();
   }
 }

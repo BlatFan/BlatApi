@@ -29,8 +29,8 @@ public class FloatEnergyCapabilityItemStack implements ICapabilityProvider {
       
       @Override
       public void setEnergy(int energy) {
-        getTag().putInt("energy", energy);
         super.setEnergy(energy);
+        getTag().putInt("energy", getEnergyStored());
       }
       
       public void setCapacity(int newCapacity){
@@ -65,9 +65,7 @@ public class FloatEnergyCapabilityItemStack implements ICapabilityProvider {
 
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-    if (ForgeCapabilities.ENERGY == capability)
-      return energy.cast();
-    
+    if (ForgeCapabilities.ENERGY == capability) return energy.cast();
     return LazyOptional.empty();
   }
 }

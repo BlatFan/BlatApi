@@ -4,10 +4,11 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public abstract class SimpleRecipe<T extends Container> implements Recipe<T> {
@@ -31,10 +32,11 @@ public abstract class SimpleRecipe<T extends Container> implements Recipe<T> {
         return true;
     }
     
+    @Override
     public abstract ItemStack getToastSymbol();
     
     @Override
-    public ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(T container, RegistryAccess registryAccess) {
         return result.copy();
     }
     

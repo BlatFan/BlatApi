@@ -6,17 +6,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 import ru.blatfan.blatapi.utils.BlockUtil;
 
@@ -25,20 +25,23 @@ import javax.annotation.Nonnull;
 @Getter
 public abstract class BlockFluidInventory extends BlockEntityBase {
     private boolean changed = false;
-    private final Container itemHandler = this.createItemHandler();
-    private final FluidTank fluidTank = this.createFluidTank();
+    private final Container itemHandler;
+    private final FluidTank fluidTank;
+    
+    private LazyOptional<IItemHandler> itemOpt = LazyOptional.empty();
+    private LazyOptional<IFluidHandler> fluidOpt = LazyOptional.empty();
     
     public BlockFluidInventory(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
         super(pType, pPos, pBlockState);
+        this.itemHandler = this.createItemHandler();
+        this.fluidTank = this.createFluidTank();
+        
+        if(this.itemHandler!=null) itemOpt = BlockUtil.getLazyItems(itemHandler);
+        if(this.fluidTank!=null) fluidOpt = LazyOptional.of(()-> fluidTank);
     }
     
     protected abstract Container createItemHandler();
     protected abstract FluidTank createFluidTank();
-    
-    @Override
-    public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, BlockEntity::saveWithFullMetadata);
-    }
     
     @Override
     protected void saveAdditional(CompoundTag pTag) {
@@ -66,10 +69,8 @@ public abstract class BlockFluidInventory extends BlockEntityBase {
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER)
-            return BlockUtil.getLazyItems(itemHandler).cast();
-        if (cap == ForgeCapabilities.FLUID_HANDLER)
-            return LazyOptional.of(this::getFluidTank).cast();
+        if (cap == ForgeCapabilities.ITEM_HANDLER) return itemOpt.cast();
+        if (cap == ForgeCapabilities.FLUID_HANDLER) return fluidOpt.cast();
         return super.getCapability(cap, side);
     }
     

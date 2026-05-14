@@ -1,4 +1,4 @@
-package ru.blatfan.blatapi.common.capability;
+package ru.blatfan.blatapi.common.cap;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

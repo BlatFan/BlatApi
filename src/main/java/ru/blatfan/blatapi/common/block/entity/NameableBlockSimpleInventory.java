@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import javax.annotation.Nullable;
 
 public abstract class NameableBlockSimpleInventory extends BlockSimpleInventory implements MenuProvider, Nameable {
-
     @Nullable
     public Component name;
 

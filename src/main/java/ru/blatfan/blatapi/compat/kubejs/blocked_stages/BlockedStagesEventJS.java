@@ -16,14 +16,14 @@ import java.util.List;
 
 public class BlockedStagesEventJS extends EventJS {
     public BlockedStage<BlockedStage.ItemStageValue> createItemStage(ResourceLocation id, boolean visible, List<Task> tasks, List<ItemStack> list){
-        BlockedStage.ItemStageValue value = new BlockedStage.ItemStageValue("item", new ItemStackList(list));
+        BlockedStage.ItemStageValue value = new BlockedStage.ItemStageValue("item", ItemStackList.of(list));
         BlockedStage<BlockedStage.ItemStageValue> stage = new BlockedStage<>(tasks, visible, value);
         BlockedStagesManager.KUBEJS_ITEM_STAGES.put(id, stage);
         return stage;
     }
     
     public BlockedStage<BlockedStage.ItemStageValue> createLootStage(ResourceLocation id, boolean visible, List<Task> tasks, List<ItemStack> list){
-        BlockedStage.ItemStageValue value = new BlockedStage.ItemStageValue("loot", new ItemStackList(list));
+        BlockedStage.ItemStageValue value = new BlockedStage.ItemStageValue("loot", ItemStackList.of(list));
         BlockedStage<BlockedStage.ItemStageValue> stage = new BlockedStage<>(tasks, visible, value);
         BlockedStagesManager.KUBEJS_LOOT_STAGES.put(id, stage);
         return stage;

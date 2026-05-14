@@ -2,7 +2,7 @@ package ru.blatfan.blatapi.client.playerskin;
 
 import net.minecraft.world.entity.player.Player;
 import ru.blatfan.blatapi.client.model.playerskin.PlayerSkinData;
-import ru.blatfan.blatapi.common.capability.IPlayerSkin;
+import ru.blatfan.blatapi.common.cap.IPlayerSkin;
 import ru.blatfan.blatapi.common.network.BlatApiPacketHandler;
 import ru.blatfan.blatapi.common.network.playerskin.PlayerSkinSetCapePacket;
 import ru.blatfan.blatapi.common.network.playerskin.PlayerSkinSetEffectPacket;

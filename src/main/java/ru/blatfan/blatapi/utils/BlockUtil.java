@@ -18,9 +18,9 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import ru.blatfan.blatapi.client.event.ClientTickHandler;
+import ru.blatfan.blatapi.client.registry.BARenderTypes;
 import ru.blatfan.blatapi.client.render.RenderBuilder;
 import ru.blatfan.blatapi.common.block.entity.BlockSimpleInventory;
-import ru.blatfan.blatapi.client.registry.BARenderTypes;
 
 import java.awt.*;
 import java.util.List;
@@ -40,7 +40,7 @@ public class BlockUtil {
         renderItem(block.getBlockPos(), x, y, z, size, poseStack, multiBufferSource, i, i1, itemStack);
     }
     
-    static double getItemY(){
+    public static double getItemY(){
         double tick;
         if(Minecraft.getInstance().level==null) tick = System.currentTimeMillis() / 800d;
         else tick = Minecraft.getInstance().level.getGameTime() / 16d;
@@ -51,7 +51,7 @@ public class BlockUtil {
         double tick;
         if(Minecraft.getInstance().level==null) tick = System.currentTimeMillis() / 800d;
         else tick = Minecraft.getInstance().level.getGameTime() / 16d;
-        return (tick * 40.0D) % 360;
+        return (tick * 40) % 360;
     }
     
     public static void renderItem(BlockPos pos, double x, double y, double z, List<Float> size, PoseStack poseStack, MultiBufferSource multiBufferSource, int i, int i1, ItemStack itemStack){
@@ -78,8 +78,7 @@ public class BlockUtil {
             .replaceBufferSource(multiBufferSource)
             .setAlpha(0.5f)
             .setColor(color)
-            .renderDragon(poseStack, x, getItemY() + y+0.15, z,
-                1f,
+            .renderDragon(poseStack, x, getItemY() + y+0.15, z, 1f,
                 ClientTickHandler.partialTicks, itemStack.getDescriptionId().length());
     }
     
@@ -92,10 +91,10 @@ public class BlockUtil {
             itemStackHandler.setStackInSlot(i, container.getItem(i));
         return itemStackHandler;
     }
-    public static LazyOptional<BaseItemStackHandler> getLazyItems(BlockSimpleInventory blockSimpleInventory){
+    public static LazyOptional<IItemHandler> getLazyItems(BlockSimpleInventory blockSimpleInventory){
         return LazyOptional.of(() -> getItemHandler(blockSimpleInventory));
     }
-    public static LazyOptional<BaseItemStackHandler> getLazyItems(Container container){
+    public static LazyOptional<IItemHandler> getLazyItems(Container container){
         return LazyOptional.of(() -> getItemHandler(container));
     }
     public static LazyOptional<IItemHandler> getLazyItems(BlockEntity blockEntity){

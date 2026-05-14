@@ -10,7 +10,6 @@ import net.minecraftforge.energy.IEnergyStorage;
 import ru.blatfan.blatapi.common.cap.CustomEnergyStorage;
 
 public class CapabilityProviderEnergyStack implements ICapabilitySerializable<CompoundTag> {
-
   private static final String NBTENERGY = "energy";
   CustomEnergyStorage energy;
   private final LazyOptional<IEnergyStorage> energyCap;
@@ -22,9 +21,7 @@ public class CapabilityProviderEnergyStack implements ICapabilitySerializable<Co
 
   @Override
   public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-    if (cap == ForgeCapabilities.ENERGY) {
-      return energyCap.cast();
-    }
+    if (cap == ForgeCapabilities.ENERGY) return energyCap.cast();
     return LazyOptional.empty();
   }
 

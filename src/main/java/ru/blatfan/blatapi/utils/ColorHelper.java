@@ -2,6 +2,7 @@ package ru.blatfan.blatapi.utils;
 
 import lombok.experimental.UtilityClass;
 import org.joml.Vector3f;
+
 import java.awt.*;
 import java.util.ArrayList;
 
@@ -46,22 +47,22 @@ public class ColorHelper {
     }
     
     public static Color getBlendColor(ArrayList<Color> colors) {
-        float f = 0.0F;
-        float f1 = 0.0F;
-        float f2 = 0.0F;
+        float f = 0f;
+        float f1 = 0f;
+        float f2 = 0f;
         int j = 0;
         
         for(Color color : colors) {
             int k = ColorHelper.getColor(color);
-            f += (float) ((k >> 16 & 255)) / 255.0F;
-            f1 += (float) ((k >> 8 & 255)) / 255.0F;
-            f2 += (float) ((k >> 0 & 255)) / 255.0F;
+            f += (float) ((k >> 16 & 255)) / 255f;
+            f1 += (float) ((k >> 8 & 255)) / 255f;
+            f2 += (float) ((k & 255)) / 255f;
             j += 1;
         }
         
-        f = f / (float)j * 255.0F;
-        f1 = f1 / (float)j * 255.0F;
-        f2 = f2 / (float)j * 255.0F;
+        f = f / (float)j * 255f;
+        f1 = f1 / (float)j * 255f;
+        f2 = f2 / (float)j * 255f;
         return ColorHelper.getColor((int) f << 16 | (int) f1 << 8 | (int) f2);
     }
     

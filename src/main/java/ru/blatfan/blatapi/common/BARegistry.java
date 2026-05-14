@@ -40,6 +40,7 @@ import ru.blatfan.blatapi.common.recipe.AnvilRepairRecipe;
 import ru.blatfan.blatapi.common.recipe.IAnvilRecipe;
 import ru.blatfan.blatapi.common.recipe.IAnvilRepairRecipe;
 import ru.blatfan.blatapi.common.registry.BlatRegister;
+import ru.blatfan.blatapi.common.registry.ItemRegistryObject;
 import ru.blatfan.blatapi.utils.NBTHelper;
 import ru.blatfan.blatapi.utils.RegistryUtils;
 import ru.blatfan.blatapi.utils.collection.Text;
@@ -137,18 +138,18 @@ public class BARegistry {
     }
     
     public static class Items {
-        public static final RegistryObject<Item> TEST_STICK = REG.item("test_stick", TestStickItem::new);
-        public static final RegistryObject<Item> GUIDE_BOOK = REG.item("guide_book", GuideBookItem::new);
-        public static final RegistryObject<Item> QUESTION = REG.singleItem("question");
-        public static final RegistryObject<Item> RED_BOOK = REG.singleItem("red_book");
-        public static final RegistryObject<Item> BLUE_BOOK = REG.singleItem("blue_book");
-        public static final RegistryObject<Item> GREEN_BOOK = REG.singleItem("green_book");
-        public static final RegistryObject<Item> YELLOW_BOOK = REG.singleItem("yellow_book");
-        public static final RegistryObject<Item> PINK_BOOK = REG.singleItem("pink_book");
-        public static final RegistryObject<Item> PURPLE_BOOK = REG.singleItem("purple_book");
-        public static final RegistryObject<Item> ORANGE_BOOK = REG.singleItem("orange_book");
-        public static final RegistryObject<Item> ERROR_BOOK = REG.item("error_book", () -> new GuideBookItem.Transfer(BlatApi.loc("error")));
-        public static final RegistryObject<Item> GUIDE_BOOK_PAPER = REG.item("guide_book_paper", GuidePaperItem::new);
+        public static final ItemRegistryObject<Item> TEST_STICK = REG.item("test_stick", TestStickItem::new);
+        public static final ItemRegistryObject<Item> GUIDE_BOOK = REG.item("guide_book", GuideBookItem::new);
+        public static final ItemRegistryObject<Item> QUESTION = REG.singleItem("question");
+        public static final ItemRegistryObject<Item> RED_BOOK = REG.singleItem("red_book");
+        public static final ItemRegistryObject<Item> BLUE_BOOK = REG.singleItem("blue_book");
+        public static final ItemRegistryObject<Item> GREEN_BOOK = REG.singleItem("green_book");
+        public static final ItemRegistryObject<Item> YELLOW_BOOK = REG.singleItem("yellow_book");
+        public static final ItemRegistryObject<Item> PINK_BOOK = REG.singleItem("pink_book");
+        public static final ItemRegistryObject<Item> PURPLE_BOOK = REG.singleItem("purple_book");
+        public static final ItemRegistryObject<Item> ORANGE_BOOK = REG.singleItem("orange_book");
+        public static final ItemRegistryObject<Item> ERROR_BOOK = REG.item("error_book", () -> new GuideBookItem.Transfer(BlatApi.loc("error")));
+        public static final ItemRegistryObject<Item> GUIDE_BOOK_PAPER = REG.item("guide_book_paper", GuidePaperItem::new);
         
         static void init(){}
     }
@@ -207,7 +208,7 @@ public class BARegistry {
                 }
             }
             if (event.getTabKey() == CreativeModeTabs.OP_BLOCKS && event.hasPermissions()) {
-                event.accept(Items.TEST_STICK);
+                event.accept((ItemLike) Items.TEST_STICK);
             }
         }
         

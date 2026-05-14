@@ -1,8 +1,8 @@
-package ru.blatfan.blatapi.common.capability;
+package ru.blatfan.blatapi.common.cap;
 
-import ru.blatfan.blatapi.client.model.playerskin.PlayerSkinData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
+import ru.blatfan.blatapi.client.model.playerskin.PlayerSkinData;
 
 public class PlayerSkinImpl implements IPlayerSkin, INBTSerializable<CompoundTag> {
     PlayerSkinData data;
