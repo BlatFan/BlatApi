@@ -4,12 +4,14 @@ import it.unimi.dsi.fastutil.Hash;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import ru.blatfan.blatapi.utils.GuiUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextureUtil;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -28,6 +30,15 @@ public class FluidRenderMap<V> extends Object2ObjectOpenCustomHashMap<FluidStack
     if (fluidAttributes == null) return Color.WHITE;
     return new Color(fluidAttributes.getTintColor());
   }
+  public static Color getTintColor(FluidStack fluidStack, BlockAndTintGetter level, BlockPos pos){
+    if (fluidStack == null || fluidStack.isEmpty()) return Color.WHITE;
+    
+    Fluid fluid = fluidStack.getFluid();
+    IClientFluidTypeExtensions fluidAttributes = IClientFluidTypeExtensions.of(fluid);
+    
+    if (fluidAttributes == null) return Color.WHITE;
+    return new Color(fluidAttributes.getTintColor(fluidStack.getFluid().defaultFluidState(), level, pos));
+  }
   
   public static int getLightLevel(FluidStack fluidStack){
     if (fluidStack == null || fluidStack.isEmpty())
@@ -35,17 +46,23 @@ public class FluidRenderMap<V> extends Object2ObjectOpenCustomHashMap<FluidStack
     return fluidStack.getFluid().getFluidType().getLightLevel(fluidStack);
   }
   
+  
+  @Nullable
+  public static TextureAtlasSprite getFluidTexture(Fluid fluid){
+    return getFluidTexture(new FluidStack(fluid, 1000), FluidFlow.STILL);
+  }
+  
   @Nullable
   public static TextureAtlasSprite getFluidTexture(FluidStack fluidStack, FluidFlow type) {
     if (fluidStack == null || fluidStack.isEmpty()) {
-      return GuiUtil.getMissingTexture();
+      return GuiTextureUtil.getMissingTexture();
     }
     
     Fluid fluid = fluidStack.getFluid();
     IClientFluidTypeExtensions fluidAttributes = IClientFluidTypeExtensions.of(fluid);
     
     if (fluidAttributes == null) {
-      return GuiUtil.getMissingTexture();
+      return GuiTextureUtil.getMissingTexture();
     }
     
     ResourceLocation spriteLocation;
@@ -57,13 +74,13 @@ public class FluidRenderMap<V> extends Object2ObjectOpenCustomHashMap<FluidStack
       }
       
       if (spriteLocation == null) {
-        return GuiUtil.getMissingTexture();
+        return GuiTextureUtil.getMissingTexture();
       }
       
-      return GuiUtil.getSprite(spriteLocation);
+      return GuiTextureUtil.getSprite(spriteLocation);
     } catch (Exception e) {
       Minecraft.getInstance().getProfiler().popPush("fluidTextureError");
-      return GuiUtil.getMissingTexture();
+      return GuiTextureUtil.getMissingTexture();
     }
   }
   

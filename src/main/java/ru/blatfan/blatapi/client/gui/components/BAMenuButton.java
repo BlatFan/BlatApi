@@ -31,10 +31,10 @@ public class BAMenuButton extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(gui, mouseX, mouseY, partialTick);
         if (icon == null) icon = new ItemStack(Items.AMETHYST_SHARD);
-        guiGraphics.renderItem(icon, this.getX() + 2, this.getY() + 2);
+        gui.renderItem(icon, this.getX() + 2, this.getY() + 2);
     }
 
     public static void click(Button button) {

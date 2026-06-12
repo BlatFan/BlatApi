@@ -1,7 +1,7 @@
 package ru.blatfan.blatapi.client.render;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import ru.blatfan.blatapi.client.TOTHandler;
@@ -17,8 +17,8 @@ public abstract class IItemOverrideRenderer {
     }
     
     public void register(){
-        TOTHandler.textures.add(this);
+        TOTHandler.renderers.add(this);
     }
     
-    public abstract void render(PoseStack gui, ItemStack stack, int x, int y);
+    public abstract void render(GuiGraphics gui, ItemStack stack, int x, int y);
 }

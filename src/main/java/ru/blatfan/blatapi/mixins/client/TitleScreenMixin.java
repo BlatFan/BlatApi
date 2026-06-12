@@ -25,10 +25,10 @@ public abstract class TitleScreenMixin {
     private int blatapi$ticks = 0;
 
     @Inject(at = @At("RETURN"), method = "render")
-    public void blatapi$render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
+    public void blatapi$render(GuiGraphics gui, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         TitleScreen self = (TitleScreen) ((Object) this);
         Font font = Minecraft.getInstance().font;
-        PoseStack poseStack = guiGraphics.pose();
+        PoseStack poseStack = gui.pose();
         if (BlatApiClient.optifinePresent) {
             for (int i = 0; i < 26; i++) {
                 float ticks = blatapi$ticks + partialTick + i;
@@ -43,11 +43,11 @@ public abstract class TitleScreenMixin {
                 poseStack.translate(self.width / 2f, self.height / 2f + y, 0);
                 poseStack.mulPose(Axis.ZP.rotationDegrees((float) (Math.sin(Math.toRadians(ticks * 1.3f)) * 30f)));
                 String string = Text.create("gui.blatapi.menu.optifine.0").getString();
-                guiGraphics.drawString(font, string, -font.width(string) / 2, -font.lineHeight - 1, 16777215);
+                gui.drawString(font, string, -font.width(string) / 2, -font.lineHeight - 1, 16777215);
                 string = Text.create("gui.blatapi.menu.optifine.1").getString();
-                guiGraphics.drawString(font, string, -font.width(string) / 2, 0, 16777215);
+                gui.drawString(font, string, -font.width(string) / 2, 0, 16777215);
                 string = Text.create("gui.blatapi.menu.optifine.2").getString();
-                guiGraphics.drawString(font, string, -font.width(string) / 2, font.lineHeight + 1, 16777215);
+                gui.drawString(font, string, -font.width(string) / 2, font.lineHeight + 1, 16777215);
                 poseStack.popPose();
                 RenderSystem.setShaderColor(1, 1, 1, 1);
             }
@@ -60,7 +60,7 @@ public abstract class TitleScreenMixin {
             poseStack.scale(size, size, size);
             poseStack.mulPose(Axis.ZP.rotationDegrees((float) (Math.sin(Math.toRadians(ticks * 1.3f)) * 30f)));
             String string = Text.create("gui.blatapi.menu.piracy").getString();
-            guiGraphics.drawString(font, string, -font.width(string) / 2, -font.lineHeight - 1, 16777215);
+            gui.drawString(font, string, -font.width(string) / 2, -font.lineHeight - 1, 16777215);
             poseStack.popPose();
         }
     }

@@ -1,12 +1,10 @@
 package ru.blatfan.blatapi.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.network.chat.TextColor;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import ru.blatfan.blatapi.utils.GuiUtil;
 
 import java.awt.*;
 import java.util.List;
@@ -26,12 +24,10 @@ public class ItemOverrideTexture extends IItemOverrideRenderer {
     }
     
     @Override
-    public void render(PoseStack gui, ItemStack stack, int x, int y) {
-        TextColor color = TextColor.fromRgb(this.color.getRGB());
-        
+    public void render(GuiGraphics gui, ItemStack stack, int x, int y) {
         RenderSystem.setShaderTexture(0, texture);
-        RenderSystem.setShaderColor((color.getValue() >> 16 & 255) / 255.0f, (color.getValue() >> 8 & 255) / 255.0f, (color.getValue() & 255) / 255.0f, 1.0f);
+        RenderSystem.setShaderColor(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, 1.0f);
         
-        GuiUtil.blit(gui, x, y, 16, 16, 0, 0, 16, 16, 16, 16);
+        gui.blit(texture, x, y, 16, 16, 0, 0, 16, 16, 16, 16);
     }
 }

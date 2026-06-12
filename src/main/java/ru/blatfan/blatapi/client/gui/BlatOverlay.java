@@ -32,13 +32,13 @@ public abstract class BlatOverlay implements IGuiOverlay {
     }
     
     @Override
-    public void render(ForgeGui forgeGui, GuiGraphics guiGraphics, float partialTick, int screenWidth, int screenHeight) {
-        render(screenWidth, screenHeight, forgeGui, guiGraphics, partialTick);
-        render(screenWidth, screenHeight, guiGraphics, partialTick);
-        render(screenWidth, screenHeight, guiGraphics);
+    public void render(ForgeGui forgeGui, GuiGraphics gui, float partialTick, int screenWidth, int screenHeight) {
+        render(screenWidth, screenHeight, forgeGui, gui, partialTick);
+        render(screenWidth, screenHeight, gui, partialTick);
+        render(screenWidth, screenHeight, gui);
     }
     
-    public void render(int width, int height, ForgeGui forgeGui, GuiGraphics guiGraphics, float partialTick){}
+    public void render(int width, int height, ForgeGui forgeGui, GuiGraphics gui, float partialTick){}
     public void render(int width, int height, GuiGraphics gui, float partialTick){}
     public void render(int width, int height, GuiGraphics gui){}
     public enum Anchor {

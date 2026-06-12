@@ -44,6 +44,7 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.joml.*;
 import ru.blatfan.blatapi.client.registry.BARenderTypes;
@@ -65,7 +66,8 @@ import java.util.function.Supplier;
 
 import static net.minecraft.util.Mth.sqrt;
 
-@UtilityClass@SuppressWarnings("ALL")
+// TODO
+@UtilityClass@SuppressWarnings("ALL")@Deprecated(since = "0.4.3")@ApiStatus.ScheduledForRemoval(inVersion = ">0.4.3")
 public class GuiUtil {
     public static GameProfile createOfflineProfile(String playerName) {
         UUID offlineUUID = UUID.nameUUIDFromBytes(("OfflinePlayer:" + playerName).getBytes());
@@ -74,35 +76,35 @@ public class GuiUtil {
     public static void renderFlatPlayerHead(GuiGraphics guiGraphics, int x, int y, int size, String player) {
         renderFlatPlayerHead(guiGraphics, x, y, size, createOfflineProfile(player));
     }
-    public static void renderFlatPlayerHead(GuiGraphics guiGraphics, int x, int y, int size, GameProfile player) {
+    public static void renderFlatPlayerHead(GuiGraphics gui, int x, int y, int size, GameProfile player) {
         ResourceLocation skinTexture = Minecraft.getInstance().getSkinManager().getInsecureSkinLocation(player);
         
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         
-        guiGraphics.blit(skinTexture, x, y, size, size, 8f, 8f, 8, 8, 64, 64);
-        guiGraphics.blit(skinTexture, x, y, size, size, 40f, 8f, 8, 8, 64, 64);
+        gui.blit(skinTexture, x, y, size, size, 8f, 8f, 8, 8, 64, 64);
+        gui.blit(skinTexture, x, y, size, size, 40f, 8f, 8, 8, 64, 64);
         
         RenderSystem.disableBlend();
     }
-    public static void renderFlatPlayerHead(GuiGraphics guiGraphics, int x, int y, int size, Player player) {
+    public static void renderFlatPlayerHead(GuiGraphics gui, int x, int y, int size, Player player) {
         ResourceLocation skinTexture = Minecraft.getInstance().getSkinManager().getInsecureSkinLocation(player.getGameProfile());
         
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         
-        guiGraphics.blit(skinTexture, x, y, size, size, 8f, 8f, 8, 8, 64, 64);
-        guiGraphics.blit(skinTexture, x, y, size, size, 40f, 8f, 8, 8, 64, 64);
+        gui.blit(skinTexture, x, y, size, size, 8f, 8f, 8, 8, 64, 64);
+        gui.blit(skinTexture, x, y, size, size, 40f, 8f, 8, 8, 64, 64);
         
         RenderSystem.disableBlend();
     }
     
-    public static void render3DPlayerHeadMouse(GuiGraphics guiGraphics, int x, int y, int size, float mouseX, float mouseY, Player player) {
-        render3DPlayerHead(guiGraphics, x, y, size, (mouseX - x) * 0.1f, (mouseY - y) * 0.25f, player);
+    public static void render3DPlayerHeadMouse(GuiGraphics gui, int x, int y, int size, float mouseX, float mouseY, Player player) {
+        render3DPlayerHead(gui, x, y, size, (mouseX - x) * 0.1f, (mouseY - y) * 0.25f, player);
     }
     
-    public static void render3DPlayerHead(GuiGraphics guiGraphics, int x, int y, int size, float degreeX, float degreeY, Player player) {
-        PoseStack poseStack = guiGraphics.pose();
+    public static void render3DPlayerHead(GuiGraphics gui, int x, int y, int size, float degreeX, float degreeY, Player player) {
+        PoseStack poseStack = gui.pose();
         poseStack.pushPose();
         
         poseStack.translate(x, y, 100);
@@ -169,8 +171,8 @@ public class GuiUtil {
     }
     
     public static void renderEntityFollowsMouse(GuiGraphics gui, int x, int y, int scale, float mouseX, float mouseY, LivingEntity entity){
-        float f = (float)Math.atan(mouseX / 40.0F);
-        float f1 = (float)Math.atan(mouseY / 40.0F);
+        float f = (float)Math.atan(mouseX / 40);
+        float f1 = (float)Math.atan(mouseY / 40);
         renderEntityFollowsAngle(gui, x, y, scale, f, f1, entity);
     }
     public static void renderEntityFollowsAngle(GuiGraphics gui, int x, int y, int scale, float entityLookX, float entityLookY, LivingEntity entity){
@@ -450,14 +452,14 @@ public class GuiUtil {
     }
     
     public static void drawGradientRect(Matrix4f mat, BufferBuilder bufferBuilder, int left, int top, int right, int bottom, int zLevel, int startColor, int endColor) {
-        float startAlpha = (float)(startColor >> 24 & 255) / 255.0F;
-        float startRed   = (float)(startColor >> 16 & 255) / 255.0F;
-        float startGreen = (float)(startColor >>  8 & 255) / 255.0F;
-        float startBlue  = (float)(startColor       & 255) / 255.0F;
-        float endAlpha   = (float)(endColor   >> 24 & 255) / 255.0F;
-        float endRed     = (float)(endColor   >> 16 & 255) / 255.0F;
-        float endGreen   = (float)(endColor   >>  8 & 255) / 255.0F;
-        float endBlue    = (float)(endColor         & 255) / 255.0F;
+        float startAlpha = (float)(startColor >> 24 & 255) / 255;
+        float startRed   = (float)(startColor >> 16 & 255) / 255;
+        float startGreen = (float)(startColor >>  8 & 255) / 255;
+        float startBlue  = (float)(startColor       & 255) / 255;
+        float endAlpha   = (float)(endColor   >> 24 & 255) / 255;
+        float endRed     = (float)(endColor   >> 16 & 255) / 255;
+        float endGreen   = (float)(endColor   >>  8 & 255) / 255;
+        float endBlue    = (float)(endColor         & 255) / 255;
         
         bufferBuilder.vertex(mat, right,    top, zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
         bufferBuilder.vertex(mat,  left,    top, zLevel).color(startRed, startGreen, startBlue, startAlpha).endVertex();
@@ -466,14 +468,14 @@ public class GuiUtil {
     }
     
     public static void drawGradientRectHorizontal(Matrix4f mat, int zLevel, int left, int top, int right, int bottom, int startColor, int endColor) {
-        float startAlpha = (float)(startColor >> 24 & 255) / 255.0F;
-        float startRed   = (float)(startColor >> 16 & 255) / 255.0F;
-        float startGreen = (float)(startColor >>  8 & 255) / 255.0F;
-        float startBlue  = (float)(startColor       & 255) / 255.0F;
-        float endAlpha   = (float)(endColor   >> 24 & 255) / 255.0F;
-        float endRed     = (float)(endColor   >> 16 & 255) / 255.0F;
-        float endGreen   = (float)(endColor   >>  8 & 255) / 255.0F;
-        float endBlue    = (float)(endColor         & 255) / 255.0F;
+        float startAlpha = (float)(startColor >> 24 & 255) / 255;
+        float startRed   = (float)(startColor >> 16 & 255) / 255;
+        float startGreen = (float)(startColor >>  8 & 255) / 255;
+        float startBlue  = (float)(startColor       & 255) / 255;
+        float endAlpha   = (float)(endColor   >> 24 & 255) / 255;
+        float endRed     = (float)(endColor   >> 16 & 255) / 255;
+        float endGreen   = (float)(endColor   >>  8 & 255) / 255;
+        float endBlue    = (float)(endColor         & 255) / 255;
         
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
@@ -496,7 +498,7 @@ public class GuiUtil {
         blit(poseStack, x, x + width, y, y + height, 0, texWidth, texHeight, texX, texY, fullWidth, fullHeight);
     }
     public static void blit(PoseStack poseStack, int x0, int x1, int y0, int y1, int z, int texWidth, int texHeight, float texX, float texY, int fullWidth, int fullHeight) {
-        innerBlit(poseStack, x0, x1, y0, y1, z, (texX + 0.0F) / (float)fullWidth, (texX + (float)texWidth) / (float)fullWidth, (texY + 0.0F) / (float)fullHeight, (texY + (float)texHeight) / (float)fullHeight);
+        innerBlit(poseStack, x0, x1, y0, y1, z, (texX + 0) / (float)fullWidth, (texX + (float)texWidth) / (float)fullWidth, (texY + 0) / (float)fullHeight, (texY + (float)texHeight) / (float)fullHeight);
     }
     
     public static void drawTextureWithMasking(Matrix4f matrix, float xCoord, float yCoord, TextureAtlasSprite textureSprite, float maskTop, float maskRight) {
@@ -544,12 +546,12 @@ public class GuiUtil {
     /**
      * drawString for rendering at float coordinates.
      */
-    public static int drawString(GuiGraphics guiGraphics, Font font, @Nullable Component component, float x, float y, int color, boolean drawShadow) {
+    public static int drawString(GuiGraphics gui, Font font, @Nullable Component component, float x, float y, int color, boolean drawShadow) {
         if (component == null) {
             return 0;
         } else {
-            int i = font.drawInBatch(component, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
-            guiGraphics.flushIfUnmanaged();
+            int i = font.drawInBatch(component, x, y, color, drawShadow, gui.pose().last().pose(), gui.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
+            gui.flushIfUnmanaged();
             return i;
         }
     }
@@ -557,12 +559,12 @@ public class GuiUtil {
     /**
      * drawString for rendering at float coordinates.
      */
-    public static int drawString(GuiGraphics guiGraphics, Font font, @Nullable String string, float x, float y, int color, boolean drawShadow) {
+    public static int drawString(GuiGraphics gui, Font font, @Nullable String string, float x, float y, int color, boolean drawShadow) {
         if (string == null) {
             return 0;
         } else {
-            int i = font.drawInBatch(string, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
-            guiGraphics.flushIfUnmanaged();
+            int i = font.drawInBatch(string, x, y, color, drawShadow, gui.pose().last().pose(), gui.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
+            gui.flushIfUnmanaged();
             return i;
         }
     }
@@ -570,12 +572,12 @@ public class GuiUtil {
     /**
      * drawString for rendering at float coordinates.
      */
-    public static int drawString(GuiGraphics guiGraphics, Font font, @Nullable FormattedCharSequence string, float x, float y, int color, boolean drawShadow) {
+    public static int drawString(GuiGraphics gui, Font font, @Nullable FormattedCharSequence string, float x, float y, int color, boolean drawShadow) {
         if (string == null) {
             return 0;
         } else {
-            int i = font.drawInBatch(string, x, y, color, drawShadow, guiGraphics.pose().last().pose(), guiGraphics.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
-            guiGraphics.flushIfUnmanaged();
+            int i = font.drawInBatch(string, x, y, color, drawShadow, gui.pose().last().pose(), gui.bufferSource(), Font.DisplayMode.NORMAL, 0, FULL_BRIGHT);
+            gui.flushIfUnmanaged();
             return i;
         }
     }
@@ -622,8 +624,8 @@ public class GuiUtil {
         PoseStack poseStack = RenderSystem.getModelViewStack();
         poseStack.pushPose();
         poseStack.translate(x, y, z);
-        poseStack.translate((double) xSize / 2, (double) ySize / 2, 0.0D);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
+        poseStack.translate((double) xSize / 2, (double) ySize / 2, 0);
+        poseStack.scale(1, -1, 1);
         poseStack.scale(xSize, ySize, zSize);
         poseStack.mulPose(Axis.XP.rotationDegrees(xRot));
         poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
@@ -657,9 +659,9 @@ public class GuiUtil {
         
         pose.pushPose();
         pose.translate(x + 8, y + 8, z);
-        pose.mulPoseMatrix((new Matrix4f()).scaling(1.0F, -1.0F, 1.0F));
-        pose.scale(16.0F, 16.0F, 16.0F);
-        pose.translate(0.0D, Math.sin(Math.toRadians(ticksUp)) * 0.03125F, 0.0D);
+        pose.mulPoseMatrix((new Matrix4f()).scaling(1, -1, 1));
+        pose.scale(16, 16, 16);
+        pose.translate(0, Math.sin(Math.toRadians(ticksUp)) * 0.03125F, 0);
         if (bakedmodel.usesBlockLight()) {
             bakedmodel.getTransforms().gui.rotation.y = ticks;
         } else {
@@ -1006,7 +1008,7 @@ public class GuiUtil {
     }
     
     public static float distSqr(float... a) {
-        float d = 0.0F;
+        float d = 0;
         for (float f : a) {
             d += f * f;
         }
@@ -1016,7 +1018,7 @@ public class GuiUtil {
     public static void applyWobble(Vector3f[] offsets, float strength, float gameTime) {
         float offset = 0;
         for (Vector3f vector3f : offsets) {
-            double time = ((gameTime / 40.0F) % Math.PI * 2);
+            double time = ((gameTime / 40) % Math.PI * 2);
             float sine = Mth.sin((float) (time + (offset * Math.PI * 2))) * strength;
             vector3f.add(sine, -sine, 0);
             offset += 0.25f;
@@ -1098,7 +1100,7 @@ public class GuiUtil {
         float bestScale = high;
         
         for (int i = 0; i < 20; i++) {
-            float mid = (low + high) / 2.0f;
+            float mid = (low + high) / 2;
             
             SplitText lines = splitText(textString, width, mid);
             float textHeight = lines.size() * font.lineHeight * mid;

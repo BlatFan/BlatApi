@@ -37,9 +37,10 @@ import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.common.multiblock.Multiblock;
 import ru.blatfan.blatapi.utils.ClientTicks;
 import ru.blatfan.blatapi.utils.ColorHelper;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.SplitText;
 import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.gui_utils.GuiRenderUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextUtil;
 
 import java.awt.*;
 import java.util.*;
@@ -110,7 +111,7 @@ public class MultiblockPage extends GuideBookPage {
         for(int i=0; i<texts.size(); i++) {
             Text c = texts.get(i);
             int ty = (int) (_buttonY + 7 + (GuideClient.font.lineHeight * i)*texts.scale());
-            GuiUtil.drawScaledString(gui, c, x + 4, ty, color, texts.scale());
+            GuiTextUtil.drawScaledString(gui, c, x + 4, ty, color, texts.scale());
         }
     }
     
@@ -198,7 +199,7 @@ public class MultiblockPage extends GuideBookPage {
                     try {
                         BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
                         if (renderer != null)
-                            renderer.render(be, ClientTicks.partialTicks, pose, buffer, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                            renderer.render(be, ClientTicks.partialTicks, pose, buffer, GuiRenderUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                     } catch (Exception e) {
                         this.erroredBlockEntities.add(be);
                         BlatApi.LOGGER.error("Error rendering block entity", e);

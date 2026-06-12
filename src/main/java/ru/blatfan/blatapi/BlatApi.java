@@ -53,7 +53,7 @@ import java.util.List;
 public class BlatApi {
     public static final String MOD_ID = "blatapi";
     public static final String MOD_NAME = "BlatApi";
-    public static final String MOD_VERSION = "0.4.2";
+    public static final String MOD_VERSION = "0.4.3";
     public static final Logger LOGGER = LoggerFactory.getLogger("BlatAPI");
     public static String CUSTOM_WINDOW_TITLE = "";
     public static final ISidedProxy proxy = DistExecutor.unsafeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);

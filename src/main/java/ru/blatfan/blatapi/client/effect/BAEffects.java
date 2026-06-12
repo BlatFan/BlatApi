@@ -23,7 +23,7 @@ import ru.blatfan.blatapi.client.shader.postprocess.GlowPostProcess;
 import ru.blatfan.blatapi.client.shader.postprocess.GlowPostProcessInstance;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.common.easing.Easing;
-import ru.blatfan.blatapi.utils.GuiUtil;
+import ru.blatfan.blatapi.utils.BAFunctions;
 
 import java.awt.*;
 
@@ -79,7 +79,7 @@ public class BAEffects {
     public static void lightningBoltTickEffect(Level level, Vec3 pos) {
         ParticleBuilder.create(BARegistry.Particles.SQUARE)
                 .setRenderType(BARenderTypes.ADDITIVE_PARTICLE_TEXTURE)
-                .setBehavior(TrailParticleBehavior.create().setTrailSize(5).setWidthFunction(GuiUtil.LINEAR_IN_ROUND_WIDTH_FUNCTION).build())
+                .setBehavior(TrailParticleBehavior.create().setTrailSize(5).setWidthFunction(BAFunctions.LINEAR_IN_ROUND_WIDTH_FUNCTION).build())
                 .setColorData(ColorParticleData.create(Color.WHITE).build())
                 .setTransparencyData(GenericParticleData.create(0.5f, 0.5f, 0).setEasing(Easing.QUARTIC_OUT).build())
                 .setScaleData(GenericParticleData.create(0.15f, 0.3f,  0).setEasing(Easing.ELASTIC_OUT).build())

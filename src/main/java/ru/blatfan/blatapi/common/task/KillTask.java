@@ -7,7 +7,6 @@ import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -18,8 +17,8 @@ import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.player_stages.PlayerStages;
 import ru.blatfan.blatapi.utils.ClientTicks;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.gui_utils.GuiEntityUtil;
 
 import java.awt.*;
 
@@ -62,10 +61,9 @@ public class KillTask extends Task {
         super.render(gui, x+16, y, mX, mY, player);
         Entity e = BuiltInRegistries.ENTITY_TYPE.get(entity).create(GuideClient.level);
         if(!(e instanceof LivingEntity living)) return;
-        living.yHeadRot=0;
-        living.yHeadRotO=0;
+        GuiEntityUtil.prepareForGuiPreview(living);
         gui.enableScissor(x, y, x+16, y+16);
-        GuiUtil.renderEntityQuaternionf(gui, x+8, y+16, 8, Axis.YP.rotationDegrees(ClientTicks.ticks), (Axis.XP.rotationDegrees(180)), living);
+        GuiEntityUtil.renderEntity(gui, x+8, y+16, 8, Axis.YP.rotationDegrees(ClientTicks.ticks), living);
         gui.disableScissor();
     }
     

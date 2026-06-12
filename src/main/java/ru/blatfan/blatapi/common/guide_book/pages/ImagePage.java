@@ -10,9 +10,10 @@ import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.utils.ColorHelper;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.SplitText;
 import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.gui_utils.GuiDrawUtils;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -63,11 +64,11 @@ public class ImagePage extends GuideBookPage {
     protected void render(GuiGraphics gui, int x, int y, int mX, int mY, float partialTick) {
         Font font = GuideClient.font;
         float sc = (float) (GuideClient.pageWidth-8) /imageWidth;
-        GuiUtil.blit(gui, sc, image, x+10, y+1, 0, 0, imageWidth, imageHeight, 256, 256);
+        GuiDrawUtils.blit(gui, sc, image, x+10, y+1, 0, 0, imageWidth, imageHeight, 256, 256);
         for(int i=0; i<texts.size(); i++){
             Text c = texts.get(i);
             int ty = (int) ((imageHeight*sc)+y+2+(font.lineHeight*i));
-            GuiUtil.drawScaledString(gui, c, x+4, ty, color, texts.scale());
+            GuiTextUtil.drawScaledString(gui, c, x+4, ty, color, texts.scale());
         }
     }
 }

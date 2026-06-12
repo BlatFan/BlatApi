@@ -33,17 +33,17 @@ public class SubCreativeTabButton extends Button {
     }
 
     @Override
-    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
         if (arrow == 0) {
             if (subTab.getSubTabImage() == null) {
-                super.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+                super.renderWidget(gui, mouseX, mouseY, partialTick);
             } else {
-                guiGraphics.blit(subTab.getSubTabImage(), this.getX(), this.getY(), isHoveredOrFocused() ? 20 : 0, 0, 20, 20, 64, 64);
+                gui.blit(subTab.getSubTabImage(), this.getX(), this.getY(), isHoveredOrFocused() ? 20 : 0, 0, 20, 20, 64, 64);
             }
             if (subTab.getSubIconItem() != null) {
-                guiGraphics.renderItem(subTab.getSubIconItem(), this.getX() + 2, this.getY() + 2);
+                gui.renderItem(subTab.getSubIconItem(), this.getX() + 2, this.getY() + 2);
             } else if (multiTab.getIconItem() != null) {
-                guiGraphics.renderItem(multiTab.getIconItem(), this.getX() + 2, this.getY() + 2);
+                gui.renderItem(multiTab.getIconItem(), this.getX() + 2, this.getY() + 2);
             }
 
             if (mouseX >= this.getX() && mouseY >= this.getY() && mouseX <= this.getX() + 20 && mouseY < this.getY() + 20) {
@@ -53,10 +53,10 @@ public class SubCreativeTabButton extends Button {
                 } else if (multiTab.getDisplayName() != null) {
                     list.add(multiTab.getDisplayName());
                 }
-                guiGraphics.renderTooltip(Minecraft.getInstance().font, list, Optional.empty(), mouseX, mouseY);
+                gui.renderTooltip(Minecraft.getInstance().font, list, Optional.empty(), mouseX, mouseY);
             }
         } else {
-            guiGraphics.blit(multiTab.getSubArrowsImage(), this.getX(), this.getY(), isHoveredOrFocused() ? 20 : 0, arrow == 1 ? 20 : 0, 20, 20, 64, 64);
+            gui.blit(multiTab.getSubArrowsImage(), this.getX(), this.getY(), isHoveredOrFocused() ? 20 : 0, arrow == 1 ? 20 : 0, 20, 20, 64, 64);
         }
     }
 

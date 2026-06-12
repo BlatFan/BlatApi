@@ -10,9 +10,9 @@ import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.utils.ColorHelper;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.SplitText;
 import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -44,7 +44,7 @@ public class TextPage extends GuideBookPage {
     }
     
     public static SplitText splitText(List<Component> text, int width, int height){
-        return GuiUtil.splitText(text, width, GuiUtil.findScale(text, width, height));
+        return GuiTextUtil.splitText(text, width, GuiTextUtil.findScale(text, width, height));
     }
     
     @Override
@@ -58,7 +58,7 @@ public class TextPage extends GuideBookPage {
         for(int i=0; i<texts.size(); i++){
             Text t = texts.get(i);
             int ty = y+(int)(font.lineHeight*i*texts.scale());
-            GuiUtil.drawScaledString(gui, t, x+8, ty, color, texts.scale());
+            GuiTextUtil.drawScaledString(gui, t, x+8, ty, color, texts.scale());
         }
     }
 }

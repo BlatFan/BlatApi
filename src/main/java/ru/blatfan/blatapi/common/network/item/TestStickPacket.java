@@ -28,7 +28,7 @@ import ru.blatfan.blatapi.client.shader.postprocess.GlowPostProcessInstance;
 import ru.blatfan.blatapi.common.BARegistry;
 import ru.blatfan.blatapi.common.easing.Easing;
 import ru.blatfan.blatapi.common.network.TwoPositionClientPacket;
-import ru.blatfan.blatapi.utils.GuiUtil;
+import ru.blatfan.blatapi.utils.BAFunctions;
 
 import java.awt.*;
 import java.util.function.Supplier;
@@ -281,7 +281,7 @@ public class TestStickPacket extends TwoPositionClientPacket {
                             .setColorData(ColorParticleData.create().setRandomColor().build())
                             .setTransparencyData(GenericParticleData.create(1, 1, 0).setEasing(Easing.QUARTIC_OUT).build())
                             .enableSecondColor()
-                            .setWidthFunction(GuiUtil.LINEAR_IN_ROUND_WIDTH_FUNCTION)
+                            .setWidthFunction(BAFunctions.LINEAR_IN_ROUND_WIDTH_FUNCTION)
                             .build())
                     .setColorData(ColorParticleData.create(0, 0, 1, 1, 0, 0).build())
                     .setTransparencyData(GenericParticleData.create(1, 1, 0).setEasing(Easing.QUARTIC_OUT).build())

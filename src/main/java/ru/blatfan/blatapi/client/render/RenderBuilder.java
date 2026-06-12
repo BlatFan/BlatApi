@@ -3,10 +3,7 @@ package ru.blatfan.blatapi.client.render;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
-import ru.blatfan.blatapi.client.event.ClientTickHandler;
-import ru.blatfan.blatapi.client.render.trail.TrailPoint;
-import ru.blatfan.blatapi.client.render.trail.TrailRenderPoint;
-import ru.blatfan.blatapi.utils.GuiUtil;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -16,6 +13,11 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
+import ru.blatfan.blatapi.client.event.ClientTickHandler;
+import ru.blatfan.blatapi.client.render.trail.TrailPoint;
+import ru.blatfan.blatapi.client.render.trail.TrailRenderPoint;
+import ru.blatfan.blatapi.utils.gui_utils.GuiPrimitiveUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiRenderUtil;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -29,18 +31,22 @@ public class RenderBuilder {
     public float r1 = 1, g1 = 1, b1 = 1, a1 = 1;
     public float r2 = 1, g2 = 1, b2 = 1, a2 = 1;
     public float r3 = 1, g3 = 1, b3 = 1, a3 = 1;
-    public int l1 = GuiUtil.FULL_BRIGHT;
-    public int l2 = GuiUtil.FULL_BRIGHT;
-    public int l3 = GuiUtil.FULL_BRIGHT;
+    public int l1 = GuiRenderUtil.FULL_BRIGHT;
+    public int l2 = GuiRenderUtil.FULL_BRIGHT;
+    public int l3 = GuiRenderUtil.FULL_BRIGHT;
     public float u0 = 0, v0 = 0, u1 = 1, v1 = 1;
     public float u2 = 0, v2 = 0, u3 = 1, v3 = 1;
     public float u4 = 0, v4 = 0, u5 = 1, v5 = 1;
     public boolean firstSide = true;
     public boolean secondSide = false;
 
+    @Getter
     protected MultiBufferSource bufferSource = LevelRenderHandler.DELAYED_RENDER;
+    @Getter
     protected RenderType renderType;
+    @Getter
     protected VertexFormat format;
+    @Getter
     protected VertexConsumerActor supplier;
     protected VertexConsumer vertexConsumer;
 
@@ -110,23 +116,7 @@ public class RenderBuilder {
         }
         return vertexConsumer;
     }
-
-    public MultiBufferSource getBufferSource() {
-        return bufferSource;
-    }
-
-    public RenderType getRenderType() {
-        return renderType;
-    }
-
-    public VertexFormat getFormat() {
-        return format;
-    }
-
-    public VertexConsumerActor getSupplier() {
-        return supplier;
-    }
-
+    
     public RenderBuilder setColor(Color color) {
         return setColor(color.getRed(), color.getGreen(), color.getBlue());
     }
@@ -628,12 +618,12 @@ public class RenderBuilder {
 
     public RenderBuilder renderWavyQuad(PoseStack stack, float width, float height, float strength, float time) {
         Vector3f[] positions = new Vector3f[]{new Vector3f(-1, 1, 0), new Vector3f(1, 1, 0), new Vector3f(1, -1, 0), new Vector3f(-1, -1, 0)};
-        GuiUtil.applyWobble(positions, strength, time);
+        GuiPrimitiveUtil.applyWobble(positions, strength, time);
         return renderQuad(stack, positions, width, height);
     }
 
     public RenderBuilder renderWavyQuad(PoseStack stack, Vector3f[] positions, float width, float height, float strength, float time) {
-        GuiUtil.applyWobble(positions, strength, time);
+        GuiPrimitiveUtil.applyWobble(positions, strength, time);
         return renderQuad(stack, positions, width, height);
     }
 
@@ -648,7 +638,7 @@ public class RenderBuilder {
         for (Vector3f position : positions) {
             position.mul(width, height, length);
         }
-        GuiUtil.applyWobble(positions, strength, time);
+        GuiPrimitiveUtil.applyWobble(positions, strength, time);
         return renderCube(stack.last().pose(), positions);
     }
 
@@ -684,13 +674,11 @@ public class RenderBuilder {
     }
 
     public RenderBuilder renderTrail(PoseStack stack, List<TrailPoint> trailSegments, float width) {
-        return renderTrail(stack, trailSegments, f -> width, f -> {
-        });
+        return renderTrail(stack, trailSegments, f -> width, f -> {});
     }
 
     public RenderBuilder renderTrail(PoseStack stack, List<TrailPoint> trailSegments, Function<Float, Float> widthFunc) {
-        return renderTrail(stack, trailSegments, widthFunc, f -> {
-        });
+        return renderTrail(stack, trailSegments, widthFunc, f -> {});
     }
 
     public RenderBuilder renderTrail(PoseStack stack, List<TrailPoint> trailSegments, Function<Float, Float> widthFunc, Consumer<Float> vfxOperator) {
@@ -710,10 +698,10 @@ public class RenderBuilder {
             Vector4f previous = positions.get(i - 1);
             Vector4f current = positions.get(i);
             Vector4f next = positions.get(i + 1);
-            points[i] = new TrailRenderPoint(current, GuiUtil.perpendicularTrailPoints(previous, next, width));
+            points[i] = new TrailRenderPoint(current, GuiPrimitiveUtil.perpendicularTrailPoints(previous, next, width));
         }
-        points[0] = new TrailRenderPoint(positions.get(0), GuiUtil.perpendicularTrailPoints(positions.get(0), positions.get(1), widthFunc.apply(0f)));
-        points[count] = new TrailRenderPoint(positions.get(count), GuiUtil.perpendicularTrailPoints(positions.get(count-1), positions.get(count), widthFunc.apply(1f)));
+        points[0] = new TrailRenderPoint(positions.get(0), GuiPrimitiveUtil.perpendicularTrailPoints(positions.get(0), positions.get(1), widthFunc.apply(0f)));
+        points[count] = new TrailRenderPoint(positions.get(count), GuiPrimitiveUtil.perpendicularTrailPoints(positions.get(count-1), positions.get(count), widthFunc.apply(1f)));
         return renderPoints(points, u0, v0, u1, v1, vfxOperator);
     }
 
@@ -730,10 +718,10 @@ public class RenderBuilder {
             Vector4f previous = positions.get(i - 1);
             Vector4f current = positions.get(i);
             Vector4f next = positions.get(i + 1);
-            points[i] = new TrailRenderPoint(current, GuiUtil.perpendicularTrailPoints(previous, next, width));
+            points[i] = new TrailRenderPoint(current, GuiPrimitiveUtil.perpendicularTrailPoints(previous, next, width));
         }
-        points[0] = new TrailRenderPoint(positions.get(0), GuiUtil.perpendicularTrailPoints(positions.get(0), positions.get(1), widthFunc.apply(0f)));
-        points[count] = new TrailRenderPoint(positions.get(count), GuiUtil.perpendicularTrailPoints(positions.get(count-1), positions.get(count), widthFunc.apply(1f)));
+        points[0] = new TrailRenderPoint(positions.get(0), GuiPrimitiveUtil.perpendicularTrailPoints(positions.get(0), positions.get(1), widthFunc.apply(0f)));
+        points[count] = new TrailRenderPoint(positions.get(count), GuiPrimitiveUtil.perpendicularTrailPoints(positions.get(count-1), positions.get(count), widthFunc.apply(1f)));
         return renderPoints(points, u0, v0, u1, v1, vfxOperator);
     }
 
@@ -815,10 +803,10 @@ public class RenderBuilder {
                 float v = j * stepV + startV;
                 float un = (i + 1 == longs) ? endU : (i + 1) * stepU + startU;
                 float vn = (j + 1 == lats) ? endV : (j + 1) * stepV + startV;
-                Vector3f p0 = GuiUtil.parametricSphere(u, v, radius);
-                Vector3f p1 = GuiUtil.parametricSphere(u, vn, radius);
-                Vector3f p2 = GuiUtil.parametricSphere(un, v, radius);
-                Vector3f p3 = GuiUtil.parametricSphere(un, vn, radius);
+                Vector3f p0 = GuiPrimitiveUtil.parametricSphere(u, v, radius);
+                Vector3f p1 = GuiPrimitiveUtil.parametricSphere(u, vn, radius);
+                Vector3f p2 = GuiPrimitiveUtil.parametricSphere(un, v, radius);
+                Vector3f p3 = GuiPrimitiveUtil.parametricSphere(un, vn, radius);
 
                 float textureU = u0;
                 float textureV = v0;

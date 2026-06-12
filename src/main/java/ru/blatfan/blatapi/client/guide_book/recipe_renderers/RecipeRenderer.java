@@ -7,7 +7,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookData;
-import ru.blatfan.blatapi.utils.GuiUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiItemUtil;
 
 public abstract class RecipeRenderer {
     public abstract int width();
@@ -33,9 +33,9 @@ public abstract class RecipeRenderer {
     }
     protected void renderSlot(GuideBookData data, GuiGraphics gui, int x, int y, int mX, int mY, Ingredient stack){
         gui.blit(data.getTexture(),x, y, 0, 68, 20, 20);
-        GuiUtil.renderIngredient(gui, x+2, y+2, stack);
+        GuiItemUtil.renderIngredient(gui, x+2, y+2, stack);
         if(mX>=x && mX<=x+20 && mY>=y && mY<=y+20)
-            GuiUtil.renderTooltip(gui, mX, mY, stack);
+            GuiItemUtil.renderTooltip(gui, mX, mY, stack);
     }
     protected void renderResultSlot(GuideBookData data, GuiGraphics gui, int x, int y, int mX, int mY, ItemStack stack){
         gui.blit(data.getTexture(),x, y, 108, 44, 26, 26);

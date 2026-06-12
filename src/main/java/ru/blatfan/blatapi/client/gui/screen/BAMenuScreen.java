@@ -25,8 +25,8 @@ import ru.blatfan.blatapi.client.gui.components.BALogoRenderer;
 import ru.blatfan.blatapi.client.render.FlatCubeMap;
 import ru.blatfan.blatapi.config.BlatApiClientConfig;
 import ru.blatfan.blatapi.utils.ColorHelper;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -309,7 +309,7 @@ public class BAMenuScreen extends Screen {
         String text = mod.getDescription().getString();
         int w = 140;
         List<Component> lines = new ArrayList<>();
-        GuiUtil.splitText(text, w).forEach(s -> lines.add(Text.create(s)));
+        GuiTextUtil.splitText(text, w).forEach(s -> lines.add(Text.create(s)));
         if (!mod.getLinks().isEmpty()) {
             lines.add(Component.empty());
             lines.add(Text.create("gui.blatapi.menu.links").withStyle(ChatFormatting.GRAY));

@@ -1,6 +1,6 @@
 package ru.blatfan.blatapi.utils.collection;
 
-import ru.blatfan.blatapi.utils.GuiUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextUtil;
 
 import java.util.ArrayList;
 
@@ -20,6 +20,6 @@ public class SplitText extends ArrayList<Text> {
     }
     
     public int height() {
-        return (int) (size()*scale()*GuiUtil.getFont().lineHeight);
+        return (int) (size()*scale() * GuiTextUtil.getFont().lineHeight);
     }
 }

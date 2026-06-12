@@ -3,9 +3,15 @@ package ru.blatfan.blatapi.utils;
 import lombok.experimental.UtilityClass;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.fml.ModList;
+import software.bernie.example.registry.ItemRegistry;
 import software.bernie.geckolib.animatable.GeoItem;
+
+import java.util.Arrays;
+import java.util.List;
 
 @UtilityClass
 public class BAGeckoHelper {
@@ -22,6 +28,17 @@ public class BAGeckoHelper {
         return Integer.MAX_VALUE;
     }
     
+    public static List<Item> getList() {
+        if(isLoaded())
+            return GeckoLibHelper.getList();
+        return Arrays.asList(
+            Items.DIAMOND_HELMET,
+            Items.DIAMOND_CHESTPLATE,
+            Items.DIAMOND_LEGGINGS,
+            Items.DIAMOND_BOOTS
+        );
+    }
+    
     private class GeckoLibHelper {
         private static boolean isGeckoArmor(ItemStack stack){
             return stack.getItem() instanceof ArmorItem && stack.getItem() instanceof GeoItem;
@@ -35,6 +52,23 @@ public class BAGeckoHelper {
                 default -> 0;
             });
             return 0;
+        }
+        
+        public static List<Item> getList() {
+            return Arrays.asList(
+                Items.DIAMOND_HELMET,
+                ItemRegistry.WOLF_ARMOR_HELMET.get(),
+                ItemRegistry.GECKO_ARMOR_HELMET.get(),
+                Items.DIAMOND_CHESTPLATE,
+                ItemRegistry.WOLF_ARMOR_CHESTPLATE.get(),
+                ItemRegistry.GECKO_ARMOR_CHESTPLATE.get(),
+                Items.DIAMOND_LEGGINGS,
+                ItemRegistry.WOLF_ARMOR_LEGGINGS.get(),
+                ItemRegistry.GECKO_ARMOR_LEGGINGS.get(),
+                Items.DIAMOND_BOOTS,
+                ItemRegistry.WOLF_ARMOR_BOOTS.get(),
+                ItemRegistry.GECKO_ARMOR_BOOTS.get()
+            );
         }
     }
 }

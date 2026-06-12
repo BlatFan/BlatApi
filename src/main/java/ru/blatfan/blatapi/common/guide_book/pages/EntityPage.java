@@ -14,9 +14,10 @@ import ru.blatfan.blatapi.client.guide_book.GuideClient;
 import ru.blatfan.blatapi.common.guide_book.GuideBookPage;
 import ru.blatfan.blatapi.utils.ClientTicks;
 import ru.blatfan.blatapi.utils.ColorHelper;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.SplitText;
 import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.gui_utils.GuiEntityUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -67,15 +68,13 @@ public class EntityPage extends GuideBookPage {
         Font font = GuideClient.font;
         Entity e = BuiltInRegistries.ENTITY_TYPE.get(entity).create(GuideClient.level);
         if(!(e instanceof LivingEntity living)) return;
-        living.yHeadRot=0;
-        living.yHeadRotO=0;
-        GuiUtil.renderEntityQuaternionf(gui, x+5+offsetX, y+offsetY, scale, Axis.YP.rotationDegrees(ClientTicks.ticks),
-            (Axis.XP.rotationDegrees(180)), living);
+        GuiEntityUtil.prepareForGuiPreview(living);
+        GuiEntityUtil.renderEntity(gui, x+5+offsetX, y+offsetY, scale, Axis.YP.rotationDegrees(ClientTicks.ticks), living);
         gui.fill(x+4, y, x+4, y+10, 0xffffff);
         for(int i=0; i<texts.size(); i++){
             Text c = texts.get(i);
             int ty = offsetY+y+2+(font.lineHeight*i);
-            GuiUtil.drawScaledString(gui, c, x+4, ty, color, texts.scale());
+            GuiTextUtil.drawScaledString(gui, c, x+4, ty, color, texts.scale());
         }
     }
 }

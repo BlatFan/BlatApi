@@ -1,27 +1,18 @@
 package ru.blatfan.blatapi.client.particle;
 
-import ru.blatfan.blatapi.client.particle.options.FluidParticleOptions;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidType;
+import ru.blatfan.blatapi.client.particle.options.FluidParticleOptions;
+import ru.blatfan.blatapi.client.render.FluidRenderMap;
 
 public class FluidParticle extends GenericParticle {
-
     public FluidParticle(ClientLevel level, FluidParticleOptions options, double x, double y, double z, double vx, double vy, double vz) {
         super(level, options, null, x, y, z, vx, vy, vz);
-        if (!options.fluidStack.isEmpty()) {
-            FluidType type = options.fluidStack.getFluid().getFluidType();
-            IClientFluidTypeExtensions clientType = IClientFluidTypeExtensions.of(type);
-            TextureAtlasSprite sprite = GuiUtil.getSprite(clientType.getStillTexture(options.fluidStack));
-            if (options.flowing) sprite = GuiUtil.getSprite(clientType.getFlowingTexture(options.fluidStack));
-            this.setSprite(sprite);
-        } else {
-            IClientFluidTypeExtensions clientType = IClientFluidTypeExtensions.of(Fluids.WATER);
-            TextureAtlasSprite sprite = GuiUtil.getSprite(clientType.getStillTexture());
-            this.setSprite(sprite);
-        }
+        TextureAtlasSprite sprite;
+        if (!options.fluidStack.isEmpty())
+            sprite = FluidRenderMap.getFluidTexture(options.fluidStack, options.flowing ? FluidRenderMap.FluidFlow.FLOWING : FluidRenderMap.FluidFlow.STILL);
+        else sprite = FluidRenderMap.getFluidTexture(Fluids.WATER);
+        if(sprite!=null) this.setSprite(sprite);
     }
 }

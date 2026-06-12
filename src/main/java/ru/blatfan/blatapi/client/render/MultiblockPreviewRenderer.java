@@ -44,8 +44,9 @@ import ru.blatfan.blatapi.common.multiblock.Multiblock;
 import ru.blatfan.blatapi.common.multiblock.matcher.DisplayOnlyMatcher;
 import ru.blatfan.blatapi.common.multiblock.matcher.Matchers;
 import ru.blatfan.blatapi.utils.ClientTicks;
-import ru.blatfan.blatapi.utils.GuiUtil;
 import ru.blatfan.blatapi.utils.collection.Text;
+import ru.blatfan.blatapi.utils.gui_utils.GuiRenderUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiTextUtil;
 
 import java.awt.*;
 import java.util.*;
@@ -89,7 +90,7 @@ public class MultiblockPreviewRenderer {
         }
     }
     
-    public static void onRenderHUD(GuiGraphics guiGraphics, float partialTicks) {
+    public static void onRenderHUD(GuiGraphics gui, float partialTicks) {
         if (hasMultiblock) {
             int waitTime = 40;
             int fadeOutSpeed = 4;
@@ -101,14 +102,14 @@ public class MultiblockPreviewRenderer {
                 return;
             }
             
-            guiGraphics.pose().pushPose();
-            guiGraphics.pose().translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
+            gui.pose().pushPose();
+            gui.pose().translate(0, -Math.max(0, animTime - waitTime) * fadeOutSpeed, 0);
             
             Minecraft mc = Minecraft.getInstance();
             int x = mc.getWindow().getGuiScaledWidth() / 2;
             int y = 12;
             
-            GuiUtil.drawString(guiGraphics, mc.font, name, x - mc.font.width(name) / 2.0F, y, 0xFFFFFF, false);
+            GuiTextUtil.drawString(gui, mc.font, name, x - mc.font.width(name) / 2.0F, y, 0xFFFFFF, false);
             
             int width = 180;
             int height = 9;
@@ -117,24 +118,24 @@ public class MultiblockPreviewRenderer {
             
             if (timeComplete > 0) {
                 String s = Text.create("multiblock.blatapi.complete").getString();
-                guiGraphics.pose().pushPose();
-                guiGraphics.pose().translate(0, Math.min(height + 5, animTime), 0);
-                guiGraphics.drawString(mc.font, s, (int) (x - mc.font.width(s) / 2.0F), top + height - 10, 0x00FF00, false);
-                guiGraphics.pose().popPose();
+                gui.pose().pushPose();
+                gui.pose().translate(0, Math.min(height + 5, animTime), 0);
+                gui.drawString(mc.font, s, (int) (x - mc.font.width(s) / 2.0F), top + height - 10, 0x00FF00, false);
+                gui.pose().popPose();
             }
             
-            guiGraphics.fill(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
-            drawGradientRect(guiGraphics, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
+            gui.fill(left - 1, top - 1, left + width + 1, top + height + 1, 0xFF000000);
+            drawGradientRect(gui, left, top, left + width, top + height, 0xFF666666, 0xFF555555);
             
             float fract = (float) blocksDone / Math.max(1, blocks);
             int progressWidth = (int) ((float) width * fract);
             int color = Mth.hsvToRgb(fract / 3.0F, 1.0F, 1.0F) | 0xFF000000;
             int color2 = new Color(color).darker().getRGB();
-            drawGradientRect(guiGraphics, left, top, left + progressWidth, top + height, color, color2);
+            drawGradientRect(gui, left, top, left + progressWidth, top + height, color, color2);
             
             if (!isAnchored) {
                 String s = Text.create("multiblock.blatapi.not_anchored").getString();
-                guiGraphics.drawString(mc.font, s, (int) (x - mc.font.width(s) / 2.0F), top + height + 8, 0xFFFFFF, false);
+                gui.drawString(mc.font, s, (int) (x - mc.font.width(s) / 2.0F), top + height + 8, 0xFFFFFF, false);
             } else {
                 if (lookingState != null) {
                     // try-catch around here because the state isn't necessarily present in the world in this instance,
@@ -144,9 +145,9 @@ public class MultiblockPreviewRenderer {
                         ItemStack stack = block.getCloneItemStack(mc.level, lookingPos, lookingState);
                         
                         if (!stack.isEmpty()) {
-                            guiGraphics.drawString(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, false);
+                            gui.drawString(mc.font, stack.getHoverName(), left + 20, top + height + 8, 0xFFFFFF, false);
                             
-                            guiGraphics.renderItem(stack, left, top + height + 2);
+                            gui.renderItem(stack, left, top + height + 2);
                         }
                     } catch (Exception ignored) {
                     }
@@ -167,11 +168,11 @@ public class MultiblockPreviewRenderer {
                         posy += 2;
                     }
                     
-                    guiGraphics.drawString(mc.font, progress, (int) (posx - mc.font.width(progress) / mult), posy, color, true);
+                    gui.drawString(mc.font, progress, (int) (posx - mc.font.width(progress) / mult), posy, color, true);
                 }
             }
             
-            guiGraphics.pose().popPose();
+            gui.pose().popPose();
         }
     }
     
@@ -282,7 +283,7 @@ public class MultiblockPreviewRenderer {
                             try {
                                 BlockEntityRenderer<BlockEntity> renderer = Minecraft.getInstance().getBlockEntityRenderDispatcher().getRenderer(be);
                                 if (renderer != null)
-                                    renderer.render(be, ClientTicks.partialTicks, ms, buffers, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+                                    renderer.render(be, ClientTicks.partialTicks, ms, buffers, GuiRenderUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
                             } catch (Exception e) {
                                 erroredBlockEntities.add(be);
                                 BlatApi.LOGGER.error("Error rendering block entity", e);
@@ -321,7 +322,7 @@ public class MultiblockPreviewRenderer {
                 br.renderLiquid(pos, getMultiblock(), new FluidBlockVertexConsumer(buffer, ms, pos), state, fluidState);
             }
             
-            br.renderSingleBlock(state, ms, buffers, GuiUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
+            br.renderSingleBlock(state, ms, buffers, GuiRenderUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY);
             
             ms.popPose();
         }
@@ -335,7 +336,7 @@ public class MultiblockPreviewRenderer {
         return offsetApplier.apply(pos);
     }
     
-    private static void drawGradientRect(GuiGraphics guiGraphics, int left, int top, int right, int bottom, int startColor, int endColor) {
+    private static void drawGradientRect(GuiGraphics gui, int left, int top, int right, int bottom, int startColor, int endColor) {
         float f = (float) (startColor >> 24 & 255) / 255.0F;
         float f1 = (float) (startColor >> 16 & 255) / 255.0F;
         float f2 = (float) (startColor >> 8 & 255) / 255.0F;
@@ -349,7 +350,7 @@ public class MultiblockPreviewRenderer {
         Tesselator tessellator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tessellator.getBuilder();
         bufferbuilder.begin(Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-        Matrix4f mat = guiGraphics.pose().last().pose();
+        Matrix4f mat = gui.pose().last().pose();
         bufferbuilder.vertex(mat, right, top, 0).color(f1, f2, f3, f).endVertex();
         bufferbuilder.vertex(mat, left, top, 0).color(f1, f2, f3, f).endVertex();
         bufferbuilder.vertex(mat, left, bottom, 0).color(f5, f6, f7, f4).endVertex();

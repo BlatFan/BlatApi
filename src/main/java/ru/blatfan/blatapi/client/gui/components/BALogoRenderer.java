@@ -23,7 +23,7 @@ public class BALogoRenderer extends LogoRenderer {
     private boolean invert = false;
     
     @Override
-    public void renderLogo(GuiGraphics guiGraphics, int screenWidth, float transparency) {
+    public void renderLogo(GuiGraphics gui, int screenWidth, float transparency) {
         ticks+=invert? -timeUnite() : timeUnite();
         float time = ticks/40f%20f;
         if(time>=1) invert=true;
@@ -35,25 +35,25 @@ public class BALogoRenderer extends LogoRenderer {
             new Vector3(-6, 32, 0),
             time
         );
-        renderSmoothLogo(guiGraphics, screenWidth+pos.x, transparency, pos.y);
+        renderSmoothLogo(gui, screenWidth+pos.x, transparency, pos.y);
     }
 
     @Override
-    public void renderLogo(GuiGraphics guiGraphics, int screenWidth, float transparency, int height) {
-        guiGraphics.setColor(1, 1, 1, this.keepLogoThroughFade ? 1 : transparency);
+    public void renderLogo(GuiGraphics gui, int screenWidth, float transparency, int height) {
+        gui.setColor(1, 1, 1, this.keepLogoThroughFade ? 1 : transparency);
         int i = screenWidth / 2 - 128;
-        guiGraphics.blit(logo, i, height, 0, 0, 256, 64, 256, 64);
-        guiGraphics.setColor(1, 1, 1, 1);
+        gui.blit(logo, i, height, 0, 0, 256, 64, 256, 64);
+        gui.setColor(1, 1, 1, 1);
     }
     
-    public void renderSmoothLogo(GuiGraphics guiGraphics, double screenWidth, float transparency, double height) {
-        guiGraphics.setColor(1, 1, 1, this.keepLogoThroughFade ? 1 : transparency);
+    public void renderSmoothLogo(GuiGraphics gui, double screenWidth, float transparency, double height) {
+        gui.setColor(1, 1, 1, this.keepLogoThroughFade ? 1 : transparency);
         double i = screenWidth / 2 - 128;
-        PoseStack pose = guiGraphics.pose();
+        PoseStack pose = gui.pose();
         pose.pushPose();
         pose.translate(i, height, 0);
-        guiGraphics.blit(logo, 0, 0, 0, 0, 256, 64, 256, 64);
+        gui.blit(logo, 0, 0, 0, 0, 256, 64, 256, 64);
         pose.popPose();
-        guiGraphics.setColor(1, 1, 1, 1);
+        gui.setColor(1, 1, 1, 1);
     }
 }

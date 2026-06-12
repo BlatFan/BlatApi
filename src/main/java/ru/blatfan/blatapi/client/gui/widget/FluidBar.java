@@ -15,7 +15,7 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 import org.joml.Matrix4f;
 import ru.blatfan.blatapi.BlatApi;
 import ru.blatfan.blatapi.client.render.FluidRenderMap;
-import ru.blatfan.blatapi.utils.GuiUtil;
+import ru.blatfan.blatapi.utils.gui_utils.GuiPrimitiveUtil;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -110,7 +110,7 @@ public class FluidBar extends AbstractWidget {
     float yRemainder = renderHeight - (float)(yTileCount * 16);
     float yStart = yPosition + renderHeight;
     
-    for(int xTile = 0; xTile <= xTileCount; ++xTile) {
+    for(int xTile = 0; xTile <= xTileCount; ++xTile)
       for(int yTile = 0; yTile <= yTileCount; ++yTile) {
         float width = xTile == xTileCount ? xRemainder : 16;
         float height = yTile == yTileCount ? yRemainder : 16;
@@ -119,10 +119,9 @@ public class FluidBar extends AbstractWidget {
         if (width > 0 && height > 0) {
           float maskTop = 16 - height;
           float maskRight = 16 - width;
-          GuiUtil.drawTextureWithMasking(matrix, x, y, sprite, maskTop, maskRight);
+          GuiPrimitiveUtil.drawTextureWithMasking(matrix, x, y, sprite, maskTop, maskRight);
         }
       }
-    }
     
     RenderSystem.setShaderColor(1, 1, 1, 1);
     RenderSystem.disableBlend();
